@@ -1,4 +1,4 @@
-package com.atta.cookhouse.classes;
+package com.atta.cookhouse.model;
 
 class MessageResponse {
 

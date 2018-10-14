@@ -1,11 +1,11 @@
-package com.atta.cookhouse.classes;
+package com.atta.cookhouse.model;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.atta.cookhouse.LoginActivity;
 import com.atta.cookhouse.MainActivity;
+import com.atta.cookhouse.login.LoginActivity;
 
 public class SessionManager {
 
@@ -36,7 +36,7 @@ public class SessionManager {
     public static final String KEY_EMAIL = "email";
 
 
-    private static final String KEY_USER_GENDER = "gender";
+    private static final String KEY_USER_LOCATION = "location";
 
     // User Name (make variable public to access from outside)
     public static final String KEY_PASSWORD = "password";
@@ -45,6 +45,10 @@ public class SessionManager {
     public static final String KEY_USER_NAME = "userName";
 
     public static final String KEY_USER_IMAGE = "userImage";
+
+    private static final String KEY_USER_BIRTHDAY = "birthday";
+
+    private static final String KEY_USER_PHONE = "phone";
 
     // Constructor
     public SessionManager(Context context){
@@ -93,7 +97,9 @@ public class SessionManager {
         editor.putInt(KEY_ID, user.getId());
         editor.putString(KEY_USER_NAME, user.getName());
         editor.putString(KEY_EMAIL, user.getEmail());
-        editor.putString(KEY_USER_GENDER, user.getGender());
+        editor.putString(KEY_USER_PHONE, user.getPhone());
+        editor.putString(KEY_USER_LOCATION, user.getLocation());
+        editor.putString(KEY_USER_BIRTHDAY, user.getBirthday());
         editor.apply();
     }
 

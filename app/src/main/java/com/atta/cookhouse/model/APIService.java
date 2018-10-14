@@ -1,4 +1,4 @@
-package com.atta.cookhouse.classes;
+package com.atta.cookhouse.model;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -15,7 +15,9 @@ public interface APIService {
             @Field("name") String name,
             @Field("email") String email,
             @Field("password") String password,
-            @Field("gender") String gender
+            @Field("phone") String phone,
+            @Field("birthday") String birthday,
+            @Field("location") String location
     );
 
     //the signin call

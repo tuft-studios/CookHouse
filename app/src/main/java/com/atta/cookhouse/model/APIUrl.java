@@ -1,4 +1,4 @@
-package com.atta.cookhouse.classes;
+package com.atta.cookhouse.model;
 
 /**
  * Created by mosta on 2/28/2018.
@@ -7,7 +7,7 @@ package com.atta.cookhouse.classes;
 public class APIUrl {
 
 
-    public static final String BASE_URL = "http://192.168.1.3/cookhouse/public/";
+    public static final String BASE_URL = "http://18.191.38.255/cookhouse/public/index.php/";
 
     public static final String ROOT_URL = "http://192.168.1.3/ana";
 

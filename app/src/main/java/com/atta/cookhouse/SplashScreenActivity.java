@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
-import com.atta.cookhouse.classes.SessionManager;
+import com.atta.cookhouse.model.SessionManager;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

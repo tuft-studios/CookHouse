@@ -1,4 +1,4 @@
-package com.atta.cookhouse.classes;
+package com.atta.cookhouse.model;
 
 import com.google.gson.annotations.SerializedName;
 
