@@ -1,4 +1,4 @@
-package com.atta.cookhouse;
+package com.atta.cookhouse.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.atta.cookhouse.R;
+import com.atta.cookhouse.ViewFragmentPagerAdapter;
 import com.atta.cookhouse.login.LoginActivity;
 import com.atta.cookhouse.model.SessionManager;
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.atta.cookhouse.MainActivity;
+import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.login.LoginActivity;
 
 public class SessionManager {

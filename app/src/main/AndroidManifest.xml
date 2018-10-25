@@ -26,7 +26,7 @@
             android:parentActivityName=".login.LoginActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

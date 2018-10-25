@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.atta.cookhouse.MainActivity;
+import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.R;
 
 import java.text.SimpleDateFormat;
