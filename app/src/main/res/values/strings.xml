@@ -30,17 +30,30 @@
     <string name="registered_emailid">Please enter your Registered Email Id below:</string>
     <string name="submit">SUBMIT</string>
     <string name="back">BACK</string>
-    <string name="login_to">Login to ...............................</string>
+    <string name="login_to">Welcome to CHEF</string>
+    <string name="register_text">New to CHEF? \n join us to enjoy our offers and deals!</string>
     <string name="register_later">register later</string>
     <string name="birth_date">Birth Date</string>
+    <string name="select_area">Select Your ِArea…</string>
+    <string name="delete">DELETE</string>
 
-    <string-array name="locations">
-        <item>Select Your Location...</item>
+    <string-array name="locations1">
+        <item> </item>
         <item>Nasr City</item>
         <item>6 of October</item>
         <item>Heliopolis</item>
     </string-array>
-    <string name="title_activity_main">MainActivity</string>
+
+    <string-array name="locations">
+        <item>Select Your ِArea…</item>
+        <item>Nasr City</item>
+        <item>6 of October</item>
+        <item>Heliopolis</item>
+    </string-array>
+
+
+    <string name="title_activity_main">Cook House</string>
+    <string name="title_activity_cart">Your Cart</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Cook House</string>
@@ -55,4 +68,9 @@
     <string name="category_salads">Salads</string>
 
     <string name="category_soups">Soups</string>
+    <string name="action_cart">Cart</string>
+    <string name="login_msg">you need to login or register to be able to proceed on your order</string>
+    <string name="home_address">Home Address</string>
+    <string name="your_point_text">Your Points \n 20</string>
+    <string name="job">Job</string>
 </resources>

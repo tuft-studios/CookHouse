@@ -10,45 +10,32 @@
     android:orientation="vertical"
     tools:showIn="@layout/app_bar_main">
 
-    <LinearLayout
+    <com.smarteist.autoimageslider.SliderLayout
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:alwaysDrawnWithCache="false"/>
+
+
+    <Spinner
+        android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/placeholder"
-            android:textSize="20sp"
-            android:text="@string/location"/>
-
-        <Spinner
-            android:id="@+id/location"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:layout_alignParentRight="true"/>
-
-    </LinearLayout>
+        android:gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/spinner"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:background="@color/colorPrimary"
-        app:tabSelectedTextColor="@color/colorAccent"
-        app:tabIndicatorColor="@color/colorPrimaryDark"/>
+        android:background="@color/white"
+        app:tabSelectedTextColor="@color/orange"
+        app:tabTextColor="#ffc77d"
+        app:tabIndicatorColor="@color/orange"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
-        android:layout_margin="12dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -1,30 +1,23 @@
 package com.atta.cookhouse.main;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.ImageView;
+import android.os.AsyncTask;
 
+import com.andremion.counterfab.CounterFab;
+import com.atta.cookhouse.Local.DatabaseClient;
+import com.atta.cookhouse.Local.QueryUtils;
 import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.APIUrl;
-import com.atta.cookhouse.model.Dish;
-import com.atta.cookhouse.model.Dishes;
-import com.atta.cookhouse.model.DishesAdapter;
-import com.squareup.okhttp.ResponseBody;
+import com.atta.cookhouse.model.AddFavResult;
+import com.atta.cookhouse.model.CartItem;
+import com.atta.cookhouse.model.FavResult;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainPresenter implements MainContract.Presenter {
 
@@ -33,142 +26,140 @@ public class MainPresenter implements MainContract.Presenter {
 
     private Context mContext;
 
-    Bitmap bitmap ;
+    private CounterFab mCounterFab;
 
-    public MainPresenter(MainContract.View view, Context context) {
+    public MainPresenter(MainContract.View view, Context context, CounterFab counterFab) {
 
         mView = view;
 
         mContext = context;
-    }
-    @Override
-    public void getRetrofitImage(final ImageView imageView, String url) {
 
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.Images_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        APIService service = retrofit.create(APIService.class);
-
-        Call<ResponseBody> call = service.getImageDetails(url);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
-
-                try {
-
-                    Log.d("onResponse", "Response came from server");
-
-                    bitmap = DownloadImage(response.body());
-
-                    imageView.setImageBitmap(bitmap);
-
-                    Log.d("onResponse", "Image is downloaded and saved ? ");
-
-                } catch (Exception e) {
-                    Log.d("onResponse", "There is an error");
-                    e.printStackTrace();
-                    bitmap = null;
-                }
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.d("onFailure", t.toString());
-                mView.showError(t.getMessage());
-                bitmap = null;
-            }
-        });
-
+        mCounterFab = counterFab;
     }
 
     @Override
-    public Bitmap DownloadImage(ResponseBody body) {
+    public void getCartItemsNum() {
 
-        Bitmap bitmap;
 
-        try {
-            Log.d("DownloadImage", "Reading and writing file");
-            InputStream in = null;
-            FileOutputStream out = null;
+        class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
 
-            try {
-                in = body.byteStream();
-                bitmap = BitmapFactory.decodeStream(in);
-                int c;
+        @Override
+        protected List<CartItem> doInBackground(Void... voids) {
+            List<CartItem> taskList = DatabaseClient
+                    .getInstance(mContext)
+                    .getAppDatabase()
+                    .itemDao()
+                    .getAll();
+            return taskList;
+        }
 
-                while ((c = in.read()) != -1) {
-                    out.write(c);
-                }
-            } catch (IOException e) {
-                Log.d("DownloadImage", e.toString());
-                return null;
-            } finally {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            }
+        @Override
+        protected void onPostExecute(List<CartItem> cartItems) {
+            super.onPostExecute(cartItems);
 
-            int width, height;
-            //Bitmap bMap = BitmapFactory.decodeFile(getExternalFilesDir(null) + File.separator + "AndroidTutorialPoint.jpg");
-            width = 2 * bitmap.getWidth();
-            height = 6 * bitmap.getHeight();
-            Bitmap bMap2 = Bitmap.createScaledBitmap(bitmap, width, height, false);
+            int numOfCartItem = cartItems.size();
 
-            return bitmap;
+            mCounterFab.setCount(numOfCartItem);
 
-        } catch (IOException e) {
-            Log.d("DownloadImage", e.toString());
-            return null;
         }
     }
 
+    GetTasks gt = new GetTasks();
+        gt.execute();
+    }
+
     @Override
-    public void getMenu(final RecyclerView recyclerView, String type) {
-
-        ArrayList<Dish> dishes = null;
-
+    public void addToFav(int propertyId, int userId) {
 
         //building retrofit object
-        retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         //Defining retrofit api service
         APIService service = retrofit.create(APIService.class);
 
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
 
         //defining the call
-        retrofit2.Call<Dishes> call = service.getMenu( type );
+        Call<AddFavResult> call = service.addToFavorite(propertyId, userId);
 
         //calling the api
-        call.enqueue(new retrofit2.Callback<Dishes>() {
+        call.enqueue(new Callback<AddFavResult>() {
             @Override
-            public void onResponse(retrofit2.Call<Dishes> call, retrofit2.Response<Dishes> response) {
+            public void onResponse(Call<AddFavResult> call, retrofit2.Response<AddFavResult> response) {
+                //hiding progress dialog
 
-                ArrayList<Dish> dishes = response.body().getDishes();
 
-                DishesAdapter myAdapter = new DishesAdapter(mContext, new MainPresenter(mView, mContext), dishes);
-                recyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
-                recyclerView.setAdapter(myAdapter);
+                //displaying the message from the response as toast
+                if (response.body() != null) {
+                    mView.showMessage(response.body().getMessage());
+                    //if there is no error
+                    if (!response.body().getError()) {
+                        //starting Main activity
+                        mView.changeFavIcon(true);
+                        mView.setFavId(response.body().getId());
+                    }else {
+                        mView.showMessage(response.body().getMessage());
+                    }
+                }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<Dishes> call, Throwable t) {
+            public void onFailure(Call<AddFavResult> call, Throwable t) {
 
-                mView.showError(t.getMessage());
+                mView.showMessage(t.getMessage());
             }
         });
+    }
 
+    @Override
+    public void removeFromFav(int fId) {
+        QueryUtils.removeFromFav(fId, mView, null);
+    }
+
+    @Override
+    public void checkIfFav(int propertyId, int userId) {
+
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+
+        //defining the call
+        Call<FavResult> call = service.checkIfFavorite(propertyId, userId);
+
+        //calling the api
+        call.enqueue(new Callback<FavResult>() {
+            @Override
+            public void onResponse(Call<FavResult> call, retrofit2.Response<FavResult> response) {
+
+
+                //displaying the message from the response as toast
+                if (response.body() != null){
+
+                    mView.changeFavIcon(response.body().getFavorite());
+
+                    if (response.body().getFavorite()){
+                        mView.setFavId(response.body().getId());
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<FavResult> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+            }
+        });
     }
 }
+
+

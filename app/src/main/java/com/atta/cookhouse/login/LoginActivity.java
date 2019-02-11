@@ -15,9 +15,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.Register.RegisterActivity;
+import com.atta.cookhouse.main.MainActivity;
+import com.atta.cookhouse.model.SessionManager;
 
 public class LoginActivity extends AppCompatActivity implements LoginContract.View ,View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     TextView newAccount, skip;
 
 
-    private static CheckBox show_hide_password;
+    private CheckBox show_hide_password;
 
     private LoginPresenter loginPresenter;
 
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         setContentView(R.layout.activity_login);
 
         setDialog();
-        loginPresenter = new LoginPresenter(this, progressDialog, this);
+        loginPresenter = new LoginPresenter(this,  this);
 
         initiateViews();
 
@@ -84,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
         }else if (view == skip){
 
-            navigateToMain();
+            skipToMain();
         }
     }
 
@@ -134,8 +135,24 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void navigateToMain() {
+
+        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+        startActivity(intent);
         finish();
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+    }
+
+    @Override
+    public void skipToMain() {
+
+        SessionManager.getInstance(this).skip();
+        navigateToMain();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if(progressDialog != null || progressDialog.isShowing() ){
+            progressDialog.dismiss();
+        }
     }
 
     @Override

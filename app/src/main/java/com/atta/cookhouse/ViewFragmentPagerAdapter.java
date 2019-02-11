@@ -6,6 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.atta.cookhouse.fragments.MainDishFragment;
+import com.atta.cookhouse.fragments.SaladsFragment;
+import com.atta.cookhouse.fragments.SoupFragment;
+
 public class ViewFragmentPagerAdapter extends FragmentPagerAdapter {
 
     /** Context of the app */

@@ -11,14 +11,16 @@ public interface RegisterContract {
         void navigateToMain();
 
         void setDialog();
+
+        boolean validate(String name, String email, String password, String passwordConfirm, String phone, String birthdayString, String locationSting, String jobSting);
+
     }
 
     interface Presenter{
 
-        void register(String name, String email, String password, String phone, String birthdayString, String locationSting);
+        void register(String name, String email, String job, String password, String phone, String birthdayString, String locationSting);
 
 
 
-        boolean validate(String name, String email, String password, String passwordConfirm, String phone, String birthdayString, String locationSting);
     }
 }

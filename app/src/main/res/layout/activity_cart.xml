@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".cart.CartActivity">
+
+    <RelativeLayout
+        android:id="@+id/ly2"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/left_arrow"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorPrimary"
+            android:text="Your Cart"/>
+
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_marginRight="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/delete"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ly"
+        android:layout_below="@+id/ly2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_margin="12dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="Your Order"/>
+
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:text="Use Points"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_cart"
+        android:layout_above="@+id/layout_all"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/ly">
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/layout_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="5dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_weight=".25"
+                android:layout_width="match_parent"
+                android:gravity="right"
+                android:text="Subtotal: ">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_subtotal"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:gravity="right"
+                android:text="0 EGP">
+            </TextView>
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black"
+            android:layout_marginLeft="120dp"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="5dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_weight=".25"
+                android:layout_width="match_parent"
+                android:gravity="right"
+                android:text="Delivery fee: ">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_delivery"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:gravity="right"
+                android:text="0 EGP">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="5dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_weight=".25"
+                android:layout_width="match_parent"
+                android:textColor="#DE7047"
+                android:gravity="right"
+                android:text="Points discount: ">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_discount"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:textColor="#DE7047"
+                android:gravity="right"
+                android:text="0 EGP">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="12dp"
+            android:padding="5dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_weight=".25"
+                android:layout_width="match_parent"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="right"
+                android:textColor="@android:color/black"
+                android:text="Total: ">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_total"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:gravity="right"
+                android:text="0 EGP">
+            </TextView>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_placeorder"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Place Order"
+            android:layout_margin="12dp"
+            android:enabled="false"
+            android:drawableRight="@drawable/right_arrow"
+            android:textColor="@color/white">
+        </Button>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

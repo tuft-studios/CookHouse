@@ -1,54 +1,47 @@
 package com.atta.cookhouse.model;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.atta.cookhouse.R;
-import com.atta.cookhouse.main.MainPresenter;
+import com.atta.cookhouse.fragments.FragmentsContract;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHolder> {
 
-    private Context mContext;
-
     private List<Dish> dishes;
 
-    MainPresenter mainPresenter;
+    FragmentsContract.View view ;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, medPrice, largePrice;
-        public ImageView dishImage,addMed, addLarge;
-        RatingBar ratingBar;
+        public TextView title, price, likes;
+        public ImageView dishImage, add, likeImage;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.dish_name);
-            ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-            dishImage = (ImageView) view.findViewById(R.id.dish_image);
-            medPrice = (TextView) view.findViewById(R.id.medium_price);
-            largePrice = (TextView) view.findViewById(R.id.large_price);
-            addMed = (ImageView) view.findViewById(R.id.add_med);
-            addLarge = (ImageView) view.findViewById(R.id.add_large);
+            title = view.findViewById(R.id.dish_name);
+            dishImage = view.findViewById(R.id.dish_image);
+            price = view.findViewById(R.id.price);
+            add = view.findViewById(R.id.add);
+            likes = view.findViewById(R.id.like_count);
+            likeImage = view.findViewById(R.id.like);
         }
     }
 
 
-    public DishesAdapter(Context context, MainPresenter mainPresenter, ArrayList<Dish> data) {
+    public DishesAdapter(FragmentsContract.View view, ArrayList<Dish> data) {
 
-        this.mContext = context;
         this.dishes = data;
-        this.mainPresenter = mainPresenter;
-
+        this.view = view;
     }
 
     @NonNull
@@ -66,32 +59,43 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
 
         final Dish dish = dishes.get(position) ;
 
+        final int id = dish.getDishId();
         final String name = dish.getDishName();
-        final int mediumPrice = dish.getMediumPrice();
-        final int largePrice = dish.getLargePrice();
-        final String ImageURL = dish.getImageUrl();
-        mainPresenter.getRetrofitImage(holder.dishImage, ImageURL);
-        final int rating = dish.getRating();
+        final int price = dish.getPrice();
+        final int likes = dish.getLikes();
+        if (dish.getImageUrl() != null){
+
+            final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
+            Picasso.get()
+                    .load(imageURL)
+                    .resize(50, 50)
+                    .centerCrop()
+                    .into(holder.dishImage);
+        }
         holder.title.setText(name);
-        holder.medPrice.setText(String.valueOf(mediumPrice));
-        holder.largePrice.setText(String.valueOf(largePrice));
-        holder.ratingBar.setRating(rating);
-        holder.addMed.setOnClickListener(new View.OnClickListener() {
+        holder.price.setText(String.valueOf(price) + " EGP");
+        holder.likes.setText(String.valueOf(likes));
+        holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(mContext,"medium add",Toast.LENGTH_LONG).show();
+                view.showOrderDialog(dish);
+
+
             }
         });
 
 
-        holder.addLarge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        /*
 
-                Toast.makeText(mContext,"large add",Toast.LENGTH_LONG).show();
+        holder.likeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                QueryUtils.addToFav(id);
             }
         });
+
+        */
 
     }
 

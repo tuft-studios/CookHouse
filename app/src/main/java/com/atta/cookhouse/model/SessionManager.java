@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.atta.cookhouse.Local.QueryUtils;
 import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.login.LoginActivity;
 
@@ -28,6 +29,8 @@ public class SessionManager {
 
     // All Shared Preferences Keys
     private static final String IS_LOGIN = "IsLoggedIn";
+    // All Shared Preferences Keys
+    private static final String IS_SKIPPED = "IsSkipped";
 
     // User name (make variable public to access from outside)
     public static final String KEY_ID = "user_id";
@@ -37,6 +40,8 @@ public class SessionManager {
 
 
     private static final String KEY_USER_LOCATION = "location";
+
+    private static final String KEY_ORDER_LOCATION = "order_location";
 
     // User Name (make variable public to access from outside)
     public static final String KEY_PASSWORD = "password";
@@ -49,6 +54,7 @@ public class SessionManager {
     private static final String KEY_USER_BIRTHDAY = "birthday";
 
     private static final String KEY_USER_PHONE = "phone";
+
 
     // Constructor
     public SessionManager(Context context){
@@ -65,13 +71,13 @@ public class SessionManager {
         return mInstance;
     }
     // Get Login State
-    public String  getUserId(){
-        return pref.getString(KEY_ID, "no User");
+    public int  getUserId(){
+        return pref.getInt(KEY_ID, 0);
     }
 
     // Get Login State
     public String  getUserName(){
-        return pref.getString(KEY_USER_NAME, "no User");
+        return pref.getString(KEY_USER_NAME, "Guest");
     }
 
     // Get Login State
@@ -94,13 +100,33 @@ public class SessionManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
+        editor.putBoolean(IS_SKIPPED, false);
         editor.putInt(KEY_ID, user.getId());
         editor.putString(KEY_USER_NAME, user.getName());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_USER_PHONE, user.getPhone());
         editor.putString(KEY_USER_LOCATION, user.getLocation());
+        editor.putString(KEY_ORDER_LOCATION, user.getLocation());
         editor.putString(KEY_USER_BIRTHDAY, user.getBirthday());
         editor.apply();
+
+
+        //QueryUtils.removeCartItems( _context, null);
+    }
+
+    /**
+     * Create login session
+     * */
+    public void skip(){
+
+        SharedPreferences sharedPreferences = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Storing login value as TRUE
+        editor.putBoolean(IS_SKIPPED, true);
+
+        editor.putBoolean(IS_LOGIN, false);
+        editor.apply();
+        //QueryUtils.removeCartItems( _context, null);
     }
 
     public void updatePassword (String newpassword){
@@ -113,18 +139,8 @@ public class SessionManager {
 
     public void checkLogin(){
         // Check login status
-        if(!this.isLoggedIn()){
-            // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, LoginActivity.class);
-            // Closing all the Activities
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if(this.isLoggedIn()){
 
-            // Add new Flag to start new Activity
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            // Staring Login Activity
-            _context.startActivity(i);
-        }else {
             // user is logged in redirect him to Main Activity
             Intent i = new Intent(_context, MainActivity.class);
             // Closing all the Activities
@@ -135,6 +151,30 @@ public class SessionManager {
 
             // Staring Login Activity
             _context.startActivity(i);
+
+        }else if (this.isSkipped()){
+            // user is logged in redirect him to Main Activity
+            Intent i = new Intent(_context, MainActivity.class);
+            // Closing all the Activities
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            // Add new Flag to start new Activity
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            // Staring Login Activity
+            _context.startActivity(i);
+        }else {
+            // user is not logged in redirect him to Login Activity
+            Intent i = new Intent(_context, LoginActivity.class);
+            // Closing all the Activities
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            // Add new Flag to start new Activity
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            // Staring Login Activity
+            _context.startActivity(i);
+
         }
 
     }
@@ -143,9 +183,14 @@ public class SessionManager {
      * Clear session details
      * */
     public void logoutUser(){
+
+
+        QueryUtils.removeCartItems( _context, null);
+
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.putBoolean(IS_LOGIN, false);
+        editor.putBoolean(IS_SKIPPED, false);
         editor.commit();
 
         // After logout redirect user to Loing Activity
@@ -168,6 +213,11 @@ public class SessionManager {
         return pref.getBoolean(IS_LOGIN, false);
     }
 
+    // Get Login State
+    public boolean isSkipped(){
+        return pref.getBoolean(IS_SKIPPED, false);
+    }
+
     public String getUserImage() {
         return pref.getString(KEY_USER_IMAGE, "");
     }
@@ -176,6 +226,42 @@ public class SessionManager {
 
         // Storing national ID in pref
         editor.putString(KEY_USER_IMAGE, image);
+
+
+        // commit changes
+        editor.commit();
+    }
+    public void setIsSkipped() {
+
+        // Storing national ID in pref
+        editor.putBoolean(IS_SKIPPED, true);
+
+
+        // commit changes
+        editor.commit();
+    }
+
+    public String getUserLocation() {
+        return pref.getString(KEY_USER_LOCATION, "");
+    }
+
+    public void setOrderLocation(String locationSting) {
+
+        // Storing national ID in pref
+        editor.putString(KEY_ORDER_LOCATION, locationSting);
+
+
+        // commit changes
+        editor.commit();
+    }
+
+    public String getOrderLocation(){
+        return pref.getString(KEY_ORDER_LOCATION, "");
+    }
+
+    public void setUserLocation(String orderLocation) {
+        // Storing national ID in pref
+        editor.putString(KEY_ORDER_LOCATION, orderLocation);
 
 
         // commit changes

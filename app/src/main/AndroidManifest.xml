@@ -12,6 +12,9 @@
         android:roundIcon="@drawable/cook_house_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".favorites.FavoritesActivity"
+            android:parentActivityName=".main.MainActivity"></activity>
+        <activity android:name=".MyOrdersActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,8 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main2Activity" />
-        <activity android:name=".login.LoginActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:theme="@style/AppTheme2" />
         <activity
             android:name=".Register.RegisterActivity"
             android:parentActivityName=".login.LoginActivity"
@@ -28,7 +33,14 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".cart.CartActivity"
+            android:theme="@style/AppTheme2" />
+        <activity
+            android:name=".SettingActivity"
+            android:label="Setting"
+            android:parentActivityName=".main.MainActivity" />
     </application>
 
 </manifest>

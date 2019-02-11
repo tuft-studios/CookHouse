@@ -10,7 +10,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 5000;
+    private static int SPLASH_TIME_OUT = 2000;
     // Session Manager Class
     SessionManager session;
 
@@ -23,7 +23,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         // Session class instance
         session = new SessionManager(getApplicationContext());
 
-
+        SessionManager.getInstance(SplashScreenActivity.this).setOrderLocation(
+                SessionManager.getInstance(SplashScreenActivity.this).getUserLocation());
         new Handler().postDelayed(new Runnable() {
 
             /*

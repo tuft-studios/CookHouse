@@ -3,15 +3,29 @@ package com.atta.cookhouse.model;
 public class User {
 
     private int id;
-    private String name;
+    private String username;
     private String email;
     private String password;
     private String phone;
     private String birthday;
     private String location;
+    private String job;
 
-    public User(String name, String email, String password, String phone, String birthday, String location) {
-        this.name = name;
+
+    public User(String username, String email, String password, String phone, String birthday, String location, String job) {
+
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.location = location;
+        this.job = job;
+    }
+
+    public User(String username, String email, String password, String phone, String birthday, String location) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.phone = phone;
@@ -19,18 +33,18 @@ public class User {
         this.location = location;
     }
 
-    public User(int id, String name, String email, String phone, String birthday, String location){
+    public User(int id, String username, String email, String phone, String birthday, String location){
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.phone = phone;
         this.birthday = birthday;
         this.location = location;
     }
 
-    public User(int id, String name, String email, String password, String phone, String birthday, String location) {
+    public User(int id, String username, String email, String password, String phone, String birthday, String location) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.phone = phone;
@@ -43,7 +57,7 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public String getEmail() {
@@ -64,5 +78,10 @@ public class User {
 
     public String getLocation() {
         return location;
+    }
+
+    public String getJob() {
+
+        return job;
     }
 }

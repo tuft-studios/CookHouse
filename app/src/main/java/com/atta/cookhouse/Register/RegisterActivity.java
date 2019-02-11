@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
     ArrayAdapter<String> locationsAdapter;
     // National ID, password edit text
-    EditText emailText, passwordText, nameText, phoneText, birthdayText, confirmPasswordText;
+    EditText emailText, passwordText, nameText, phoneText, birthdayText, confirmPasswordText, jobText;
 
     TextView skip;
 
@@ -67,21 +67,22 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     private void initiateViews() {
 
         // National ID, Password input text
-        emailText = (EditText)findViewById(R.id.email);
-        passwordText = (EditText)findViewById(R.id.password);
-        nameText = (EditText) findViewById(R.id.name);
-        phoneText = (EditText) findViewById(R.id.phone);
+        emailText = findViewById(R.id.email);
+        passwordText = findViewById(R.id.password);
+        nameText = findViewById(R.id.name);
+        phoneText = findViewById(R.id.phone);
         phoneText.setOnClickListener(this);
-        birthdayText = (EditText) findViewById(R.id.bd);
+        birthdayText = findViewById(R.id.bd);
         birthdayText.setOnClickListener(this);
-        confirmPasswordText = (EditText) findViewById(R.id.password_confirm);
-        locationSpinner = (Spinner) findViewById(R.id.location);
+        confirmPasswordText = findViewById(R.id.password_confirm);
+        locationSpinner = findViewById(R.id.location);
+        jobText = findViewById(R.id.job);
 
-        skip = (TextView) findViewById(R.id.btnSkip);
+        skip = findViewById(R.id.btnSkip);
         skip.setOnClickListener(this);
 
         // Register button
-        register = (Button)findViewById(R.id.btnRegister);
+        register = findViewById(R.id.btnRegister);
         register.setOnClickListener(this);
 
 
@@ -113,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
 
         locationsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, locationsArray);
+        locationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(locationsAdapter);
         locationSpinner.setOnItemSelectedListener(this);
     }
@@ -121,15 +123,16 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     @Override
     public void onClick(View view) {
         if(view == register) {
-            if (!registerPresenter.validate(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(),
-                    confirmPasswordText.getText().toString(), phoneText.getText().toString(), birthdayString, locationSting)) {
+            if (!validate(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(),
+                    confirmPasswordText.getText().toString(), phoneText.getText().toString(), birthdayString, locationSting,
+                    jobText.getText().toString())) {
                 register.setEnabled(true);
                 return;
             }
 
 
             progressDialog.show();
-            registerPresenter.register(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(),
+            registerPresenter.register(nameText.getText().toString(), emailText.getText().toString(), jobText.getText().toString(), passwordText.getText().toString(),
                     phoneText.getText().toString(), birthdayString, locationSting);
         }else if (view == skip){
 
@@ -189,5 +192,81 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         progressDialog = new ProgressDialog(RegisterActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating your profile...");
+    }
+
+
+    @Override
+    public boolean validate(String name, String email, String password, String passwordConfirm, String phone,
+                            String birthdayString, String locationSting, String jobSting) {
+        boolean valid = true;
+
+        final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+
+        if (name.isEmpty()) {
+
+            showViewError("name","Enter your name");
+            valid = false;
+        } else {
+
+            showViewError("name",null);
+        }
+
+        if (!email.matches(emailPattern) || email.isEmpty())
+        {
+            showViewError("email","Invalid email address");
+            valid = false;
+
+        }else {
+            showViewError("email",null);
+        }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            showViewError("password","password must be between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else if (passwordConfirm.isEmpty() || passwordConfirm.length() < 4 || passwordConfirm.length() > 10 ) {
+
+            showViewError("password_confirm","password must be between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else if (!password.equals(passwordConfirm)){
+
+            showViewError("password","passwords not Matched");
+            valid = false;
+        }else {
+            showViewError("password",null);
+            showViewError("password_confirm",null);
+        }
+
+        if (phone.isEmpty() || phone.length()!= 11) {
+            showViewError("phone","Enter a valid Phone number");
+            valid = false;
+        } else {
+            showViewError("phone",null);
+        }
+
+        if(locationSting == null){
+
+            showMessage("Enter Your Location");
+            valid = false;
+        }else if (locationSting.isEmpty() || locationSting.equals("null")){
+
+            showMessage("Enter Your Location");
+            valid = false;
+        }
+
+
+        if(birthdayString == null){
+
+            showViewError("bd","Enter Your Birthday");
+            valid = false;
+        }else if (birthdayString.isEmpty() || birthdayString.equals("null")){
+
+            showViewError("bd","Enter Your Birthday");
+            valid = false;
+        }
+
+
+
+        return valid;
     }
 }

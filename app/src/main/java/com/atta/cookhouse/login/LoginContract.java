@@ -15,6 +15,10 @@ public interface LoginContract {
         void navigateToRegister();
 
         void setDialog();
+
+        void skipToMain();
+
+        void dismissProgressDialog();
     }
 
     interface Presenter{

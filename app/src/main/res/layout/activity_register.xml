@@ -14,12 +14,18 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView
-            android:src="@drawable/cook_house"
+
+        <TextView
+            android:id="@+id/login_text"
+            android:layout_marginTop="12dp"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_height = "wrap_content"
+            android:layout_below="@+id/logo"
+            android:layout_gravity="center"
+            android:text = "@string/register_text"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimary" />
 
         <!--  Name Label -->
         <EditText
@@ -27,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:layout_marginTop = "40dp"
+            android:layout_marginTop = "20dp"
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/user"
             android:drawablePadding="8dp"
@@ -38,7 +44,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@android:color/black" />
 
         <EditText
@@ -56,7 +62,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@android:color/black" />
 
         <EditText
@@ -68,12 +74,12 @@
             android:drawableLeft="@drawable/phone"
             android:drawablePadding="8dp"
             android:hint="@string/mobileNumber"
-            android:inputType="number"
+            android:inputType="phone"
             android:padding="10dp"
             android:singleLine="true"/>
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@android:color/black" />
 
         <EditText
@@ -90,45 +96,28 @@
             android:padding="10dp"
             android:singleLine="true"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@android:color/black" />
-
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@android:color/black" />
 
-        <RelativeLayout
+
+        <EditText
+            android:id="@+id/job"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:drawableLeft="@drawable/placeholder"
-                android:textSize="20sp"
-                android:text="@string/location"/>
-
-            <Spinner
-                android:id="@+id/location"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:background="@android:drawable/btn_dropdown"
-                android:layout_alignParentRight="true"/>
-
-
-        </RelativeLayout>
+            android:layout_marginBottom="12dp"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/job"
+            android:drawablePadding="8dp"
+            android:hint="@string/job"
+            android:padding="10dp"
+            android:singleLine="true" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@android:color/black" />
 
         <EditText
@@ -146,8 +135,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@android:color/black" />
+
 
 
         <EditText
@@ -163,16 +153,49 @@
             android:padding="10dp"
             android:singleLine="true" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black" />
+
+
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/location"
+            android:drawablePadding="8dp"
+            android:hint="@string/home_address"
+            android:padding="10dp"
+            android:singleLine="true"  />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black" />
+
+
+        <Spinner
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/spinner2"/>
+
+
 
         <!-- Signup Button -->
         <Button
             android:id="@+id/btnRegister"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
             android:layout_gravity="center"
-            android:background="@drawable/button_login_form"
+            android:background="@drawable/button_form"
             android:text="@string/btn_register"
             android:textColor="@color/white" />
 
@@ -183,15 +206,15 @@
 
             <TextView
                 android:id="@+id/btnSkip"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginBottom="20dp"
                 android:layout_marginRight="12dp"
-                android:gravity="right"
-                android:text="@string/register_later"
+                android:gravity="center"
+                android:text="Skip"
                 android:textAllCaps="false"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorPrimary"
                 android:textSize="15dp" />
 
     </LinearLayout>

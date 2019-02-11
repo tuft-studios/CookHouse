@@ -1,27 +1,50 @@
 package com.atta.cookhouse.main;
 
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ImageView;
 
-import com.squareup.okhttp.ResponseBody;
+import com.atta.cookhouse.fragments.FragmentsPresenter;
+import com.atta.cookhouse.model.Dish;
 
 public interface MainContract {
 
+
+
     interface View{
 
-        void showError(String error);
+        void showMessage(String error);
 
-        void ViewImage(Bitmap bitmap);
+        void setFlipperView();
+
+        void renameRegisterItem();
+
+        void renameLoginItem();
+
+        void checkIfSkipped();
+
+        void setName();
+
+        void showOrderDialog(Dish dish, FragmentsPresenter fragmentsPresenter, RecyclerView recyclerView, String type, String location);
+
+        void showPasswordDialog();
+
+        boolean validate(String currentPassword, String newPassword, String newPasswordConfirm);
+
+        void changeFavIcon(boolean isFav);
+
+        void setFavId(int id);
+
+        void setDialog();
     }
 
     interface Presenter{
 
-        void getRetrofitImage(final ImageView imageView, String url) ;
+        void getCartItemsNum() ;
 
+        void addToFav(int propertyId, int userId);
 
-        Bitmap DownloadImage(ResponseBody body);
+        void removeFromFav(int fId);
 
-        void getMenu(final RecyclerView recyclerView, String type);
+        void checkIfFav(int propertyId, int userId);
+
     }
 }
