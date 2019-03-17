@@ -46,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
     TextView skip;
 
-    String birthdayString, locationSting;
+    String birthdayString, locationString;
 
 
     private RegisterPresenter registerPresenter;
@@ -124,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     public void onClick(View view) {
         if(view == register) {
             if (!validate(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(),
-                    confirmPasswordText.getText().toString(), phoneText.getText().toString(), birthdayString, locationSting,
+                    confirmPasswordText.getText().toString(), phoneText.getText().toString(), birthdayString, locationString,
                     jobText.getText().toString())) {
                 register.setEnabled(true);
                 return;
@@ -133,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
             progressDialog.show();
             registerPresenter.register(nameText.getText().toString(), emailText.getText().toString(), jobText.getText().toString(), passwordText.getText().toString(),
-                    phoneText.getText().toString(), birthdayString, locationSting);
+                    phoneText.getText().toString(), birthdayString, locationString);
         }else if (view == skip){
 
             navigateToMain();
@@ -151,9 +151,17 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position != 0){
-            locationSting = locationsArray.get(position);
+
+            if (position != 1){
+                locationString = "Maadi";
+                showMessage("Available on Maadi only, Coming Soon");
+            }else {
+                locationString = locationsArray.get(position);
+
+
+            }
         }else {
-            locationSting = null;
+            locationString = null;
         }
     }
 

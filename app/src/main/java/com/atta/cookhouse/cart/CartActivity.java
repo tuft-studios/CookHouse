@@ -81,6 +81,10 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         backBtn = findViewById(R.id.btn_back);
         backBtn.setOnClickListener(this);
 
+        if (SessionManager.getInstance(CartActivity.this).getLanguage().equals("ar")) {
+            backBtn.setImageResource(R.drawable.right_arrow_2);
+        }
+
         deleteBtn = findViewById(R.id.delete);
         deleteBtn.setOnClickListener(this);
 

@@ -55,6 +55,18 @@ public interface APIService {
             @Field("password") String password
     );
 
+    @FormUrlEncoded
+    @POST("get_profile")
+    Call<Profile> getProfile(
+            @Field("user_id") int userId
+    );
+
+    @FormUrlEncoded
+    @POST("example.php")
+    Call<SmsResult> sendSms(
+            @Field("phone_number") String phoneNumber
+    );
+
     //the signin call
     @FormUrlEncoded
     @POST("get_menu")
@@ -102,6 +114,17 @@ public interface APIService {
     @POST("get_favorite")
     Call<Dishes> getFavorite(
             @Field("user_id") int userId
+    );
+
+    @FormUrlEncoded
+    @POST("get_addresses")
+    Call<Addresses> getAddresses(
+            @Field("user_id") int userId
+    );
+
+    @DELETE("remove_address/{id}")
+    Call<Result> removeAddress(
+            @Path("id") int id
     );
 
     //the image call

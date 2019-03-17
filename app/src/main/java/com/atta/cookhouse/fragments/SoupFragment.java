@@ -40,6 +40,10 @@ public class SoupFragment extends Fragment  implements FragmentsContract.View {
 
     String location = "any";
 
+    BroadcastReceiver mReceiver;
+
+    IntentFilter filter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class SoupFragment extends Fragment  implements FragmentsContract.View {
                 }
         );
 
-        BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if ("action_location_updated".equals(intent.getAction())) {
@@ -76,13 +80,26 @@ public class SoupFragment extends Fragment  implements FragmentsContract.View {
                 }
             }
         };
-        IntentFilter filter = new IntentFilter("action_location_updated");
+        filter = new IntentFilter("action_location_updated");
 
-        getActivity().registerReceiver(mReceiver, filter);
+        //getActivity().registerReceiver(mReceiver, filter);
 
         return view;
     }
 
+
+    @Override
+    public void onPause() {
+
+        getContext().unregisterReceiver(mReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        getActivity().registerReceiver(mReceiver, filter);
+        super.onResume();
+    }
 
     public void getMenu(){
         if (fragmentsPresenter == null){
@@ -132,7 +149,7 @@ public class SoupFragment extends Fragment  implements FragmentsContract.View {
     @Override
     public void showRecyclerView(ArrayList<Dish> dishes) {
 
-        DishesAdapter myAdapter = new DishesAdapter(this, dishes);
+        DishesAdapter myAdapter = new DishesAdapter(this, dishes, getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         recyclerView.setAdapter(myAdapter);
 

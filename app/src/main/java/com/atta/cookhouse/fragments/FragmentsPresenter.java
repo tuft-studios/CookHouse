@@ -86,9 +86,9 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
 
 
     @Override
-    public void getCartItem(final int id, final String dishName, final String price, final int count) {
+    public void getCartItem(final int id, final String dishName, final String price, final int count, final int kitchen) {
 
-        QueryUtils.getCartItem(id, dishName, price, count, mContext, mCounterFab);
+        QueryUtils.getCartItem(id, dishName, price, count, kitchen, mContext, mCounterFab);
 
 
     }

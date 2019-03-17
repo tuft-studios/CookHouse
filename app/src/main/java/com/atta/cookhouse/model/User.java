@@ -3,14 +3,20 @@ package com.atta.cookhouse.model;
 public class User {
 
     private int id;
-    private String username;
-    private String email;
-    private String password;
-    private String phone;
-    private String birthday;
-    private String location;
-    private String job;
+    private String username, email, password, phone, phone2, birthday, location, job;
 
+
+    public User(int id, String username, String email, String password, String phone, String phone2, String birthday, String location, String job) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.phone2 = phone2;
+        this.birthday = birthday;
+        this.location = location;
+        this.job = job;
+    }
 
     public User(String username, String email, String password, String phone, String birthday, String location, String job) {
 
@@ -83,5 +89,10 @@ public class User {
     public String getJob() {
 
         return job;
+    }
+
+
+    public String getPhone2() {
+        return phone2;
     }
 }

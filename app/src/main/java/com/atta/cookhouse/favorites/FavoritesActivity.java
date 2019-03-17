@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FavoritesActivity extends AppCompatActivity implements FavoritesContract.View, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
@@ -112,6 +113,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
         if (viewHolder instanceof DishesLinearAdapter.MyViewHolder) {
             // get the removed item name to display it in snack bar
 
+            AtomicBoolean undo = new AtomicBoolean(false);
             List<Dish> dishes = myAdapter.getList();
 
             String name = dishes.get(viewHolder.getAdapterPosition()).getDishName();
@@ -130,6 +132,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
                 @Override
                 public void onClick(View view) {
 
+                    undo.set(true);
                     // undo is selected, restore the deleted item
                     myAdapter.restoreItem(deletedItem, deletedIndex);
                 }
@@ -138,7 +141,9 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
-                    favoritesPresenter.removeFromFav(SessionManager.getInstance(FavoritesActivity.this).getUserId(), deletedItem.getDishId());
+                    if (!undo.get()) {
+                        favoritesPresenter.removeFromFav(SessionManager.getInstance(FavoritesActivity.this).getUserId(), deletedItem.getDishId());
+                    }
                 }
 
                 @Override
@@ -171,7 +176,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final String imageUrl = dish.getImageUrl();
+        final int kitchen = dish.getKitchen();
         final int price = dish.getPrice();
 
         count = 1;
@@ -243,7 +248,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
                 String total = String.valueOf(price * count);
 
-                QueryUtils.getCartItem(id, name, total, count, FavoritesActivity.this, null);
+                QueryUtils.getCartItem(id, name, total, count, kitchen, FavoritesActivity.this, null);
 
                 myDialog.dismiss();
 

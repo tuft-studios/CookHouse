@@ -26,6 +26,10 @@ public class CartItem implements Serializable {
     int count;
 
 
+    @ColumnInfo(name = "kitchen")
+    int kitchen;
+
+
     public String getDishName() {
         return dishName;
     }
@@ -64,5 +68,13 @@ public class CartItem implements Serializable {
 
     public void setDishId(int dishId) {
         this.dishId = dishId;
+    }
+
+    public void setKitchen(int kitchen) {
+        this.kitchen = kitchen;
+    }
+
+    public int getKitchen() {
+        return kitchen;
     }
 }

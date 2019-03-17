@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cook House</string>
+
+
+    <string name="arabic" translatable="false">عربي</string>
+    <string name="change_language">أختار اللغة</string>
+    <string name="change_app_language">تغير اللغة</string>
+    <string name="reset_password" >تغير كلمة السر</string>
+    <string name="setting_label">الاعدادات</string>
+    <string name="curruncy">جنيه</string>
+
+
+    <string name="category_main">الاطباق الرئيسية</string>
+
+    <string name="category_salads">السلطة</string>
+
+    <string name="category_soups">الشرية</string>
+
+
+    <string-array name="locations1">
+        <item> </item>
+        <item>Nasr City</item>
+        <item>6 of October</item>
+        <item>Heliopolis</item>
+    </string-array>
+
+    <string-array name="locations">
+        <item>حدد المنطقة…</item>
+        <item>المعادي</item>
+        <item>مدينة نصر</item>
+        <item>السادس من اكتوبر</item>
+        <item>مصر الجديدة</item>
+    </string-array>
+</resources>

@@ -20,7 +20,8 @@ import com.atta.cookhouse.Register.RegisterActivity;
 import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.model.SessionManager;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View ,View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class LoginActivity extends AppCompatActivity implements LoginContract.View ,
+        View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 
     ProgressDialog progressDialog;
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         setContentView(R.layout.activity_login);
 
         setDialog();
-        loginPresenter = new LoginPresenter(this,  this);
+        loginPresenter = new LoginPresenter(this, this);
 
         initiateViews();
 

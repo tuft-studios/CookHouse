@@ -27,7 +27,7 @@ public interface FragmentsContract {
 
         void getMenu(final RecyclerView recyclerView, String type, String location);
 
-        void getCartItem(int id, String dishName, String price, int count);
+        void getCartItem(int id, String dishName, String price, int count, int kitchen);
 
     }
 }

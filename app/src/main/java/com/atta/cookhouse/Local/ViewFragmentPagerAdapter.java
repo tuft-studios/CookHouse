@@ -1,4 +1,4 @@
-package com.atta.cookhouse;
+package com.atta.cookhouse.Local;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.atta.cookhouse.R;
 import com.atta.cookhouse.fragments.MainDishFragment;
 import com.atta.cookhouse.fragments.SaladsFragment;
 import com.atta.cookhouse.fragments.SoupFragment;

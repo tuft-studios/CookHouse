@@ -55,7 +55,7 @@ public class CartPresenter implements CartContract.Presenter {
     @Override
     public void getCartItems(final boolean view, @Nullable final int userId, @Nullable final String location,
                              @Nullable final String deliveryAdd, @Nullable final String schedule, @Nullable final String orderTime) {
-        int kitchen = 0;
+
 
         class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
 
@@ -103,7 +103,39 @@ public class CartPresenter implements CartContract.Presenter {
                         count.put("quantities[" + cartItems.indexOf(element) + "]", String.valueOf(element.getCount()));
                     }
 
+                    boolean m1 = false, m2 = false, m3 = false;
 
+                    for (CartItem element : cartItems) {
+
+                        switch (element.getKitchen()){
+                            case 0:
+                                m1 = true;
+                                break;
+                            case 1:
+                                m2 = true;
+                                break;
+                            case 2:
+                                m3 = true;
+                                break;
+                        }
+                    }
+
+                    int kitchen = 0;
+
+                    if (m1 & !m2 & !m3)
+                        kitchen = 0;
+                    else if (!m1 & m2 & !m3)
+                        kitchen = 1;
+                    else if (!m1 & !m2 & m3)
+                        kitchen = 2;
+                    else if (m1 & m2 & !m3)
+                        kitchen = 3;
+                    else if (m1 & !m2 & m3)
+                        kitchen = 4;
+                    else if (!m1 & m2 & m3)
+                        kitchen = 5;
+                    else if (m1 & m2 & m3)
+                        kitchen = 6;
 
                     Order order = new Order(dishes, count,  totalPrice, deliveryPrice , totalPrice+deliveryPrice
                             , discount, userId, location, kitchen, deliveryAdd, schedule, orderTime, creationTime);
@@ -217,13 +249,17 @@ public class CartPresenter implements CartContract.Presenter {
                     mProgressDialog.dismiss();
                 }
 
-                //displaying the message from the response as toast
-                mView.showMessage(response.body().getMessage());
-                //if there is no error
-                if (!response.body().getError()) {
-                    //starting Main activity
-                    removeCartItems();
-                    mView.navigateToMain();
+                if (response.body() != null) {
+
+                    //displaying the message from the response as toast
+                    mView.showMessage(response.body().getMessage());
+                    //if there is no error
+                    if (!response.body().getError()) {
+                        //starting Main activity
+                        removeCartItems();
+                        mView.navigateToMain();
+                    }
+
                 }
             }
 

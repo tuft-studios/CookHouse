@@ -55,6 +55,15 @@ public class SessionManager {
 
     private static final String KEY_USER_PHONE = "phone";
 
+    private static final String KEY_USER_PHONE_2 = "phone2";
+
+    private static final String KEY_IS_LANGUAGE_SELECTED = "isLanguageSelected";
+
+    private static final String KEY_LANGUAGE_SELECTED = "languageSelected";
+
+    //key for first time launch
+    private static final String IS_FIRST_LAUNCH="IsFirstLaunch";
+
 
     // Constructor
     public SessionManager(Context context){
@@ -81,10 +90,42 @@ public class SessionManager {
     }
 
     // Get Login State
+    public String  getUserPhone(){
+        return pref.getString(KEY_USER_PHONE, null);
+    }
+
+
+    // Get Login State
+    public String  getUserPhone2(){
+        return pref.getString(KEY_USER_PHONE_2, null);
+    }
+
+
+    // Get Login State
     public String  getEmail(){
         return pref.getString(KEY_EMAIL, "no email");
     }
 
+    // Get Login State
+    public boolean checkIfLanguageSelected (){
+        return pref.getBoolean(KEY_IS_LANGUAGE_SELECTED, false);
+    }
+
+    // Get Login State
+    public String getLanguage(){
+        return pref.getString(KEY_LANGUAGE_SELECTED, "en");
+    }
+
+    // call in intro activity to set false after first launch
+    public void setIsFirstLaunch(boolean isFirstLaunch){
+        editor.putBoolean(IS_FIRST_LAUNCH,isFirstLaunch);
+        editor.commit();
+    }
+
+    //return set value, if no value is set then return the default value
+    public boolean isFirstLaunch(){
+        return pref.getBoolean(IS_FIRST_LAUNCH,true);
+    }
 
     // Get Login State
     public String  getPassword(){
@@ -105,6 +146,7 @@ public class SessionManager {
         editor.putString(KEY_USER_NAME, user.getName());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_USER_PHONE, user.getPhone());
+        editor.putString(KEY_USER_PHONE_2, user.getPhone2());
         editor.putString(KEY_USER_LOCATION, user.getLocation());
         editor.putString(KEY_ORDER_LOCATION, user.getLocation());
         editor.putString(KEY_USER_BIRTHDAY, user.getBirthday());
@@ -191,6 +233,8 @@ public class SessionManager {
         editor.clear();
         editor.putBoolean(IS_LOGIN, false);
         editor.putBoolean(IS_SKIPPED, false);
+        editor.putBoolean(KEY_LANGUAGE_SELECTED, false);
+        editor.putBoolean(IS_FIRST_LAUNCH, true);
         editor.commit();
 
         // After logout redirect user to Loing Activity
@@ -235,6 +279,18 @@ public class SessionManager {
 
         // Storing national ID in pref
         editor.putBoolean(IS_SKIPPED, true);
+
+
+        // commit changes
+        editor.commit();
+    }
+
+
+    public void setLanguage(String language) {
+
+        // Storing national ID in pref
+        editor.putBoolean(KEY_IS_LANGUAGE_SELECTED, true);
+        editor.putString(KEY_LANGUAGE_SELECTED, language);
 
 
         // commit changes

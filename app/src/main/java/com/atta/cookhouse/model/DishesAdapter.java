@@ -1,5 +1,6 @@
 package com.atta.cookhouse.model;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
 
     FragmentsContract.View view ;
 
+    Context context;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, price, likes;
@@ -38,10 +41,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
     }
 
 
-    public DishesAdapter(FragmentsContract.View view, ArrayList<Dish> data) {
+    public DishesAdapter(FragmentsContract.View view, ArrayList<Dish> data, Context context) {
 
         this.dishes = data;
         this.view = view;
+        this.context = context;
     }
 
     @NonNull
@@ -68,12 +72,13 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
             final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
             Picasso.get()
                     .load(imageURL)
-                    .resize(50, 50)
+                    .resize(180, 120)
                     .centerCrop()
                     .into(holder.dishImage);
         }
         holder.title.setText(name);
-        holder.price.setText(String.valueOf(price) + " EGP");
+        String priceText = String.valueOf(price) + " " + context.getString(R.string.curruncy);
+        holder.price.setText(priceText);
         holder.likes.setText(String.valueOf(likes));
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override

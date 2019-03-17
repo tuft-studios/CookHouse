@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -21,17 +22,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
+import com.atta.cookhouse.Local.ViewFragmentPagerAdapter;
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.Register.RegisterActivity;
-import com.atta.cookhouse.SettingActivity;
-import com.atta.cookhouse.ViewFragmentPagerAdapter;
 import com.atta.cookhouse.cart.CartActivity;
 import com.atta.cookhouse.favorites.FavoritesActivity;
 import com.atta.cookhouse.fragments.FragmentsPresenter;
@@ -39,10 +38,13 @@ import com.atta.cookhouse.login.LoginActivity;
 import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.SessionManager;
+import com.atta.cookhouse.profile.ProfileActivity;
+import com.atta.cookhouse.setting.SettingActivity;
 import com.smarteist.autoimageslider.SliderLayout;
 import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,13 +53,15 @@ public class MainActivity extends AppCompatActivity
 
     public static final String ACTION_UPDATE_FRAGMENT = "action_location_updated";
 
+    SessionManager sessionManager;
+
     String[] urls, tags;
 
     SliderLayout sliderLayout;
 
     Spinner locationSpinner;
 
-    List<String> locationsArray;
+    List<String> locationsArray, locationsEnglish;
 
     ArrayAdapter<String> locationsAdapter;
 
@@ -85,20 +89,17 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        sessionManager = new SessionManager(this);
         setDialog();
 
-        CounterFab counterFab = (CounterFab) findViewById(R.id.fab);
-        counterFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        CounterFab counterFab = findViewById(R.id.fab);
+        counterFab.setOnClickListener(view -> {
 
-                finish();
-                startActivity(new Intent(getApplicationContext(), CartActivity.class));
-            }
+            finish();
+            startActivity(new Intent(getApplicationContext(), CartActivity.class));
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -134,22 +135,30 @@ public class MainActivity extends AppCompatActivity
         sliderLayout.setScrollTimeInSec(3);
 
         locationSpinner = findViewById(R.id.location);
-
+        if (sessionManager.getLanguage().equals("ar")) {
+            locationSpinner.setBackground(ContextCompat.getDrawable(this, R.drawable.spinner2));
+        }
 
         String[] locations = getResources().getStringArray(R.array.locations);
 
-        locationString = SessionManager.getInstance(this).getUserLocation();
+        locationString = sessionManager.getUserLocation();
 
 
         locationsArray = Arrays.asList(locations);
+        locationsEnglish = new ArrayList<>();
+        locationsEnglish.add("Maadi");
+        locationsEnglish.add("Nasr City");
+        locationsEnglish.add("6 of October");
+        locationsEnglish.add("Heliopolis");
 
-        locationsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, locationsArray);
+        locationsAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, locationsArray);
         locationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(locationsAdapter);
         locationSpinner.setOnItemSelectedListener(this);
 
         if (!locationString.equals("")) {
-            int spinnerPosition = locationsAdapter.getPosition(locationString);
+
+            int spinnerPosition = locationsEnglish.indexOf(locationString) + 1;
             locationSpinner.setSelection(spinnerPosition);
         }
 
@@ -176,7 +185,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -192,7 +201,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.profile) {
-            // Handle the camera action
+            startActivity(new Intent(this, ProfileActivity.class));
         } else if (id == R.id.my_orders) {
 
         } else if (id == R.id.my_favorites) {
@@ -271,12 +280,8 @@ public class MainActivity extends AppCompatActivity
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
             sliderView.setDescription(tags[i]);
             final int finalI = i;
-            sliderView.setOnSliderClickListener(new SliderView.OnSliderClickListener() {
-                @Override
-                public void onSliderClick(SliderView sliderView) {
-                    Toast.makeText(MainActivity.this, "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
-                }
-            });
+            sliderView.setOnSliderClickListener(sliderView1 ->
+                    Toast.makeText(MainActivity.this, "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show());
 
             //at last add this view in your layout :
             sliderLayout.addSliderView(sliderView);
@@ -288,12 +293,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         if (position != 0){
-            locationString = locationsArray.get(position);
+            if (position != 1){
+                locationSpinner.setSelection(1);
+                locationString = locationsArray.get(0);
+                showMessage("Available on Maadi only, Coming Soon");
+            }else {
+                locationString = locationsArray.get(position);
 
 
-            SessionManager.getInstance(MainActivity.this).setOrderLocation(locationString);
+                SessionManager.getInstance(MainActivity.this).setOrderLocation(locationString);
 
-            sendBroadcast(new Intent(ACTION_UPDATE_FRAGMENT));
+                sendBroadcast(new Intent(ACTION_UPDATE_FRAGMENT));
+            }
+
 
         }else {
             locationString = null;
@@ -310,8 +322,13 @@ public class MainActivity extends AppCompatActivity
     {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
+
+        nav_Menu.findItem(R.id.register_item).setVisible(false);
+
+        /*
         nav_Menu.findItem(R.id.register_item).setIcon(R.drawable.password);
         nav_Menu.findItem(R.id.register_item).setTitle("Reset Password");
+        */
     }
 
     @Override
@@ -345,7 +362,7 @@ public class MainActivity extends AppCompatActivity
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final String imageUrl = dish.getImageUrl();
+        final int kitchen = dish.getKitchen();
         final int price = dish.getPrice();
 
         count = 1;
@@ -427,7 +444,7 @@ public class MainActivity extends AppCompatActivity
 
             String total = String.valueOf(price * count);
 
-            fragmentsPresenter.getCartItem(id, name, total, count);
+            fragmentsPresenter.getCartItem(id, name, total, count, kitchen);
 
             myDialog.dismiss();
 
@@ -441,7 +458,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showPasswordDialog() {
-
+/*
         Dialog passwordDialog = new Dialog(this);
 
 
@@ -470,7 +487,7 @@ public class MainActivity extends AppCompatActivity
 
 
         passwordDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        passwordDialog.show();
+        passwordDialog.show();*/
     }
 
     @Override
