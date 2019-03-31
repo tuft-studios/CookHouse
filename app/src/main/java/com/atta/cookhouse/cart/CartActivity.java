@@ -14,12 +14,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -27,12 +32,15 @@ import android.widget.Toast;
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.Register.RegisterActivity;
 import com.atta.cookhouse.main.MainActivity;
+import com.atta.cookhouse.model.Address;
 import com.atta.cookhouse.model.SessionManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity implements CartContract.View, View.OnClickListener {
@@ -40,13 +48,17 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     private RecyclerView recyclerView;
 
-    TextView subtotalPrice, deliverPrice, totalPrice;
+    TextView subtotalPrice, deliverPrice, totalPrice, subtotalPriceSum, deliverPriceSum, totalPriceSum;
 
     CartPresenter cartPresenter;
 
     Button orderBtn;
 
-    ImageView backBtn, deleteBtn;
+    ImageView backBtn, deleteBtn, backToCartBtn;
+
+    List<String> addressesArray;
+
+    List<Address> addresses;
 
     Long OrderTime;
 
@@ -56,6 +68,10 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     ProgressDialog progressDialog;
     private String schedule, dateSelected, timeSelected;
+
+    int deliveryAddId;
+
+    Animation mSlideFromBelow, mSlideToLift;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +86,21 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         subtotalPrice = findViewById(R.id.tv_subtotal);
         deliverPrice = findViewById(R.id.tv_delivery);
         totalPrice = findViewById(R.id.tv_total);
+        subtotalPriceSum = findViewById(R.id.tv_subtotal_sam);
+        deliverPriceSum = findViewById(R.id.tv_delivery_sam);
+        totalPriceSum = findViewById(R.id.tv_total_sum);
+        backToCartBtn = findViewById(R.id.btn_back_to_cart);
+        backToCartBtn.setOnClickListener(this);
+
+        mSlideFromBelow = AnimationUtils.loadAnimation(this, R.anim.slide_from_below);
+        mSlideToLift = AnimationUtils.loadAnimation(this, R.anim.slide_to_left);
 
 
         setProgressDialog();
 
         cartPresenter = new CartPresenter(CartActivity.this, CartActivity.this, recyclerView, progressDialog);
 
-        cartPresenter.getCartItems(true, 0, null, null, null, null);
+        cartPresenter.getCartItems(true, 0, null, 0, null, null);
 
         backBtn = findViewById(R.id.btn_back);
         backBtn.setOnClickListener(this);
@@ -91,6 +115,30 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         orderBtn = findViewById(R.id.btn_placeorder);
         orderBtn.setOnClickListener(this);
 
+        cartPresenter.getAddresses(new SessionManager(this).getUserId());
+    }
+
+
+    @Override
+    public void showAddresses(List<Address> mAddresses) {
+
+
+        addresses= mAddresses;
+        addressesArray= new ArrayList<>();
+
+
+        if (addresses.size() > 0){
+
+            for (int i = 0; i < addresses.size(); i++){
+                addressesArray.add(addresses.get(i).getAddressName());
+            }
+        }
+    }
+
+    @Override
+    public void showAddressesMessage(String message) {
+
+        addressesArray.add(message);
     }
 
 
@@ -147,6 +195,12 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         deliverPrice.setText(" 5 EGP");
 
         totalPrice.setText(String.valueOf(subtotal + delivery) + " EGP");
+
+        subtotalPriceSum.setText(String.valueOf(subtotal) + " EGP");
+
+        deliverPriceSum.setText(" 5 EGP");
+
+        totalPriceSum.setText("TOTAL " + String.valueOf(subtotal + delivery) + " EGP");
     }
 
     @Override
@@ -159,7 +213,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     public void showViewError(String view, String error) {
 
         int id = getResources().getIdentifier(view, "id", this.getPackageName());
-        EditText editText = (EditText)findViewById(id);
+        EditText editText = findViewById(id);
         editText.setError(error);
     }
 
@@ -167,11 +221,19 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     public void onClick(View view) {
         if (view == backBtn){
             backToMain();
+        }else if (view == backToCartBtn){
+
+            findViewById(R.id.sammary_layout).setVisibility(View.GONE);
+            findViewById(R.id.sammary_layout).startAnimation(mSlideToLift);
+
+            findViewById(R.id.cart_layout).setVisibility(View.VISIBLE);
+
         }else if (view == deleteBtn){
 
             cartPresenter.removeCartItems();
 
         }else if (view == orderBtn){
+
 
             if (SessionManager.getInstance(CartActivity.this).isLoggedIn()){
 
@@ -251,7 +313,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     }
 
     @Override
-    public void createOrder(String deliveryAdd) {
+    public void createOrder(int deliveryAdd) {
 
 
         String orderTime;
@@ -282,127 +344,147 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         Button confirmButton;
         final RadioButton now, later;
-        final EditText dateText, timeText, deliveryAddress;
+        final EditText dateText, timeText;
+        LinearLayout deliveryAddress;
+
+
+        Spinner addressesSpinner;
+
+        ArrayAdapter<String> addressesAdapter;
+
         schedule = "now";
         myDialog.setContentView(R.layout.order_popup);
 
-        dateText =(EditText) myDialog.findViewById(R.id.day);
-        timeText =(EditText) myDialog.findViewById(R.id.time);
-        deliveryAddress =(EditText) myDialog.findViewById(R.id.address_text);
+        dateText = myDialog.findViewById(R.id.day);
+        timeText = myDialog.findViewById(R.id.time);
+        deliveryAddress = myDialog.findViewById(R.id.address_layout);
 
-        dateText.setOnClickListener(new View.OnClickListener() {
+        addressesSpinner = myDialog.findViewById(R.id.delivery_addresses_spinner);
+
+        addressesAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, addressesArray);
+        addressesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        addressesSpinner.setAdapter(addressesAdapter);
+        addressesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                final Calendar myCalendar = Calendar.getInstance();
-
-                DatePickerDialog date;
-                date = new DatePickerDialog(CartActivity.this, new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        myCalendar.set(Calendar.YEAR, year);
-                        myCalendar.set(Calendar.MONTH, monthOfYear);
-                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                        String myFormat = "dd/MM/yyyy"; //In which you need put here
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-                        dateText.setText(sdf.format(myCalendar.getTime()));
-
-                        dateSelected = sdf.format(myCalendar.getTime());
-                    }
-                }, myCalendar .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                date.show();
-
-
-            }
-        });
-
-        timeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                final Calendar mCurrentTime = Calendar.getInstance();
-                int hour = mCurrentTime.get(Calendar.HOUR);
-                int minute = mCurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(CartActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-
-                        if (selectedHour >= 20){
-                            showMessage("Max delivery time is 7:30 PM");
-                            timeSelected = null;
-                            timeText.setText("");
-                        }else {
-
-                            mCurrentTime.set(Calendar.HOUR, selectedHour);
-                            mCurrentTime.set(Calendar.MINUTE, selectedMinute);
-
-                            String myFormat = "h:mm a"; //In which you need put here
-                            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                            timeText.setText(sdf.format(mCurrentTime.getTime()));
-
-                            mCurrentTime.set(Calendar.HOUR, selectedHour -2);
-                            timeSelected = sdf.format(mCurrentTime.getTime());
-                        }
-                    }
-                }, hour, minute, false);//no 12 hour time
-                mTimePicker.show();
-
-
-            }
-        });
-
-        confirmButton = (Button) myDialog.findViewById(R.id.confirm2);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String deliveryAdd = deliveryAddress.getText().toString();
-
-                if (validateOrder(deliveryAdd, deliveryAddress, timeText, dateText)){
-
-                    createOrder(deliveryAdd);
-
-                    myDialog.dismiss();
+                if (!addresses.isEmpty()) {
+                    deliveryAddId = addresses.get(position).getId();
+                }else {
+                    deliveryAddId = 0;
                 }
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        dateText.setOnClickListener(v -> {
+
+            final Calendar myCalendar = Calendar.getInstance();
+
+            DatePickerDialog date;
+            date = new DatePickerDialog(CartActivity.this, new DatePickerDialog.OnDateSetListener() {
+
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    // TODO Auto-generated method stub
+                    myCalendar.set(Calendar.YEAR, year);
+                    myCalendar.set(Calendar.MONTH, monthOfYear);
+                    myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                    String myFormat = "dd/MM/yyyy"; //In which you need put here
+                    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+                    dateText.setText(sdf.format(myCalendar.getTime()));
+
+                    dateSelected = sdf.format(myCalendar.getTime());
+                }
+            }, myCalendar .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH));
+            date.show();
+
+
+        });
+
+        timeText.setOnClickListener(v -> {
+            // TODO Auto-generated method stub
+            final Calendar mCurrentTime = Calendar.getInstance();
+            int hour = mCurrentTime.get(Calendar.HOUR);
+            int minute = mCurrentTime.get(Calendar.MINUTE);
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(CartActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                    if (selectedHour >= 20){
+                        showMessage("Max delivery time is 7:30 PM");
+                        timeSelected = null;
+                        timeText.setText("");
+                    }else {
+
+                        mCurrentTime.set(Calendar.HOUR, selectedHour);
+                        mCurrentTime.set(Calendar.MINUTE, selectedMinute);
+
+                        String myFormat = "h:mm a"; //In which you need put here
+                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                        timeText.setText(sdf.format(mCurrentTime.getTime()));
+
+                        mCurrentTime.set(Calendar.HOUR, selectedHour -2);
+                        timeSelected = sdf.format(mCurrentTime.getTime());
+                    }
+                }
+            }, hour, minute, false);//no 12 hour time
+            mTimePicker.show();
+
+
+        });
+
+        confirmButton = myDialog.findViewById(R.id.confirm2);
+        confirmButton.setOnClickListener(v -> {
+
+/*
+            if (validateOrder(deliveryAddId, timeText, dateText)){
+
+                createOrder(deliveryAddId);
+
+                myDialog.dismiss();
+            }*/
+            if(myDialog != null || myDialog.isShowing() ){
+                myDialog.dismiss();
+            }
+
+            findViewById(R.id.sammary_layout).startAnimation(mSlideFromBelow);
+            findViewById(R.id.sammary_layout).setVisibility(View.VISIBLE);
+            findViewById(R.id.cart_layout).setVisibility(View.GONE);
         });
 
         now = myDialog.findViewById(R.id.now) ;
         later = myDialog.findViewById(R.id.later) ;
-        now.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(!b){
-                    dateText.setVisibility(View.VISIBLE);
-                    timeText.setVisibility(View.VISIBLE);
-                    schedule = "later";
-                }else {
-                    dateText.setVisibility(View.GONE);
-                    timeText.setVisibility(View.GONE);
+        now.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(!b){
+                dateText.setVisibility(View.VISIBLE);
+                timeText.setVisibility(View.VISIBLE);
+                schedule = "later";
+            }else {
+                dateText.setVisibility(View.GONE);
+                timeText.setVisibility(View.GONE);
 
-                    schedule = "now";
-                }
+                schedule = "now";
             }
         });
-        later.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    dateText.setVisibility(View.VISIBLE);
-                    timeText.setVisibility(View.VISIBLE);
-                    schedule = "later";
-                }else {
-                    dateText.setVisibility(View.GONE);
-                    timeText.setVisibility(View.GONE);
+        later.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                dateText.setVisibility(View.VISIBLE);
+                timeText.setVisibility(View.VISIBLE);
+                schedule = "later";
+            }else {
+                dateText.setVisibility(View.GONE);
+                timeText.setVisibility(View.GONE);
 
-                    schedule = "now";
-                }
+                schedule = "now";
             }
         });
 
@@ -413,17 +495,13 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     }
 
     @Override
-    public boolean validateOrder(String deliveryAdd, EditText deliveryAddress, EditText timeText, EditText dateText) {
+    public boolean validateOrder(int deliveryAdd, EditText timeText, EditText dateText) {
         boolean valid = true;
 
-        if (deliveryAdd.isEmpty() || deliveryAdd == null){
+        if (deliveryAdd == 0){
 
             showMessage("Enter the delivery address");
-            deliveryAddress.setError("Enter the delivery address");
             valid = false;
-        }else {
-
-            deliveryAddress.setError(null);
         }
 
         if (schedule == "later" && timeSelected == null ){
@@ -467,7 +545,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         }
         progressDialog = new ProgressDialog(CartActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating your profile...");
+        progressDialog.setMessage("Creating your order...");
     }
 
 
