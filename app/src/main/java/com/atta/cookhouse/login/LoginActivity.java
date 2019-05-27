@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
         }else if (view == skip){
 
+            SessionManager.getInstance(this).setLanguage(SessionManager.getInstance(this).getLanguage());
             skipToMain();
         }
     }

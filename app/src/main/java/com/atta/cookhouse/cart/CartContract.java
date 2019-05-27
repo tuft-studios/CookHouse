@@ -2,6 +2,7 @@ package com.atta.cookhouse.cart;
 
 import android.widget.EditText;
 
+import com.atta.cookhouse.model.Address;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.Order;
 
@@ -25,12 +26,11 @@ public interface CartContract {
 
         void navigateToMain();
 
-        void createOrder(String deliveryAdd);
+        void createOrder(int deliveryAdd);
 
         void showDialog();
 
-        boolean validateOrder(String deliveryAdd, EditText deliveryAddress, EditText timeText, EditText dateText);
-
+        boolean validateOrder(int deliveryAdd, EditText timeText, EditText dateText);
 
         void dismissProgressDialog();
 
@@ -38,11 +38,15 @@ public interface CartContract {
 
         void showViewError(String view, String error);
 
+        void showAddresses(List<Address> mAddresses);
+
+        void showAddressesMessage(String message);
+
     }
 
     interface Presenter{
 
-        void getCartItems(boolean view, int userId, String location, String deliveryAdd, String schedule, String orderTime);
+        void getCartItems(boolean view, int userId, String location, int deliveryAdd, String mobile, String schedule, String orderTime);
 
         int totalPriceCalculation(List<CartItem> cartItems);
 
@@ -57,5 +61,7 @@ public interface CartContract {
         void login(String email, String password);
 
         boolean validate(String email, String password);
+
+        void getAddresses(int userId);
     }
 }

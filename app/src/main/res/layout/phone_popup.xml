@@ -24,13 +24,6 @@
             android:layout_marginBottom="12dp"
             android:textSize="20sp"/>
 
-        <Spinner
-            android:id="@+id/phones_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="12dp"/>
-
         <EditText
             android:id="@+id/new_phone"
             android:layout_width="match_parent"
@@ -48,7 +41,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="15dp"
             android:textColor="#ffffff"
-            android:text="@string/english"
+            android:text="@string/update"
             android:background="@drawable/button_form"
             android:textStyle="bold" />
 

@@ -14,6 +14,29 @@
 
 
         <TextView
+            android:id="@+id/forget_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:textSize="24sp"
+            android:text="@string/forget_password"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_arrow"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
             android:id="@+id/reset_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +62,7 @@
 
         <TextView
             android:id="@+id/change_language"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
@@ -64,7 +87,7 @@
 
         <TextView
             android:id="@+id/change_phone"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
@@ -87,8 +110,8 @@
 
 
         <TextView
-            android:id="@+id/addresses"
-            android:layout_width="wrap_content"
+            android:id="@+id/add_addresses_cart"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"

@@ -159,29 +159,12 @@
             android:background="@android:color/black" />
 
 
-        <EditText
-            android:id="@+id/address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/location"
-            android:drawablePadding="8dp"
-            android:hint="@string/home_address"
-            android:padding="10dp"
-            android:singleLine="true"  />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black" />
-
-
         <Spinner
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/spinner2"/>
+            android:layout_marginTop="12dp"
+            android:background="@drawable/spinner"/>
 
 
 
@@ -200,22 +183,6 @@
             android:textColor="@color/white" />
 
 
-
-        <!-- Link to Login Screen -->
-
-
-            <TextView
-                android:id="@+id/btnSkip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginBottom="20dp"
-                android:layout_marginRight="12dp"
-                android:gravity="center"
-                android:text="Skip"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
 
     </LinearLayout>
 

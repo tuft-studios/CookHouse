@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/alert_shape"
+    android:layout_margin="12dp"
+    android:layout_gravity="center">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/title_shape"
+        android:id="@+id/view" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView"
+        android:gravity="center"
+        android:text="New Order"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:layout_alignBottom="@+id/view"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <LinearLayout
+        android:id="@+id/address_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_margin="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery Address"/>
+
+        <RelativeLayout
+            android:id="@+id/spinner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+            <android.support.v7.widget.AppCompatEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"/>
+
+            <Spinner
+                android:id="@+id/delivery_addresses_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/add_addresses_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add / Edit Addresses"
+            android:layout_marginTop="4dp"
+            android:textColor="#02A247"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/mobile_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/address_layout"
+        android:layout_margin="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Default Mobile"/>
+
+        <RelativeLayout
+            android:id="@+id/spinner_layout_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/temp_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"/>
+
+            <Spinner
+                android:id="@+id/mobile_spinner_cart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="No"
+            android:textOn="Yes"
+            android:text="Add temp mobile"
+            android:switchPadding="4dp"
+            android:padding="4dp"
+            android:layout_gravity="end"/>
+
+        <TextView
+            android:id="@+id/edit_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add / Edit Mobiles"
+            android:layout_marginTop="4dp"
+            android:textColor="#02A247"
+            android:layout_gravity="end"/>
+
+    </LinearLayout>
+
+
+
+    <RadioGroup
+        android:id="@+id/switch_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mobile_layout"
+        android:paddingStart="12dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Now"/>
+        <RadioButton
+            android:id="@+id/later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule"/>
+    </RadioGroup>
+
+
+    <EditText
+        android:id="@+id/day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/switch_group"
+        android:hint="Day"
+        android:gravity="center"
+        android:focusable="false"
+        android:inputType="date"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/day"
+        android:hint="Time"
+        android:gravity="center"
+        android:focusable="false"
+        android:inputType="time"
+        android:singleLine="true" />
+
+
+    <Button
+        android:id="@+id/confirm2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/time"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_centerHorizontal="true"
+        android:text="Confirm"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_form"/>
+
+</RelativeLayout>

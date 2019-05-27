@@ -8,12 +8,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,19 +19,17 @@ import com.atta.cookhouse.R;
 import com.atta.cookhouse.addresses.AddressesActivity;
 import com.atta.cookhouse.model.SessionManager;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener, SettingContract.View {
 
     TextView resetPassword, changeLanguage, addresses, changePhoneText;
 
-    Dialog languageDialog, passwordDialog, phoneDialog;
+    Dialog languageDialog, passwordDialog, phoneDialog, codeDialog;
 
-    Button btnArabic, btnEnglish, resetBtn, changePhoneBtn;
+    Button btnArabic, btnEnglish, resetBtn, changePhoneBtn, codeConfirm;
 
-    EditText oldPassword, newPassword, newPasswordConfirm, newPhone;
+    EditText oldPassword, newPassword, newPasswordConfirm, newPhone, codeText;
 
     SessionManager session;
 
@@ -42,13 +37,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     SettingPresenter settingPresenter;
 
-    Spinner phonesSpinner;
-
-    ArrayAdapter<String> phonesAdapter;
-
-    List<String> phones;
-
-    String selectedPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +53,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         changeLanguage.setOnClickListener(this);
         resetPassword = findViewById(R.id.reset_password);
         resetPassword.setOnClickListener(this);
-        addresses = findViewById(R.id.addresses);
+        addresses = findViewById(R.id.add_addresses_cart);
         addresses.setOnClickListener(this);
         changePhoneText = findViewById(R.id.change_phone);
         changePhoneText.setOnClickListener(this);
 
         mProgressView = findViewById(R.id.login_progress);
+
+        if (getIntent().getBooleanExtra("phoneExtra", false)){
+
+            showPhonePopup();
+        }
 
     }
 
@@ -99,14 +92,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     private void showPhonePopup() {
 
-        phones = new ArrayList<>();
-        phones.add("select your phone");
-        phones.add(session.getUserPhone());
-
-        if (session.getUserPhone2() != null){
-            phones.add(session.getUserPhone2());
-        }
-
 
 
         phoneDialog = new Dialog(this);
@@ -116,39 +101,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         phoneDialog.setContentView(R.layout.phone_popup);
 
         changePhoneBtn =phoneDialog.findViewById(R.id.btn_phone);
-        phonesSpinner = phoneDialog.findViewById(R.id.phones_spinner);
         newPhone = phoneDialog.findViewById(R.id.new_phone);
 
         changePhoneBtn.setOnClickListener(this);
-
-        phonesAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, phones);
-        phonesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        phonesSpinner.setAdapter(phonesAdapter);
-        phonesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != 0){
-
-                    if (selectedPhone != null){
-
-                        selectedPhone = phones.get(position-1);
-
-                        settingPresenter.updatePhone(session.getUserId(), selectedPhone);
-                    }
-
-                }else{
-                    selectedPhone = null;
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
 
         phoneDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         phoneDialog.show();
@@ -156,7 +111,34 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
     public void changePhone(){
 
-        settingPresenter.sendSms();
+        settingPresenter.sendSms(SessionManager.getInstance(this).getUserId(), newPhone.getText().toString());
+    }
+
+    @Override
+    public void showCodePopup(String phone) {
+
+
+
+
+        codeDialog = new Dialog(this);
+
+
+
+        codeDialog.setContentView(R.layout.code_popup);
+
+        codeConfirm =codeDialog.findViewById(R.id.btn_code);
+        codeText = codeDialog.findViewById(R.id.code_text);
+
+        codeConfirm.setOnClickListener(v -> {
+
+            settingPresenter.confirmCode(SessionManager.getInstance(this).getUserId(), phone, codeText.getText().toString());
+        });
+
+
+
+        codeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        codeDialog.show();
+
     }
 
 
@@ -231,6 +213,25 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         passwordDialog.show();
     }
 
+    @Override
+    public void hidePasswordPopup() {
+
+        passwordDialog.dismiss();
+    }
+
+
+    @Override
+    public void hidePhonePopup() {
+
+        phoneDialog.dismiss();
+    }
+
+
+    @Override
+    public void hideCodePopup() {
+
+        codeDialog.dismiss();
+    }
 
     @Override
     public boolean validate(String oldPassword, String newPassword, String passwordConfirm) {

@@ -32,14 +32,17 @@
 
 
             <ImageView
+                android:id="@+id/fb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/facebook"/>
             <ImageView
+                android:id="@+id/tw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/twitter"/>
             <ImageView
+                android:id="@+id/insta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/instagram"/>

@@ -1,13 +1,18 @@
 package com.atta.cookhouse.main;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -16,6 +21,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,8 +44,13 @@ import com.atta.cookhouse.login.LoginActivity;
 import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.SessionManager;
+import com.atta.cookhouse.myorders.MyOrdersActivity;
 import com.atta.cookhouse.profile.ProfileActivity;
 import com.atta.cookhouse.setting.SettingActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.smarteist.autoimageslider.SliderLayout;
 import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
@@ -53,6 +64,11 @@ public class MainActivity extends AppCompatActivity
 
     public static final String ACTION_UPDATE_FRAGMENT = "action_location_updated";
 
+    private static final String TAG = "MainActivity";
+
+    private static final int FINE_LOCATION_REQUEST_CODE = 101;
+    private static final int COARSE_LOCATION_REQUEST_CODE = 102;
+
     SessionManager sessionManager;
 
     String[] urls, tags;
@@ -65,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
     ArrayAdapter<String> locationsAdapter;
 
-    private String locationString;
+    private String locationString, token;
 
     MainPresenter mainPresenter;
 
@@ -77,7 +93,7 @@ public class MainActivity extends AppCompatActivity
 
     ViewFragmentPagerAdapter adapter;
 
-    ImageView favBtn;
+    ImageView favBtn, fb, tw, insta;
 
     boolean isFavorite;
 
@@ -94,6 +110,7 @@ public class MainActivity extends AppCompatActivity
 
         sessionManager = new SessionManager(this);
         setDialog();
+
 
         CounterFab counterFab = findViewById(R.id.fab);
         counterFab.setOnClickListener(view -> {
@@ -135,7 +152,8 @@ public class MainActivity extends AppCompatActivity
         sliderLayout.setScrollTimeInSec(3);
 
         locationSpinner = findViewById(R.id.location);
-        if (sessionManager.getLanguage().equals("ar")) {
+        String selectedLanguage = sessionManager.getLanguage();
+        if (selectedLanguage.equals("ar")) {
             locationSpinner.setBackground(ContextCompat.getDrawable(this, R.drawable.spinner2));
         }
 
@@ -168,9 +186,81 @@ public class MainActivity extends AppCompatActivity
 
         mainPresenter.getCartItemsNum();
 
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        if (task.getResult() != null) {
+                            token = task.getResult().getToken();
+
+                            if (!token.equals(sessionManager.getUserToken())){
+
+                                sessionManager.setUserToken(token);
+
+                                mainPresenter.saveToken(token, sessionManager.getUserId());
+                            }
+
+                        }
+
+                    }
+                });
+
         checkIfSkipped();
 
         setName();
+
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    FINE_LOCATION_REQUEST_CODE);
+            requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION,
+                    COARSE_LOCATION_REQUEST_CODE);
+            return;
+        }
+
+        fb = findViewById(R.id.fb);
+        fb.setOnClickListener(v -> {
+            String url = "https://www.facebook.com/";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        });
+        tw = findViewById(R.id.tw);
+        tw.setOnClickListener(v -> {
+            String url = "https://twitter.com/";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        });
+        insta = findViewById(R.id.insta);
+        insta.setOnClickListener(v -> {
+
+            String url = "https://www.instagram.com/";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        });
+
+    }
+
+
+    protected void requestPermission(String permissionType, int requestCode) {
+        int permission = ContextCompat.checkSelfPermission(this,
+                permissionType);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{permissionType}, requestCode
+            );
+        }
     }
 
     @Override
@@ -201,12 +291,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.profile) {
-            startActivity(new Intent(this, ProfileActivity.class));
+            if (SessionManager.getInstance(getApplicationContext()).isLoggedIn()) {
+                startActivity(new Intent(this, ProfileActivity.class));
+            }else showMessage("you need to login first");
         } else if (id == R.id.my_orders) {
 
+            if (SessionManager.getInstance(getApplicationContext()).isLoggedIn()) {
+                startActivity(new Intent(this, MyOrdersActivity.class));
+            }else showMessage("you need to login first");
         } else if (id == R.id.my_favorites) {
 
-            startActivity(new Intent(this, FavoritesActivity.class));
+            if (SessionManager.getInstance(getApplicationContext()).isLoggedIn()) {
+                startActivity(new Intent(this, FavoritesActivity.class));
+            }else showMessage("you need to login first");
         } else if (id == R.id.login_logout) {
 
             if (SessionManager.getInstance(getApplicationContext()).isLoggedIn()){
@@ -334,7 +431,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void renameLoginItem() {
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView =  findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
         nav_Menu.findItem(R.id.login_logout).setIcon(R.drawable.ic_login);
         nav_Menu.findItem(R.id.login_logout).setTitle("Login");
@@ -345,7 +442,7 @@ public class MainActivity extends AppCompatActivity
         TextView textView = navigationView.getHeaderView(0).findViewById(R.id.textView);
         String name = SessionManager.getInstance(getApplicationContext()).getUserName();
         String UpperName = name.substring(0, 1).toUpperCase() + name.substring(1);
-        textView.setText(UpperName);
+        textView.setText("Hi " + UpperName);
     }
 
     @Override

@@ -7,207 +7,499 @@
     android:layout_height="match_parent"
     tools:context=".cart.CartActivity">
 
+
     <RelativeLayout
-        android:id="@+id/ly2"
+        android:id="@+id/cart_layout"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
+
+        <RelativeLayout
+            android:id="@+id/ly2"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/left_arrow"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:textColor="@color/colorPrimary"
+                android:text="Your Cart"/>
+
+
+            <ImageView
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginEnd="12dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/delete"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ly"
+            android:layout_below="@+id/ly2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="12dp"
-            android:src="@drawable/left_arrow"/>
+            android:orientation="horizontal">
 
 
-        <TextView
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_margin="12dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:text="Your Order"/>
+
+
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:text="Use Points"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_cart"
+            android:layout_above="@+id/layout_all"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/ly">
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/layout_all"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            android:textColor="@color/colorPrimary"
-            android:text="Your Cart"/>
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="12dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="5dp">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".25"
+                    android:layout_width="match_parent"
+                    android:gravity="right"
+                    android:text="Subtotal: ">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_subtotal"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:gravity="right"
+                    android:text="0 EGP">
+                </TextView>
+            </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_marginEnd="12dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/delete"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/black"
+                android:layout_marginLeft="120dp"/>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="5dp">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".25"
+                    android:layout_width="match_parent"
+                    android:gravity="right"
+                    android:text="Delivery fee: ">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_delivery"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:gravity="right"
+                    android:text="0 EGP">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="5dp">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".25"
+                    android:layout_width="match_parent"
+                    android:textColor="#DE7047"
+                    android:gravity="right"
+                    android:text="Points discount: ">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_discount"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:textColor="#DE7047"
+                    android:gravity="right"
+                    android:text="0 EGP">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="12dp"
+                android:padding="5dp">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".25"
+                    android:layout_width="match_parent"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:textColor="@android:color/black"
+                    android:text="Total: ">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_total"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:gravity="right"
+                    android:text="0 EGP">
+                </TextView>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_placeorder"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Place Order"
+                android:layout_margin="12dp"
+                android:enabled="false"
+                android:drawableRight="@drawable/right_arrow"
+                android:textColor="@color/white">
+            </Button>
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ly"
-        android:layout_below="@+id/ly2"
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/sammary_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+
+        <RelativeLayout
+            android:id="@+id/ly3"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:id="@+id/btn_back_to_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/left_arrow" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="12dp"
+                android:gravity="center"
+                android:text="Summary"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
 
 
         <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:text="To be delivered in"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ly3" />
+
+        <TextView
+            android:id="@+id/tv_delivery_time_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:gravity="end"
+            android:text="To be delivered in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="To Address"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_delivery_time_sum" />
+
+
+        <TextView
+            android:id="@+id/tv_address_sum"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_margin="12dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:text="Your Order"/>
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="end"
+            android:text="To be delivered in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 
-        <CheckBox
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="Use Points"/>
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="Mobile Phone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_address_sum" />
 
-    </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_cart"
-        android:layout_above="@+id/layout_all"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/ly">
-    </android.support.v7.widget.RecyclerView>
-
-    <LinearLayout
-        android:id="@+id/layout_all"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="12dp"
-        android:orientation="vertical">
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_phone_sum"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:padding="5dp">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:layout_width="match_parent"
-                android:gravity="right"
-                android:text="Subtotal: ">
-            </TextView>
-
-            <TextView
-                android:id="@+id/tv_subtotal"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:gravity="right"
-                android:text="0 EGP">
-            </TextView>
-        </LinearLayout>
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:gravity="end"
+            android:text="To be delivered in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black"
-            android:layout_marginLeft="120dp"/>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="Items"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_phone_sum" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
-            android:padding="5dp">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:layout_width="match_parent"
-                android:gravity="right"
-                android:text="Delivery fee: ">
-            </TextView>
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5">
 
-            <TextView
-                android:id="@+id/tv_delivery"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_cart2"
                 android:layout_width="match_parent"
-                android:gravity="right"
-                android:text="0 EGP">
-            </TextView>
-        </LinearLayout>
+                android:layout_height="wrap_content">
 
-        <LinearLayout
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="8dp"
+            android:text="Receipt"
+            app:layout_constraintBottom_toTopOf="@+id/cardView2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView2"
             android:layout_width="match_parent"
-            android:padding="5dp">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:layout_width="match_parent"
-                android:textColor="#DE7047"
-                android:gravity="right"
-                android:text="Points discount: ">
-            </TextView>
-
-            <TextView
-                android:id="@+id/tv_discount"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:textColor="#DE7047"
-                android:gravity="right"
-                android:text="0 EGP">
-            </TextView>
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="12dp"
-            android:padding="5dp">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
+            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="right"
-                android:textColor="@android:color/black"
-                android:text="Total: ">
-            </TextView>
-
-            <TextView
-                android:id="@+id/tv_total"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:gravity="right"
-                android:text="0 EGP">
-            </TextView>
-        </LinearLayout>
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="12dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:text="Subtotal: " />
+
+                    <TextView
+                        android:id="@+id/tv_subtotal_sum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="0 EGP" />
+                </LinearLayout>
 
 
-        <Button
-            android:id="@+id/btn_placeorder"
-            android:layout_height="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:text="Delivery fee: " />
+
+                    <TextView
+                        android:id="@+id/tv_delivery_sum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="0 EGP" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:text="Points discount: "
+                        android:textColor="#DE7047" />
+
+                    <TextView
+                        android:id="@+id/tv_discount_sum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="0 EGP"
+                        android:textColor="#DE7047" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:text="Tax amount: " />
+
+                    <TextView
+                        android:id="@+id/tv_tx_sam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="0 EGP" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <RelativeLayout
+            android:id="@+id/button"
             android:layout_width="match_parent"
-            android:text="Place Order"
-            android:layout_margin="12dp"
-            android:enabled="false"
-            android:drawableRight="@drawable/right_arrow"
-            android:textColor="@color/white">
-        </Button>
+            android:layout_height="?android:attr/actionBarSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#00C853">
 
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_total_sum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"
+                android:text="TOTAL EGP 185"/>
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/right_arrow"/>
+        </RelativeLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 
 </RelativeLayout>

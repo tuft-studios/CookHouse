@@ -6,6 +6,7 @@ import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.Address;
 import com.atta.cookhouse.model.Profile;
+import com.atta.cookhouse.model.Result;
 import com.atta.cookhouse.model.User;
 
 import java.util.ArrayList;
@@ -96,8 +97,62 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     }
 
     @Override
-    public void updateProfile(int userId) {
+    public void updateProfile(User user, int add_id) {
 
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+        //Defining the user object as we need to pass it with the call
+        //User user = new User(name, email, password, phone, birthdayString, locationSting);
+
+        //defining the call
+        Call<Result> call = service.updateProfile(
+                user.getId(),
+                user.getName(),
+                add_id,
+                user.getPhone(),
+                user.getBirthday(),
+                user.getJob(),
+                user.getLocation()
+        );
+
+        //calling the api
+        call.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+
+                //displaying the message from the response as toast
+                if (response.body() != null) {
+
+
+                    mView.showMessage(response.body().getMessage());
+
+
+                    if (!response.body().getError()){
+
+
+                        mView.moveToMain();
+                    }
+
+
+                }else {
+                    mView.showMessage("An error");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+            }
+        });
     }
 
 

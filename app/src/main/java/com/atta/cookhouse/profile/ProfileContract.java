@@ -16,13 +16,15 @@ public interface ProfileContract {
         void showProfile(User user);
 
         void showMessage(String message);
+
+        void moveToMain();
     }
 
     interface Presenter{
 
         void getProfile(int userId) ;
 
-        void updateProfile(int userId) ;
+        void updateProfile(User user, int add_id) ;
 
     }
 }

@@ -46,5 +46,7 @@ public interface MainContract {
 
         void checkIfFav(int propertyId, int userId);
 
+        void saveToken(String token, int userId);
+
     }
 }

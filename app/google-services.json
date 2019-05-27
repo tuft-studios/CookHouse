@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "302546490825-p0aarqbqe66ikkbhdcgob7krvdtt7l1t.apps.googleusercontent.com",
+          "client_id": "302546490825-0aglqm54jme0cnikmdat65don6vp1mub.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.atta.cookhouse",
-            "certificate_hash": "5cc0be3a1d439ae2cb8592fd20472407bf9783ff"
+            "certificate_hash": "b70924b8991910c61eb2921f99d4c52f67f6f53a"
           }
         },
         {
@@ -33,20 +33,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "302546490825-m1d7fo9d0a4qut3mchkfuequpva4iauo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

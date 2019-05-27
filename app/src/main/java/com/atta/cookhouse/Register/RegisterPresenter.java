@@ -34,7 +34,7 @@ public class RegisterPresenter implements RegisterContract.Presenter{
     }
 
     @Override
-    public void register(String name, String email, String job, String password, String phone, String birthdayString, String locationSting) {
+    public void register(User user) {
 
         //building retrofit object
         Retrofit retrofit = new Retrofit.Builder()
@@ -45,8 +45,6 @@ public class RegisterPresenter implements RegisterContract.Presenter{
         //Defining retrofit api service
         APIService service = retrofit.create(APIService.class);
 
-        //Defining the user object as we need to pass it with the call
-        User user = new User(name, email, password, phone, birthdayString, locationSting, job);
 
         //defining the call
         Call<Result> call = service.createUser(
@@ -73,6 +71,7 @@ public class RegisterPresenter implements RegisterContract.Presenter{
                 //if there is no error
                 if (!response.body().getError()) {
                     //starting profile activity
+                    SessionManager.getInstance(mContext).setLanguage(SessionManager.getInstance(mContext).getLanguage());
                     SessionManager.getInstance(mContext).createLoginSession(response.body().getUser());
                     mView.navigateToMain();
                 }

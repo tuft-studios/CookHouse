@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:padding="@dimen/padd_10">
+        android:paddingStart="@dimen/padd_10">
 
 
 
@@ -48,7 +48,6 @@
             android:id="@+id/address_name_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:textSize="20dp"
             android:layout_centerHorizontal="true"
             android:textStyle="bold"

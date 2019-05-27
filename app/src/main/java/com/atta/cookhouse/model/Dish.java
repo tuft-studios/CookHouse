@@ -3,7 +3,7 @@ package com.atta.cookhouse.model;
 public class Dish {
 
 
-    private int dId, price, kitchen, likes;
+    private int dId, price, kitchen, likes, quantity;
     private String imageUrl, dishName, dishDisc, location;
 
 
@@ -16,6 +16,11 @@ public class Dish {
         this.imageUrl = imageUrl;
         this.location = location;
         this.likes = likes;
+    }
+
+    public Dish(int id, int quantity) {
+        this.dId = id;
+        this.quantity = quantity;
     }
 
     public int getDishId() {
@@ -48,5 +53,9 @@ public class Dish {
 
     public int getLikes() {
         return likes;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

@@ -30,7 +30,7 @@ import com.atta.cookhouse.model.SessionManager;
 
 import java.util.ArrayList;
 
-public class MainDishFragment extends Fragment implements FragmentsContract.View {
+public class DishFragment extends Fragment implements FragmentsContract.View {
 
     ImageView imageView;
 
@@ -45,6 +45,8 @@ public class MainDishFragment extends Fragment implements FragmentsContract.View
     BroadcastReceiver mReceiver;
 
     IntentFilter filter;
+
+    String category;
 
     @Nullable
     @Override
@@ -62,6 +64,10 @@ public class MainDishFragment extends Fragment implements FragmentsContract.View
         View view = inflater.inflate(R.layout.grid_view,container,false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
+        if (getArguments() != null) {
+
+            category = getArguments().getString("category");
+        }
         getMenu();
 
 
@@ -113,7 +119,7 @@ public class MainDishFragment extends Fragment implements FragmentsContract.View
             location = SessionManager.getInstance(getContext()).getOrderLocation();
         }
 
-        fragmentsPresenter.getMenu(recyclerView, "main dish", location);
+        fragmentsPresenter.getMenu(recyclerView, category, location);
     }
 
 

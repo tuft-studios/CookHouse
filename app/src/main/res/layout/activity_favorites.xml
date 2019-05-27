@@ -28,6 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No properties added to your favorites"/>
+        android:text="No Dishes added to your favorites"/>
 
 </RelativeLayout>

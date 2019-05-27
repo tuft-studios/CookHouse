@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atta.cookhouse.R;
@@ -20,14 +21,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
     private Context mCtx;
     private List<CartItem> cartItems;
     private CartPresenter cartPresenter;
+    private boolean summary;
 
     CartContract.View mView;
 
-    public CartAdapter(Context mCtx, List<CartItem> cartItems, CartPresenter cartPresenter, CartContract.View mView) {
+    public CartAdapter(Context mCtx, List<CartItem> cartItems, CartPresenter cartPresenter, CartContract.View mView, boolean summary) {
         this.mCtx = mCtx;
         this.cartItems = cartItems;
         this.cartPresenter = cartPresenter;
         this.mView = mView;
+        this.summary = summary;
     }
 
     @Override
@@ -134,6 +137,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
 
         ImageView addOne, removeOne, removeItem;
 
+        RelativeLayout relativeLayout;
+
         public TasksViewHolder(View itemView) {
             super(itemView);
 
@@ -145,8 +150,39 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
             removeOne = itemView.findViewById(R.id.remove_one);
             removeItem = itemView.findViewById(R.id.remove_item);
 
+            relativeLayout = itemView.findViewById(R.id.background_layout);
+
+            if (summary){
+
+                addOne.setVisibility(View.GONE);
+                removeOne.setVisibility(View.GONE);
+                removeItem.setVisibility(View.GONE);
+
+                relativeLayout.setBackgroundResource(0);
+
+                relativeLayout.requestLayout();
+
+                relativeLayout.getLayoutParams().height = dpToPx(40);
+/*
+                final float scale = mCtx.getResources().getDisplayMetrics().density;
+                int pixels = (int) (60 * scale + 0.5f);
+
+                RelativeLayout.LayoutParams relativeLayout = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, pixels);
+
+                relativeLayout.height*/
+            }
+
 
         }
 
+    }
+
+    public int dpToPx(int dp) {
+
+        float density = mCtx.getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
     }
 }

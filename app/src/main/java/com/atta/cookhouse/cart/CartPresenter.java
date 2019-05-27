@@ -4,12 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.atta.cookhouse.Local.DatabaseClient;
 import com.atta.cookhouse.Local.QueryUtils;
+import com.atta.cookhouse.R;
 import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.Address;
+import com.atta.cookhouse.model.Addresses;
 import com.atta.cookhouse.model.CartAdapter;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.Order;
@@ -38,10 +43,12 @@ public class CartPresenter implements CartContract.Presenter {
 
     private RecyclerView mRecyclerView;
 
+    private RecyclerView mSummaryRecyclerView;
+
 
     private ProgressDialog mProgressDialog;
 
-    public CartPresenter(CartContract.View view, Context context, RecyclerView recyclerView, ProgressDialog progressDialog) {
+    public CartPresenter(CartContract.View view, Context context, RecyclerView recyclerView, RecyclerView summaryRecyclerView, ProgressDialog progressDialog) {
 
         mView = view;
 
@@ -49,12 +56,14 @@ public class CartPresenter implements CartContract.Presenter {
 
         mRecyclerView = recyclerView;
 
+        mSummaryRecyclerView = summaryRecyclerView;
+
         mProgressDialog = progressDialog;
     }
 
     @Override
     public void getCartItems(final boolean view, @Nullable final int userId, @Nullable final String location,
-                             @Nullable final String deliveryAdd, @Nullable final String schedule, @Nullable final String orderTime) {
+                             final int deliveryAdd, @Nullable final String mobile, @Nullable final String schedule, @Nullable final String orderTime) {
 
 
         class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
@@ -82,8 +91,16 @@ public class CartPresenter implements CartContract.Presenter {
                     if (!cartItems.isEmpty()){
                         mView.enableOrderBtn();
 
-                        CartAdapter adapter = new CartAdapter(mContext, cartItems, CartPresenter.this, mView);
+                        CartAdapter adapter = new CartAdapter(mContext, cartItems, CartPresenter.this, mView, false);
                         mRecyclerView.setAdapter(adapter);
+
+
+                        CartAdapter summaryAdapter = new CartAdapter(mContext, cartItems, CartPresenter.this, mView, true);
+                        mSummaryRecyclerView.setAdapter(summaryAdapter);
+                        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext,
+                                LinearLayoutManager.VERTICAL);
+                        dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.line_divider));
+                        mSummaryRecyclerView.addItemDecoration(dividerItemDecoration);
 
 
                         mView.setTotalPrice(totalPrice, deliveryPrice);
@@ -102,6 +119,7 @@ public class CartPresenter implements CartContract.Presenter {
                         dishes.put("dishes[" + cartItems.indexOf(element) + "]", String.valueOf(element.getDishId()));
                         count.put("quantities[" + cartItems.indexOf(element) + "]", String.valueOf(element.getCount()));
                     }
+/*
 
                     boolean m1 = false, m2 = false, m3 = false;
 
@@ -136,9 +154,10 @@ public class CartPresenter implements CartContract.Presenter {
                         kitchen = 5;
                     else if (m1 & m2 & m3)
                         kitchen = 6;
+*/
 
                     Order order = new Order(dishes, count,  totalPrice, deliveryPrice , totalPrice+deliveryPrice
-                            , discount, userId, location, kitchen, deliveryAdd, schedule, orderTime, creationTime);
+                            , discount, userId, location, deliveryAdd, mobile,  schedule, orderTime, creationTime);
 
                     addOrder(order);
                 }
@@ -232,11 +251,11 @@ public class CartPresenter implements CartContract.Presenter {
                 order.getDiscount(),
                 order.getTotalPrice(),
                 order.getAddress(),
+                order.getMobile(),
                 order.getUserId(),
                 order.getSchedule(),
                 order.getOrderTime(),
                 order.getCreationTime(),
-                order.getKitchen(),
                 order.getLocation()
         );
 
@@ -288,5 +307,56 @@ public class CartPresenter implements CartContract.Presenter {
 
         return QueryUtils.validate( email,  password,null, mView, mContext);
 
+    }
+
+
+    @Override
+    public void getAddresses(int userId) {
+
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+        //Defining the user object as we need to pass it with the call
+        //User user = new User(name, email, password, phone, birthdayString, locationSting);
+
+        //defining the call
+        Call<Addresses> call = service.getAddresses(userId);
+
+        //calling the api
+        call.enqueue(new Callback<Addresses>() {
+            @Override
+            public void onResponse(Call<Addresses> call, Response<Addresses> response) {
+
+                if (response.body() != null){
+                    if (!response.body().getError()){
+
+                        List<Address> addresses = response.body().getAddresses();
+
+                        if (addresses.size() > 0){
+
+                            mView.showAddresses(addresses);
+                        }
+
+                    }else {
+                        mView.showAddressesMessage(response.body().getMessage());
+                    }
+                }else {
+                    mView.showAddressesMessage("something wrong, please try again");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Addresses> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+            }
+        });
     }
 }

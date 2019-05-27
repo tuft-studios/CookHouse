@@ -9,6 +9,9 @@ public class Addresses {
     @SerializedName("error")
     private Boolean error;
 
+    @SerializedName("error_msg")
+    private String message;
+
     @SerializedName("addresses")
     private ArrayList<Address> addresses;
 
@@ -21,5 +24,9 @@ public class Addresses {
 
     public Boolean getError() {
         return error;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

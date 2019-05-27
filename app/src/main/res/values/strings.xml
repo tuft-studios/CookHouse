@@ -62,6 +62,12 @@
         <item>Heliopolis</item>
     </string-array>
 
+    <string-array name="categories">
+        <item>Main Dish</item>
+        <item>Salad</item>
+        <item>Soup</item>
+    </string-array>
+
     <string-array name="locations">
         <item>Select Your ِArea…</item>
         <item>Maadi</item>
@@ -90,8 +96,8 @@
     <string name="action_cart" translatable="false">Cart</string>
     <string name="login_msg" translatable="false">you need to login or register to be able to proceed on your order</string>
     <string name="home_address" translatable="false">Home Address</string>
-    <string name="your_point_text" translatable="false">Your Points \n 20</string>
-    <string name="job" translatable="false">Job</string>
+    <string name="your_point_text" translatable="false">Points</string>
+    <string name="job" translatable="false">Job (optional)</string>
     <string name="title_activity_maps" translatable="false">Map</string>
     <string name="my_addresses_info" translatable="false">No addresses added, Add one</string>
     <string name="action_add" translatable="false">ADD</string>
@@ -107,4 +113,17 @@
     <string name="change_phone">Change Phone</string>
     <string name="addresses">Addresses</string>
     <string name="new_phone_text">Enter your new Phone</string>
+    <string name="area">Area</string>
+    <string name="add_name">Address Name</string>
+    <string name="street">street</string>
+    <string name="building_num">Building No.</string>
+    <string name="floor">Floor No.</string>
+    <string name="apartment">Apartment No.</string>
+    <string name="landmark">Landmark</string>
+    <string name="update">update</string>
+    <string name="action_skip">skip</string>
+    <string name="mobileNumber2">Mobile Number 2 (optional)</string>
+    <string name="enter_code">Enter confirmation code</string>
+    <string name="enter_the_code">Enter the code</string>
+    <string name="forget_password">Forget Password</string>
 </resources>

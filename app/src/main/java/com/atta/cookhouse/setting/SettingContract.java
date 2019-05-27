@@ -18,6 +18,14 @@ public interface SettingContract {
 
         void showProgress(boolean show);
 
+        void hidePasswordPopup();
+
+        void hidePhonePopup();
+
+        void hideCodePopup();
+
+        void showCodePopup(String phone);
+
     }
 
     interface Presenter{
@@ -25,7 +33,8 @@ public interface SettingContract {
 
         void updatePhone(int userId, String phone);
 
-        void sendSms();
+        void sendSms(int UserId, String phone);
 
+        void confirmCode(int userId, String phone, String rand);
     }
 }

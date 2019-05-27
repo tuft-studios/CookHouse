@@ -160,7 +160,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
     public void updateText() {
         recyclerView.setVisibility(View.GONE);
         infoTextView.setVisibility(View.VISIBLE);
-        infoTextView.setText("No properties added to your favorites");
+        infoTextView.setText("No dishes added to your favorites");
     }
 
 

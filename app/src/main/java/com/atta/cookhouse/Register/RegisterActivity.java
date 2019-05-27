@@ -4,7 +4,10 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,11 +15,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.R;
+import com.atta.cookhouse.main.MainActivity;
+import com.atta.cookhouse.model.SessionManager;
+import com.atta.cookhouse.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -44,8 +48,6 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     // National ID, password edit text
     EditText emailText, passwordText, nameText, phoneText, birthdayText, confirmPasswordText, jobText;
 
-    TextView skip;
-
     String birthdayString, locationString;
 
 
@@ -71,15 +73,11 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         passwordText = findViewById(R.id.password);
         nameText = findViewById(R.id.name);
         phoneText = findViewById(R.id.phone);
-        phoneText.setOnClickListener(this);
         birthdayText = findViewById(R.id.bd);
         birthdayText.setOnClickListener(this);
         confirmPasswordText = findViewById(R.id.password_confirm);
         locationSpinner = findViewById(R.id.location);
         jobText = findViewById(R.id.job);
-
-        skip = findViewById(R.id.btnSkip);
-        skip.setOnClickListener(this);
 
         // Register button
         register = findViewById(R.id.btnRegister);
@@ -105,7 +103,10 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
             }
 
         };
-
+        String selectedLanguage = SessionManager.getInstance(this).getLanguage();
+        if (selectedLanguage.equals("ar")) {
+            locationSpinner.setBackground(ContextCompat.getDrawable(this, R.drawable.spinner2));
+        }
 
         String[] locations = getResources().getStringArray(R.array.locations);
 
@@ -121,6 +122,31 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.register, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.skip) {
+
+            SessionManager.getInstance(this).setLanguage(SessionManager.getInstance(this).getLanguage());
+            navigateToMain();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onClick(View view) {
         if(view == register) {
             if (!validate(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(),
@@ -132,11 +158,13 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
 
             progressDialog.show();
-            registerPresenter.register(nameText.getText().toString(), emailText.getText().toString(), jobText.getText().toString(), passwordText.getText().toString(),
-                    phoneText.getText().toString(), birthdayString, locationString);
-        }else if (view == skip){
 
-            navigateToMain();
+            //Defining the user object as we need to pass it with the call
+            User user = new User(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(),
+                    phoneText.getText().toString(), birthdayString, locationString, jobText.getText().toString());
+
+
+            registerPresenter.register(user);
 
         }else if (view == birthdayText){
 
@@ -153,7 +181,9 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         if (position != 0){
 
             if (position != 1){
-                locationString = "Maadi";
+                locationSpinner.setSelection(1);
+                locationString = locationsArray.get(0);
+                //locationString = "Maadi";
                 showMessage("Available on Maadi only, Coming Soon");
             }else {
                 locationString = locationsArray.get(position);

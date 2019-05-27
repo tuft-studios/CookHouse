@@ -210,6 +210,7 @@ public class QueryUtils {
                     loginView.dismissProgressDialog();
                     if (!response.body().getError()) {
                         loginView.showMessage();
+                        SessionManager.getInstance(mContext).setLanguage(SessionManager.getInstance(mContext).getLanguage());
                         SessionManager.getInstance(mContext).createLoginSession(response.body().getUser());
                         loginView.navigateToMain();
                     } else {
@@ -221,6 +222,7 @@ public class QueryUtils {
                     cartView.dismissProgressDialog();
                     if (!response.body().getError()) {
                         cartView.showMessage("Login successfully");
+                        SessionManager.getInstance(mContext).setLanguage(SessionManager.getInstance(mContext).getLanguage());
                         SessionManager.getInstance(mContext).createLoginSession(response.body().getUser());
                     } else {
 

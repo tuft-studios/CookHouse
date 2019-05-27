@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                placeLatLngLoc = place.getLatLng();
+                myLatLng = place.getLatLng();
                 myPlace = place;
                 placeSelected = true;
                 if(marker!=null){
@@ -263,10 +263,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClick(View view) {
         if (view == confirmButton) {
 
+/*
             List<Address> addresses;
             String street, district;
 
-            Intent intent = new Intent();
 
             if (!placeSelected){
 
@@ -310,7 +310,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String lon = String.valueOf(myLatLng.longitude);
                 intent.putExtra("longitude", lon);
 
-            }
+            }*/
+
+
+            Intent intent = new Intent();
+
+            intent.putExtra("error_message", errorMessage);
+
+            String lat = String.valueOf(myLatLng.latitude);
+            intent.putExtra("latitude", lat);
+            String lon = String.valueOf(myLatLng.longitude);
+            intent.putExtra("longitude", lon);
 
 
             setResult(Activity.RESULT_OK, intent);

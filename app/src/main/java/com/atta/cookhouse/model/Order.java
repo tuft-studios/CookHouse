@@ -1,36 +1,64 @@
 package com.atta.cookhouse.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
-public class Order {
+public class Order implements Serializable {
 
 
     private Map<String, String> dishes, count ;
-    private int subtotalPrice, delivery, totalPrice, discount, userId, kitchen;
-    private String location, address, schedule, orderTime, CreationTime;
 
-    public void setSchedule(String schedule) {
-        this.schedule = schedule;
-    }
 
-    public void setOrderTime(String orderTime) {
-        this.orderTime = orderTime;
-    }
+    @SerializedName("dishesList")
+    private ArrayList<Dish> dishesList;
 
-    public Order(Map<String, String> dishes, Map<String, String> count, int subtotalPrice, int delivery, int totalPrice, int discount, int userId, String location, int kitchen, String address, String schedule, String orderTime, String creationTime) {
-        this.dishes = dishes;
-        this.count = count;
-        this.subtotalPrice = subtotalPrice;
+
+    private int orderId, subtotal, delivery, total, discount, userId, address, status;
+    private String location, schedule, orderTime, creationTime, phone, kitchen;
+
+
+    @SerializedName("fullAddress")
+    private Address fullAddress;
+
+
+    public Order(int orderId, ArrayList<Dish> dishesList, int status, int subtotal, int delivery, int total, int discount, int userId, String location,
+                 int address, String phone, String schedule, String orderTime, String creationTime, Address fullAddress, String kitchen) {
+        this.dishesList = dishesList;
+        this.orderId = orderId;
+        this.status = status;
+        this.subtotal = subtotal;
         this.delivery = delivery;
-        this.totalPrice = totalPrice;
+        this.total = total;
         this.discount = discount;
         this.userId = userId;
         this.location = location;
-        this.kitchen = kitchen;
         this.address = address;
         this.schedule = schedule;
+        this.phone = phone;
         this.orderTime = orderTime;
-        CreationTime = creationTime;
+        this.creationTime = creationTime;
+        this.fullAddress = fullAddress;
+        this.kitchen = kitchen;
+    }
+
+    public Order(Map<String, String> dishes, Map<String, String> count, int subtotal, int delivery, int total, int discount, int userId, String location,
+                 int address, String phone, String schedule, String orderTime, String creationTime) {
+        this.dishes = dishes;
+        this.count = count;
+        this.subtotal = subtotal;
+        this.delivery = delivery;
+        this.total = total;
+        this.discount = discount;
+        this.userId = userId;
+        this.location = location;
+        this.address = address;
+        this.schedule = schedule;
+        this.phone = phone;
+        this.orderTime = orderTime;
+        this.creationTime = creationTime;
     }
 
     public String getSchedule() {
@@ -43,38 +71,6 @@ public class Order {
         return orderTime;
     }
 
-    public void setDishes(Map<String, String> dishes) {
-        this.dishes = dishes;
-    }
-
-    public void setCount(Map<String, String> count) {
-        this.count = count;
-    }
-
-    public void setSubtotalPrice(int subtotalPrice) {
-        this.subtotalPrice = subtotalPrice;
-    }
-
-    public void setDelivery(int delivery) {
-        this.delivery = delivery;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public Map<String, String> getDishes() {
 
         return dishes;
@@ -85,7 +81,7 @@ public class Order {
     }
 
     public int getSubtotalPrice() {
-        return subtotalPrice;
+        return subtotal;
     }
 
     public int getDelivery() {
@@ -93,7 +89,7 @@ public class Order {
     }
 
     public int getTotalPrice() {
-        return totalPrice;
+        return total;
     }
 
     public int getDiscount() {
@@ -104,7 +100,7 @@ public class Order {
         return location;
     }
 
-    public String getAddress() {
+    public int getAddress() {
         return address;
     }
 
@@ -117,16 +113,45 @@ public class Order {
         return userId;
     }
 
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
+
+    public void setOrderTime(String orderTime) {
+        this.orderTime = orderTime;
+    }
+
     public void setCreationTime(String creationTime) {
-        CreationTime = creationTime;
+        creationTime = creationTime;
     }
 
     public String getCreationTime() {
 
-        return CreationTime;
+        return creationTime;
     }
 
-    public int getKitchen() {
+    public String getMobile() {
+        return phone;
+    }
+
+    public ArrayList<Dish> getDishesList() {
+        return dishesList;
+    }
+
+    public Address getFullAddress() {
+        return fullAddress;
+    }
+
+
+    public int getId() {
+        return orderId;
+    }
+
+    public String getKitchen() {
         return kitchen;
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

@@ -11,6 +11,7 @@ import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.AddFavResult;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.FavResult;
+import com.atta.cookhouse.model.Result;
 
 import java.util.List;
 
@@ -155,6 +156,47 @@ public class MainPresenter implements MainContract.Presenter {
 
             @Override
             public void onFailure(Call<FavResult> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void saveToken(String token, int userId) {
+
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+
+        //defining the call
+        Call<Result> call = service.saveToken(token, userId);
+
+        //calling the api
+        call.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, retrofit2.Response<Result> response) {
+
+
+                //displaying the message from the response as toast
+                if (response.body() != null){
+
+                    if (!response.body().getError()){
+                        mView.showMessage(response.body().getMessage());
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
 
                 mView.showMessage(t.getMessage());
             }

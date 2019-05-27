@@ -55,7 +55,7 @@ public class SessionManager {
 
     private static final String KEY_USER_PHONE = "phone";
 
-    private static final String KEY_USER_PHONE_2 = "phone2";
+    private static final String KEY_USER_TOKEN = "token";
 
     private static final String KEY_IS_LANGUAGE_SELECTED = "isLanguageSelected";
 
@@ -91,13 +91,23 @@ public class SessionManager {
 
     // Get Login State
     public String  getUserPhone(){
-        return pref.getString(KEY_USER_PHONE, null);
+        return pref.getString(KEY_USER_PHONE, "");
     }
 
 
     // Get Login State
-    public String  getUserPhone2(){
-        return pref.getString(KEY_USER_PHONE_2, null);
+    public String  getUserToken(){
+        return pref.getString(KEY_USER_TOKEN, "");
+    }
+
+    public void setUserToken(String token){
+
+        // Storing national ID in pref
+        editor.putString(KEY_USER_TOKEN, token);
+
+
+        // commit changes
+        editor.commit();
     }
 
 
@@ -113,6 +123,7 @@ public class SessionManager {
 
     // Get Login State
     public String getLanguage(){
+
         return pref.getString(KEY_LANGUAGE_SELECTED, "en");
     }
 
@@ -146,7 +157,6 @@ public class SessionManager {
         editor.putString(KEY_USER_NAME, user.getName());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_USER_PHONE, user.getPhone());
-        editor.putString(KEY_USER_PHONE_2, user.getPhone2());
         editor.putString(KEY_USER_LOCATION, user.getLocation());
         editor.putString(KEY_ORDER_LOCATION, user.getLocation());
         editor.putString(KEY_USER_BIRTHDAY, user.getBirthday());
@@ -233,7 +243,7 @@ public class SessionManager {
         editor.clear();
         editor.putBoolean(IS_LOGIN, false);
         editor.putBoolean(IS_SKIPPED, false);
-        editor.putBoolean(KEY_LANGUAGE_SELECTED, false);
+        editor.putBoolean(KEY_IS_LANGUAGE_SELECTED, false);
         editor.putBoolean(IS_FIRST_LAUNCH, true);
         editor.commit();
 

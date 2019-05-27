@@ -108,7 +108,7 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/addresses"
+                    android:id="@+id/add_addresses"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add / Edit Addresses"
@@ -118,7 +118,6 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,10 +126,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Default Mobile number"/>
+                    android:text="Mobile"/>
+
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/mobile1_tv"
+                    android:id="@+id/mobile_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -138,31 +138,18 @@
                     android:paddingStart="4dp"
                     android:textCursorDrawable="@null"
                     android:maxLines="1"
-                    android:singleLine="true"/>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:singleLine="true"
+                    android:focusable="false"
+                    android:enabled="false"/>
 
                 <TextView
+                    android:id="@+id/edit_mobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mobile number 2"/>
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/mobile2_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:text="Edit Mobile"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:paddingLeft="4dp"
-                    android:textCursorDrawable="@null"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:textColor="#02A247"
+                    android:layout_gravity="right"/>
 
             </LinearLayout>
 
@@ -213,11 +200,30 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"/>
+            <Spinner
+                android:id="@+id/profile_location"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/spinner"/>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
 
         <Button
+            android:id="@+id/save_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"

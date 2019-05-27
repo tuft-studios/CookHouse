@@ -48,15 +48,17 @@ public class AddressesActivity extends AppCompatActivity implements AddressesCon
         setContentView(R.layout.activity_addresses);
 
 
+        recyclerView = findViewById(R.id.my_add_recycler);
+        relativeLayout = findViewById(R.id.relativeLayout);
+
+        infoTextView = findViewById(R.id.my_addresses_info_tv);
+
+
         addressesPresenter = new AddressesPresenter(this, this);
 
         sessionManager = new SessionManager(this);
 
 
-        recyclerView = findViewById(R.id.my_add_recycler);
-        relativeLayout = findViewById(R.id.relativeLayout);
-
-        infoTextView = findViewById(R.id.info_tv);
 
         if (sessionManager.isLoggedIn()){
 

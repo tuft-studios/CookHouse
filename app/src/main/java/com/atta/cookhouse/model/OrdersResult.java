@@ -2,6 +2,8 @@ package com.atta.cookhouse.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class OrdersResult {
     @SerializedName("error")
     private Boolean error;
@@ -10,13 +12,12 @@ public class OrdersResult {
     private String message;
 
     @SerializedName("dishes")
-    private String dishes;
+    private ArrayList<Dish> dishes;
 
-    public OrdersResult(Boolean error, String message, String dishes) {
-        this.error = error;
-        this.message = message;
-        this.dishes = dishes;
-    }
+    @SerializedName("address")
+    private Address address;
+
+
 
     public Boolean getError() {
         return error;
@@ -25,4 +26,13 @@ public class OrdersResult {
     public String getMessage() {
         return message;
     }
+
+    public ArrayList<Dish> getDishes() {
+        return dishes;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
 }

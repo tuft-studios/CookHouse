@@ -38,13 +38,35 @@ public interface APIService {
             @Field("delivery") int delivery,
             @Field("discount") int discount,
             @Field("total") int total,
-            @Field("address") String address,
+            @Field("address_id") int address,
+            @Field("phone") String phone,
             @Field("user_id") int userId,
             @Field("schedule") String schedule,
             @Field("order_time") String orderTime,
             @Field("creation_time") String creationTime,
-            @Field("kitchen") int kitchen,
             @Field("location") String location
+    );
+
+
+    @FormUrlEncoded
+    @POST("get_order_dishes")
+    Call<Dishes> getOrderDishes(
+            @Field("order_id") int id
+    );
+
+
+    @FormUrlEncoded
+    @POST("save_token")
+    Call<Result> saveToken(
+            @Field("token") String token,
+            @Field("user_id") int userId
+    );
+
+
+    @FormUrlEncoded
+    @POST("get_orders")
+    Call<MyOrdersResult> getMyOrders(
+            @Field("user_id") int userId
     );
 
     //the signin call
@@ -62,9 +84,32 @@ public interface APIService {
     );
 
     @FormUrlEncoded
-    @POST("example.php")
+    @POST("update_user")
+    Call<Result> updateProfile(
+            @Field("id") int id,
+            @Field("name") String name,
+            @Field("add_id") int addId,
+            @Field("phone1") String phone1,
+            @Field("date_of_birth") String DateOfBirth,
+            @Field("job") String job,
+            @Field("location") String location
+
+    );
+
+    @FormUrlEncoded
+    @POST("phone_update.php")
     Call<SmsResult> sendSms(
-            @Field("phone_number") String phoneNumber
+            @Field("phone_number") String phoneNumber,
+            @Field("user_id") int userId
+    );
+
+
+    @FormUrlEncoded
+    @POST("confirm_phone_code")
+    Call<Result> confirmPhoneCode(
+            @Field("phone") String phoneNumber,
+            @Field("user_id") int userId,
+            @Field("rand") String rand
     );
 
     //the signin call
@@ -126,6 +171,47 @@ public interface APIService {
     Call<Result> removeAddress(
             @Path("id") int id
     );
+
+    @FormUrlEncoded
+    @POST("add_address")
+    Call<Result> addAddress(
+            @Field("user_id") int userId,
+            @Field("floor") String floor,
+            @Field("apartmentNumber") String apartmentNumber,
+            @Field("buildingNumber") String buildingNumber,
+            @Field("area") String area,
+            @Field("addressName") String addressName,
+            @Field("fullAddress") String fullAddress,
+            @Field("street") String street,
+            @Field("landMark") String landMark,
+            @Field("latitude") float latitude,
+            @Field("longitude") float longitude
+
+    );
+
+
+    @PUT("edit_address/{id}/{user_id}/{floor}/{apartmentNumber}/{buildingNumber}/{area}/{addressName}/{fullAddress}/{street}/{landMark}/{latitude}/{longitude}")
+    Call<Result> editAddress(
+            @Path("id") int id,
+            @Path("user_id") int userId,
+            @Path("floor") String floor,
+            @Path("apartmentNumber") String apartmentNumber,
+            @Path("buildingNumber") String buildingNumber,
+            @Path("area") String area,
+            @Path("addressName") String addressName,
+            @Path("fullAddress") String fullAddress,
+            @Path("street") String street,
+            @Path("landMark") String landMark,
+            @Path("latitude") float latitude,
+            @Path("longitude") float longitude
+
+    );
+
+    @DELETE("remove_address/{id}")
+    Call<Result> deleteAddress(
+            @Path("id") int id
+    );
+
 
     //the image call
     @retrofit.http.GET("images/{imageName}")

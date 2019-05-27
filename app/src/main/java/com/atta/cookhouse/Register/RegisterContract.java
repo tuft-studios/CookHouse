@@ -1,5 +1,7 @@
 package com.atta.cookhouse.Register;
 
+import com.atta.cookhouse.model.User;
+
 public interface RegisterContract {
 
     interface View{
@@ -18,7 +20,7 @@ public interface RegisterContract {
 
     interface Presenter{
 
-        void register(String name, String email, String job, String password, String phone, String birthdayString, String locationSting);
+        void register(User user);
 
 
 
