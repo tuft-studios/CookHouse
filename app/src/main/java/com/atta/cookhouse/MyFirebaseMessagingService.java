@@ -47,32 +47,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             Intent intent = null;
             //creating an intent for the notification
-            if(title.equals("Trip Matched")){
-                mNotificationManager = new MyNotificationManager(getApplicationContext(), false);
-                //intent = new Intent(getApplicationContext(), MatchedTripsActivity.class);
-            }else if(title.equals("Request result")){
-                mNotificationManager = new MyNotificationManager(getApplicationContext(), false);
-                String requesterId = data.getString("requester_id");
-                String offerorId = data.getString("offeror_id");
-                String tripRequestId = data.getString("trip_request_id");
-                String tripOfferId = data.getString("trip_offer_id");
-                String status = data.getString("status");
-
-                //intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
-                intent.putExtra("requesterId", requesterId);
-                intent.putExtra("offerorId", offerorId);
-                intent.putExtra("tripRequestId", tripRequestId);
-                intent.putExtra("tripOfferId", tripOfferId);
-                intent.putExtra("status", status);
-            }else if(title.equals("Trip Started")){
-                mNotificationManager = new MyNotificationManager(getApplicationContext(), false);
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-            }else if(title.equals("Order Added")){
+            if(title.equals("Order Added")){
                 mNotificationManager = new MyNotificationManager(getApplicationContext(), true);
                 /*String distance = data.getString("distance");
                 String offerorId = data.getString("offeror_id");*/
 
                 intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 /*intent.putExtra("distance", distance);
                 intent.putExtra("offeror_id", offerorId);*/
             }

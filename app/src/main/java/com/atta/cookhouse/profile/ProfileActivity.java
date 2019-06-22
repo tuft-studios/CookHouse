@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     DatePickerDialog.OnDateSetListener date;
 
-    String birthdayString, locationString, phone1, phone2;
+    String birthdayString, locationString;
 
     Button saveProfile;
 
@@ -139,7 +139,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 
         }else if (v == saveProfile){
-            User user = new User(SessionManager.getInstance(this).getUserId(), nameText.getText().toString(), phone1, birthdayString, jobText.getText().toString(),  locationString);
+
+            String job = jobText.getText().toString();
+            User user = new User(SessionManager.getInstance(this).getUserId(), nameText.getText().toString(), birthdayString,  locationString ,job);
 
             profilePresenter.updateProfile(user, addId);
 

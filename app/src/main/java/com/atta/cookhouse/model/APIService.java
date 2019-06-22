@@ -89,7 +89,6 @@ public interface APIService {
             @Field("id") int id,
             @Field("name") String name,
             @Field("add_id") int addId,
-            @Field("phone1") String phone1,
             @Field("date_of_birth") String DateOfBirth,
             @Field("job") String job,
             @Field("location") String location
@@ -109,6 +108,22 @@ public interface APIService {
     Call<Result> confirmPhoneCode(
             @Field("phone") String phoneNumber,
             @Field("user_id") int userId,
+            @Field("rand") String rand
+    );
+
+
+    @FormUrlEncoded
+    @POST("forgot_password.php")
+    Call<SmsResult> sendPasswordSms(
+            @Field("phone_number") String phoneNumber
+    );
+
+
+    @FormUrlEncoded
+    @POST("confirm_password_code")
+    Call<Result> confirmPasswordCode(
+            @Field("password") String password,
+            @Field("mobile") String mobile,
             @Field("rand") String rand
     );
 

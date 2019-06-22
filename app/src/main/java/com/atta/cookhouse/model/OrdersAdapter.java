@@ -63,25 +63,36 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         final String orderDate = order.getCreationTime();
         final int statusValue = order.getStatus();
 
+
         switch (statusValue){
             case 0:
                 holder.status.setText("Waiting");
+
                 holder.status.setBackgroundResource(R.drawable.waiting_status_shape);
                 break;
             case 1:
-                holder.status.setText("Cooking");
-                holder.status.setBackgroundResource(R.drawable.cocking_status_shape);
+                holder.status.setText("Received");
+
+                holder.status.setBackgroundResource(R.drawable.received_status_shape);
                 break;
             case 2:
-                holder.status.setText("Delivered");
-                holder.status.setBackgroundResource(R.drawable.delivered_status_shape);
+                holder.status.setText("Ready");
+
+                holder.status.setBackgroundResource(R.drawable.ready_status_shape);
                 break;
             case 3:
+                holder.status.setText("Delivered");
+
+                holder.status.setBackgroundResource(R.drawable.delivered_status_shape);
+                break;
+            case 4:
                 holder.status.setText("Cancelled");
+
                 holder.status.setBackgroundResource(R.drawable.cancelled_status_shape);
                 break;
             default:
                 holder.status.setText("Waiting");
+
                 holder.status.setBackgroundResource(R.drawable.waiting_status_shape);
                 break;
         }

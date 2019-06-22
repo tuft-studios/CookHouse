@@ -47,6 +47,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
     IntentFilter filter;
 
     String category;
+    private int count;
 
     @Nullable
     @Override
@@ -153,6 +154,114 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         ((MainActivity)getActivity()).showOrderDialog(dish, fragmentsPresenter, recyclerView, "main dish", location);
 
     }
+/*
+    public void showOrderDialog2(Dish dish) {
+
+
+        final Dialog myDialog = new Dialog(getContext());
+
+
+        myDialog.setContentView(R.layout.add_to_cart_popup);
+
+        mainPresenter.checkIfFav(dish.getDishId(), SessionManager.getInstance(getContext()).getUserId());
+
+        final int id = dish.getDishId();
+        final String name = dish.getDishName();
+        final String disc = dish.getDishDisc();
+        final int kitchen = dish.getKitchen();
+        final int price = dish.getPrice();
+
+        count = 1;
+
+        final TextView dishName, dishDisc, quantity, totalPrice;
+
+        final ImageView dishImage, addImage, removeImage;
+
+        Button addToCart;
+
+        dishName = myDialog.findViewById(R.id.dish_name);
+        dishDisc = myDialog.findViewById(R.id.dish_disc);
+        quantity = myDialog.findViewById(R.id.quantity);
+        totalPrice = myDialog.findViewById(R.id.total_price);
+        addImage = myDialog.findViewById(R.id.increase);
+        removeImage = myDialog.findViewById(R.id.decrease);
+        dishImage = myDialog.findViewById(R.id.dish_image);
+        favBtn = myDialog.findViewById(R.id.fav);
+
+        dishName.setText(name);
+        dishDisc.setText(disc);
+
+        quantity.setText(String.valueOf(count));
+
+        totalPrice.setText(String.valueOf(price * count) + " EGP");
+
+        //fragmentsPresenter.getRetrofitImage(dishImage, imageUrl);
+
+        final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
+        Picasso.get()
+                .load(imageURL)
+                .into(dishImage);
+
+        favBtn.setOnClickListener(v -> {
+
+            if (isFavorite){
+
+                progressDialog.setMessage("Removing from Favorites...");
+                mainPresenter.removeFromFav(favId);
+            }else {
+
+                progressDialog.setMessage("Adding to your Favorites...");
+                mainPresenter.addToFav(dish.getDishId(), SessionManager.getInstance(this).getUserId());
+                fragmentsPresenter.getMenu(recyclerView, type, location);
+            }
+            progressDialog.show();
+
+        });
+
+        addImage.setOnClickListener(view -> {
+
+            count++;
+
+            quantity.setText(String.valueOf(count));
+
+            totalPrice.setText(String.valueOf(price * count) + " EGP");
+
+            removeImage.setOnClickListener(view1 -> {
+
+                count--;
+
+                quantity.setText(String.valueOf(count));
+
+                totalPrice.setText(String.valueOf(price * count) + " EGP");
+
+                if (count == 1){
+                    removeImage.setOnClickListener(null);
+                }
+            });
+
+        });
+
+
+
+        addToCart = myDialog.findViewById(R.id.add_to_cart);
+        addToCart.setOnClickListener(v -> {
+
+            Toast.makeText(MainActivity.this,"Dish add",Toast.LENGTH_LONG).show();
+
+            String total = String.valueOf(price * count);
+
+            fragmentsPresenter.getCartItem(id, name, total, count, kitchen);
+
+            myDialog.dismiss();
+
+        });
+
+
+        myDialog.setCancelable(true);
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialog.show();
+
+    }*/
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.main, menu);

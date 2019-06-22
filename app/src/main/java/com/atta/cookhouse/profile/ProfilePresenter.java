@@ -116,7 +116,6 @@ public class ProfilePresenter implements ProfileContract.Presenter {
                 user.getId(),
                 user.getName(),
                 add_id,
-                user.getPhone(),
                 user.getBirthday(),
                 user.getJob(),
                 user.getLocation()

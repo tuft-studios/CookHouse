@@ -58,6 +58,7 @@ public class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
 
                             if (dishes.size() > 0){
 
+                                mView.showRecyclerView(dishes);
                             }
                         }else {
                             mView.showMessage("An error");

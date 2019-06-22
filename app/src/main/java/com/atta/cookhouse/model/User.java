@@ -49,6 +49,13 @@ public class User {
     }
 
 
+    public User(int id, String username, String birthday, String location, String job){
+        this.id = id;
+        this.username = username;
+        this.birthday = birthday;
+        this.location = location;
+        this.job = job;
+    }
 
     public int getId() {
         return id;

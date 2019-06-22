@@ -1,6 +1,8 @@
 package com.atta.cookhouse.model;
 
-public class Dish {
+import java.io.Serializable;
+
+public class Dish implements Serializable {
 
 
     private int dId, price, kitchen, likes, quantity;

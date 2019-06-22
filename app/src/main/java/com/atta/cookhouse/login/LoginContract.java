@@ -19,6 +19,18 @@ public interface LoginContract {
         void skipToMain();
 
         void dismissProgressDialog();
+
+        void showPasswordPopup();
+
+        void hidePasswordPopup();
+
+        void hideCodePopup();
+
+        void showCodePopup();
+
+        void resetPassword();
+
+        boolean validate(String code, String newPassword, String passwordConfirm);
     }
 
     interface Presenter{
@@ -27,5 +39,9 @@ public interface LoginContract {
 
 
         boolean validate(String email, String password);
+
+        void sendSms(String mobile);
+
+        void confirmCode(String mobile, String password, String rand);
     }
 }

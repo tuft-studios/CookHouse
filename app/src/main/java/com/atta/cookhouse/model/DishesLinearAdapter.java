@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.favorites.FavoritesContract;
+import com.atta.cookhouse.orderdetails.OrderDetailsContract;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,21 +21,28 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
 
     private List<Dish> dishes;
 
-    FavoritesContract.View view ;
+    Order order;
+
+    FavoritesContract.View favView ;
+
+    OrderDetailsContract.View orderView;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, price;
+        public TextView title, price, count;
         public ImageView dishImage;
         public RelativeLayout viewBackground, viewForeground;
 
         public MyViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.name_txt);
-            dishImage = view.findViewById(R.id.image);
-            price = view.findViewById(R.id.price_txt);
-            viewBackground = view.findViewById(R.id.view_background);
-            viewForeground = view.findViewById(R.id.view_foreground);
+            if (favView != null){
+                dishImage = view.findViewById(R.id.image);
+                price = view.findViewById(R.id.price_txt);
+                viewBackground = view.findViewById(R.id.view_background);
+                viewForeground = view.findViewById(R.id.view_foreground);
+            }else count = view.findViewById(R.id.count_sam);
+
         }
     }
 
@@ -46,14 +54,28 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
     public DishesLinearAdapter(FavoritesContract.View view, ArrayList<Dish> data) {
 
         this.dishes = data;
-        this.view = view;
+        this.favView = view;
+    }
+
+    public DishesLinearAdapter(OrderDetailsContract.View view, ArrayList<Dish> data, Order order) {
+
+        this.dishes = data;
+        this.orderView = view;
+        this.order = order;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fav_list_item, parent, false);
+        View itemView;
+        if (favView != null) {
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.fav_list_item, parent, false);
+        }else {
+
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.sam_list_item, parent, false);
+        }
 
         return new MyViewHolder(itemView);
     }
@@ -67,26 +89,39 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final int price = dish.getPrice();
-        if (dish.getImageUrl() != null){
 
-            final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
-            Picasso.get()
-                    .load(imageURL)
-                    .resize(50, 50)
-                    .centerCrop()
-                    .into(holder.dishImage);
-        }
         holder.title.setText(name);
-        holder.price.setText(String.valueOf(price) + " EGP");
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                view.showOrderDialog(dish);
+        if (favView != null) {
 
+            if (dish.getImageUrl() != null) {
 
+                final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
+                Picasso.get()
+                        .load(imageURL)
+                        .resize(50, 50)
+                        .centerCrop()
+                        .into(holder.dishImage);
             }
-        });
+
+            holder.price.setText(String.valueOf(price) + " EGP");
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    favView.showOrderDialog(dish);
+
+
+                }
+            });
+
+        }else {
+            int count = order.getDishesList().get(position).getQuantity();
+
+            holder.count.setText("X" + count);
+        }
+
 
 
     }

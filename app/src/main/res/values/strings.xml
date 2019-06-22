@@ -126,4 +126,8 @@
     <string name="enter_code">Enter confirmation code</string>
     <string name="enter_the_code">Enter the code</string>
     <string name="forget_password">Forget Password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="send">Send</string>
+    <string name="registered_phone_text">201XXXXXXXXX</string>
+    <string name="code_hint">A confirmation Code will be sent to your resisted mobile number</string>
 </resources>

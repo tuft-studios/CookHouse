@@ -1,7 +1,10 @@
 package com.atta.cookhouse.login;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -30,10 +33,15 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     Button login;
 
     // National ID, password edit text
-    EditText emailText,passwordText;
+    EditText emailText, passwordText, phoneTextView, code, newPassword, newPasswordConfirm;
 
-    TextView newAccount, skip;
+    TextView newAccount, skip, forgotPassword;
 
+    Dialog passwordDialog, codeDialog;
+
+    Button sendBtn, resetBtn;
+
+    String phone;
 
     private CheckBox show_hide_password;
 
@@ -67,6 +75,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
         show_hide_password = (CheckBox) findViewById(R.id.show_hide_password);
         show_hide_password.setOnCheckedChangeListener(this);
+
+        forgotPassword = findViewById(R.id.forgot_password);
+        forgotPassword.setOnClickListener(this);
     }
 
 
@@ -88,6 +99,15 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
             SessionManager.getInstance(this).setLanguage(SessionManager.getInstance(this).getLanguage());
             skipToMain();
+        }else if (view == forgotPassword){
+
+            showPasswordPopup();
+        }else if (view == sendBtn){
+
+            phone = phoneTextView.getText().toString();
+            loginPresenter.sendSms(phone);
+        }else if (view == resetBtn){
+            resetPassword();
         }
     }
 
@@ -112,6 +132,39 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             passwordText.setTransformationMethod(PasswordTransformationMethod.getInstance());// hide password
 
         }
+    }
+
+
+    @Override
+    public void resetPassword() {
+        if (!validate(code.getText().toString(), newPassword.getText().toString(), newPasswordConfirm.getText().toString())) {
+
+            return;
+        }
+
+        loginPresenter.confirmCode(phone, newPassword.getText().toString(), code.getText().toString());
+    }
+
+
+    @Override
+    public boolean validate(String code, String newPassword, String passwordConfirm) {
+
+        boolean valid = true;
+
+
+        if (newPassword.isEmpty() || newPassword.length() < 4 || newPassword.length() > 10) {
+            showError("wrong new password, Passwords  must be between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else if (passwordConfirm.isEmpty() || passwordConfirm.length() < 4 || passwordConfirm.length() > 10 ) {
+
+            showError("wrong confirm password, Passwords  must be between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else if (!newPassword.equals(passwordConfirm)){
+
+            showError("new password and confirm password not Matched");
+            valid = false;
+        }
+        return valid;
     }
 
     @Override
@@ -155,6 +208,55 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         if(progressDialog != null || progressDialog.isShowing() ){
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void showPasswordPopup() {
+
+        passwordDialog = new Dialog(this);
+
+
+        passwordDialog.setContentView(R.layout.forgot_password);
+
+        sendBtn = passwordDialog.findViewById(R.id.btn_send);
+        phoneTextView = passwordDialog.findViewById(R.id.user_phone);
+
+        sendBtn.setOnClickListener(this);
+
+        passwordDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        passwordDialog.show();
+    }
+
+    @Override
+    public void hidePasswordPopup() {
+
+        passwordDialog.dismiss();
+    }
+
+    @Override
+    public void hideCodePopup() {
+        codeDialog.dismiss();
+    }
+
+    @Override
+    public void showCodePopup() {
+
+        codeDialog = new Dialog(this);
+
+
+
+        passwordDialog.setContentView(R.layout.password_code_popup);
+
+        resetBtn =passwordDialog.findViewById(R.id.btn_reset);
+        code = passwordDialog.findViewById(R.id.old_password);
+        newPassword = passwordDialog.findViewById(R.id.new_password);
+        newPasswordConfirm = passwordDialog.findViewById(R.id.new_password_confirm);
+
+        resetBtn.setOnClickListener(this);
+
+
+        passwordDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        passwordDialog.show();
     }
 
     @Override

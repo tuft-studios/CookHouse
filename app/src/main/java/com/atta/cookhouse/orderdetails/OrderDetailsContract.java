@@ -1,7 +1,6 @@
 package com.atta.cookhouse.orderdetails;
 
 import com.atta.cookhouse.model.Dish;
-import com.atta.cookhouse.model.Order;
 
 import java.util.ArrayList;
 
@@ -11,7 +10,7 @@ public interface OrderDetailsContract {
 
         void showMessage(String error);
 
-        void showRecyclerView(ArrayList<Order> orders);
+        void showRecyclerView(ArrayList<Dish> dishes);
 
         void showOrderDialog(Dish dish);
 
