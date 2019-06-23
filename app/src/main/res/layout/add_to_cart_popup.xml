@@ -42,6 +42,18 @@
             android:layout_marginRight="12dp"/>
     </RelativeLayout>
 
+
+    <TextView
+        android:id="@+id/dish_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="end"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:text="50 EGP"/>
+
     <TextView
         android:id="@+id/dish_disc"
         android:layout_width="match_parent"
@@ -50,6 +62,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:text="Homemade French Croissant stuffed with emental cheese and served with bla bla bla bla bla bla bla bla bla bla bla"/>
+
 
 
     <TextView

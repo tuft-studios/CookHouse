@@ -40,11 +40,11 @@ public interface MainContract {
 
         void getCartItemsNum() ;
 
-        void addToFav(int propertyId, int userId);
+        void addToFav(int dishId, int userId);
 
         void removeFromFav(int fId);
 
-        void checkIfFav(int propertyId, int userId);
+        void checkIfFav(int dishId, int userId);
 
         void saveToken(String token, int userId);
 

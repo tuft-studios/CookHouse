@@ -24,6 +24,10 @@ public interface ItemDao {
     void deleteAll();
 
 
+    @Query("SELECT * FROM cartItem WHERE dishId = :dishId")
+    CartItem checkItem(int dishId);
+
+
     @Query("SELECT * from cartItem where dishName = :dishName")
     CartItem getItem(String dishName);
 

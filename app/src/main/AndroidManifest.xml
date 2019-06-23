@@ -69,7 +69,8 @@
             android:name=".myorders.MyOrdersActivity"
             android:label="My Orders"
             android:parentActivityName=".main.MainActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".SplashScreenActivity"
+            android:theme="@style/AppTheme2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

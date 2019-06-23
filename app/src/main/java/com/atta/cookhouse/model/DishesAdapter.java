@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.fragments.FragmentsContract;
+import com.atta.cookhouse.fragments.FragmentsPresenter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
     private List<Dish> dishes;
 
     FragmentsContract.View view ;
+
+    FragmentsPresenter fragmentsPresenter;
 
     Context context;
 
@@ -35,17 +38,18 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
             dishImage = view.findViewById(R.id.dish_image);
             price = view.findViewById(R.id.price);
             add = view.findViewById(R.id.add);
-            likes = view.findViewById(R.id.like_count);
-            likeImage = view.findViewById(R.id.like);
+            //likes = view.findViewById(R.id.like_count);
+            //likeImage = view.findViewById(R.id.like);
         }
     }
 
 
-    public DishesAdapter(FragmentsContract.View view, ArrayList<Dish> data, Context context) {
+    public DishesAdapter(FragmentsContract.View view, ArrayList<Dish> data, Context context, FragmentsPresenter fragmentsPresenter) {
 
         this.dishes = data;
         this.view = view;
         this.context = context;
+        this.fragmentsPresenter = fragmentsPresenter;
     }
 
     @NonNull
@@ -66,7 +70,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final int price = dish.getPrice();
-        final int likes = dish.getLikes();
+        //final int likes = dish.getLikes();
         if (dish.getImageUrl() != null){
 
             final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
@@ -79,12 +83,13 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
         holder.title.setText(name);
         String priceText = String.valueOf(price) + " " + context.getString(R.string.curruncy);
         holder.price.setText(priceText);
-        holder.likes.setText(String.valueOf(likes));
-        holder.add.setOnClickListener(new View.OnClickListener() {
+        //holder.likes.setText(String.valueOf(likes));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                view.showOrderDialog(dish);
+                fragmentsPresenter.checkCartItem(dish);
+
 
 
             }

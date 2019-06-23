@@ -2,6 +2,7 @@ package com.atta.cookhouse.orderdetails;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,13 +28,15 @@ public class OrderDetailsActivity extends AppCompatActivity implements OrderDeta
 
     OrderDetailsPresenter orderDetailsPresenter;
 
-    TextView timeTv, addressTv, mobileTv, subTotalTv, deliveryFeesTv, discountTv, totalTx;
+    TextView timeTv, addressTv, mobileTv, subTotalTv, deliveryFeesTv, discountTv, totalTx, canceledTv;
 
     RecyclerView recyclerView;
 
-    ImageView submittedImage, preparedImage, deliveredImage, backtoMain;
+    ImageView submittedImage, receivedImage, readyImage, deliveredImage, backToMain;
 
     DishesLinearAdapter myAdapter;
+
+    ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,11 +104,15 @@ public class OrderDetailsActivity extends AppCompatActivity implements OrderDeta
 
 
         submittedImage = findViewById(R.id.imageView);
-        preparedImage = findViewById(R.id.imageView2);
-        deliveredImage = findViewById(R.id.imageView3);
+        receivedImage = findViewById(R.id.imageView2);
+        readyImage = findViewById(R.id.imageView3);
+        deliveredImage = findViewById(R.id.imageView4);
+        canceledTv = findViewById(R.id.canceled_tv);
 
-        backtoMain  = findViewById(R.id.btn_back_to_main);
-        backtoMain.setOnClickListener(this);
+        backToMain = findViewById(R.id.btn_back_to_main);
+        backToMain.setOnClickListener(this);
+
+        constraintLayout = findViewById(R.id.order_tracker_layout);
 
     }
 
@@ -121,32 +128,57 @@ public class OrderDetailsActivity extends AppCompatActivity implements OrderDeta
         switch (order.getStatus()){
             case 0:
                 submittedImage.setImageResource(R.drawable.dot_and_circle);
-                preparedImage.setImageResource(R.drawable.circle);
+                receivedImage.setImageResource(R.drawable.circle);
+                readyImage.setImageResource(R.drawable.circle);
                 deliveredImage.setImageResource(R.drawable.circle);
-                preparedImage.setOnClickListener(this);
+                receivedImage.setOnClickListener(this);
                 break;
 
             case 1:
                 submittedImage.setImageResource(R.drawable.circle);
-                preparedImage.setImageResource(R.drawable.dot_and_circle);
+                receivedImage.setImageResource(R.drawable.dot_and_circle);
+                readyImage.setImageResource(R.drawable.circle);
                 deliveredImage.setImageResource(R.drawable.circle);
-                preparedImage.setOnClickListener(null);
-                deliveredImage.setOnClickListener(this);
+                receivedImage.setOnClickListener(null);
+                readyImage.setOnClickListener(this);
                 break;
 
             case 2:
                 submittedImage.setImageResource(R.drawable.circle);
-                preparedImage.setImageResource(R.drawable.circle);
+                receivedImage.setImageResource(R.drawable.circle);
+                readyImage.setImageResource(R.drawable.dot_and_circle);
+                deliveredImage.setImageResource(R.drawable.circle);
+                readyImage.setOnClickListener(null);
+                deliveredImage.setOnClickListener(this);
+                break;
+
+            case 3:
+                submittedImage.setImageResource(R.drawable.circle);
+                receivedImage.setImageResource(R.drawable.circle);
+                readyImage.setImageResource(R.drawable.circle);
                 deliveredImage.setImageResource(R.drawable.dot_and_circle);
-                preparedImage.setOnClickListener(null);
+                readyImage.setOnClickListener(null);
                 deliveredImage.setOnClickListener(null);
+                break;
+
+            case 4:
+                constraintLayout.setVisibility(View.INVISIBLE);
+                canceledTv.setVisibility(View.VISIBLE);
+                break;
+
+            default:
+                submittedImage.setImageResource(R.drawable.dot_and_circle);
+                receivedImage.setImageResource(R.drawable.circle);
+                readyImage.setImageResource(R.drawable.circle);
+                deliveredImage.setImageResource(R.drawable.circle);
+                readyImage.setOnClickListener(this);
                 break;
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (v == backtoMain){
+        if (v == backToMain){
 
             Intent intent = new Intent(this, MyOrdersActivity.class);
             startActivity(intent);

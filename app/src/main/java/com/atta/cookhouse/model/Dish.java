@@ -5,8 +5,9 @@ import java.io.Serializable;
 public class Dish implements Serializable {
 
 
-    private int dId, price, kitchen, likes, quantity;
+    private int dId, price, kitchen, likes, quantity, cartCount;
     private String imageUrl, dishName, dishDisc, location;
+    boolean isFav;
 
 
     public Dish(int dId, String dishName, String dishDisc, int kitchen, int price, String imageUrl, String location, int likes) {
@@ -23,6 +24,19 @@ public class Dish implements Serializable {
     public Dish(int id, int quantity) {
         this.dId = id;
         this.quantity = quantity;
+    }
+
+    public Dish(int dId, int price, int kitchen, int likes, int cartCount, String imageUrl, String dishName, String dishDisc, String location, boolean isFav) {
+        this.dId = dId;
+        this.price = price;
+        this.kitchen = kitchen;
+        this.likes = likes;
+        this.cartCount = cartCount;
+        this.imageUrl = imageUrl;
+        this.dishName = dishName;
+        this.dishDisc = dishDisc;
+        this.location = location;
+        this.isFav = isFav;
     }
 
     public int getDishId() {
@@ -59,5 +73,21 @@ public class Dish implements Serializable {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public int getCartCount() {
+        return cartCount;
+    }
+
+    public void setCartCount(int cartCount) {
+        this.cartCount = cartCount;
+    }
+
+    public boolean isFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean fav) {
+        isFav = fav;
     }
 }

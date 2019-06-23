@@ -6,8 +6,8 @@ import android.os.AsyncTask;
 import com.andremion.counterfab.CounterFab;
 import com.atta.cookhouse.cart.CartContract;
 import com.atta.cookhouse.favorites.FavoritesContract;
+import com.atta.cookhouse.fragments.FragmentsContract;
 import com.atta.cookhouse.login.LoginContract;
-import com.atta.cookhouse.main.MainContract;
 import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.CartItem;
@@ -21,6 +21,34 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class QueryUtils {
+
+    public static void updateCount(final CartItem cartItem, final Context mContext, int count) {
+
+        cartItem.setCount(count);
+
+        class SaveTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                //adding to database
+                DatabaseClient.getInstance(mContext).getAppDatabase()
+                        .itemDao()
+                        .update(cartItem);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                //mView.openCart();
+            }
+        }
+
+        SaveTask st = new SaveTask();
+        st.execute();
+
+    }
 
     public static void updateCount(final CartItem cartItem, final Context mContext, boolean add) {
 
@@ -81,7 +109,7 @@ public class QueryUtils {
                 //itemInserted[0] = id > -1 ;
 
                 if (cartItem != null){
-                    getCartItem(cartItem.getId(), mContext);
+                    getCartItem(cartItem.getId(), mContext, count);
                 }else {
 
                     addToCart(id, dishName, count, kitchen, price, mContext);
@@ -99,7 +127,7 @@ public class QueryUtils {
         gt.execute();
 
     }
-    public static void getCartItem(final int id, final Context mContext) {
+    public static void getCartItem(final int id, final Context mContext, int count) {
 
         class GetTasks extends AsyncTask<Void, Void, CartItem> {
 
@@ -117,7 +145,7 @@ public class QueryUtils {
             protected void onPostExecute(CartItem cartItem) {
                 super.onPostExecute(cartItem);
 
-                QueryUtils.updateCount(cartItem, mContext, true);
+                QueryUtils.updateCount(cartItem, mContext, count);
 
 
             }
@@ -303,7 +331,7 @@ public class QueryUtils {
 
     }
 
-    public static void removeFromFav(int fId, final MainContract.View mainView, final FavoritesContract.View favView) {
+    public static void removeFromFav(int fId, final FragmentsContract.View mainView, final FavoritesContract.View favView) {
 
         //building retrofit object
         Retrofit retrofit = new Retrofit.Builder()

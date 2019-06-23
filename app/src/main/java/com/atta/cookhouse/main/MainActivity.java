@@ -115,8 +115,10 @@ public class MainActivity extends AppCompatActivity
         CounterFab counterFab = findViewById(R.id.fab);
         counterFab.setOnClickListener(view -> {
 
-            finish();
-            startActivity(new Intent(getApplicationContext(), CartActivity.class));
+            if (counterFab.getCount() > 0) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), CartActivity.class));
+            }else showMessage("Cart is empty");
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

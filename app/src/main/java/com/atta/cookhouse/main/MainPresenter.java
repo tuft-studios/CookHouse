@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 
 import com.andremion.counterfab.CounterFab;
 import com.atta.cookhouse.Local.DatabaseClient;
-import com.atta.cookhouse.Local.QueryUtils;
 import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.AddFavResult;
@@ -70,7 +69,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void addToFav(int propertyId, int userId) {
+    public void addToFav(int dishId, int userId) {
 
         //building retrofit object
         Retrofit retrofit = new Retrofit.Builder()
@@ -83,7 +82,7 @@ public class MainPresenter implements MainContract.Presenter {
 
 
         //defining the call
-        Call<AddFavResult> call = service.addToFavorite(propertyId, userId);
+        Call<AddFavResult> call = service.addToFavorite(dishId, userId);
 
         //calling the api
         call.enqueue(new Callback<AddFavResult>() {
@@ -116,11 +115,11 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void removeFromFav(int fId) {
-        QueryUtils.removeFromFav(fId, mView, null);
+        //QueryUtils.removeFromFav(fId, mView, null);
     }
 
     @Override
-    public void checkIfFav(int propertyId, int userId) {
+    public void checkIfFav(int dishId, int userId) {
 
         //building retrofit object
         Retrofit retrofit = new Retrofit.Builder()
@@ -133,7 +132,7 @@ public class MainPresenter implements MainContract.Presenter {
 
 
         //defining the call
-        Call<FavResult> call = service.checkIfFavorite(propertyId, userId);
+        Call<FavResult> call = service.checkIfFavorite(dishId, userId);
 
         //calling the api
         call.enqueue(new Callback<FavResult>() {

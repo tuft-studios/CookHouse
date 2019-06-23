@@ -20,6 +20,16 @@ public interface FragmentsContract {
         void showOrderDialog(Dish dish);
 
         void showRecyclerView(ArrayList<Dish> dishes );
+
+        void setFavId(int id);
+
+        void changeFavIcon(boolean isFav);
+
+        void showMessage(String error);
+
+        void setDialog();
+
+        void setCount(int count, Dish dish);
     }
 
     interface Presenter{
@@ -28,6 +38,16 @@ public interface FragmentsContract {
         void getMenu(final RecyclerView recyclerView, String type, String location);
 
         void getCartItem(int id, String dishName, String price, int count, int kitchen);
+
+        void checkIfFav(int propertyId, int userId);
+
+        void addToFav(int dishId, int userId);
+
+        void removeFromFav(int dishId, int userId);
+
+        void checkCartItems(final ArrayList<Dish> dishes);
+
+        void checkCartItem(final Dish dish);
 
     }
 }

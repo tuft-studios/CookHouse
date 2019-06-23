@@ -263,7 +263,21 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         }else if (view == deleteBtn){
 
-            cartPresenter.removeCartItems();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Remove items !");
+            builder.setMessage("Do you really want to empty your cart?");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+
+                cartPresenter.removeCartItems();
+                Toast.makeText(CartActivity.this, "Cart items removed", Toast.LENGTH_SHORT).show();
+            });
+
+            builder.setNegativeButton("No", null);
+
+            builder.show();
+
 
         }else if (view == orderBtn){
 
