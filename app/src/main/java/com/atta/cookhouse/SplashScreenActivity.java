@@ -44,6 +44,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     Intent intent = new Intent(SplashScreenActivity.this, LanguageActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    finish();
                 }else {
 
                     String languageToLoad = session.getLanguage();

@@ -270,9 +270,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (!placeSelected){
 
-                addresses = getAddress(myLatLng);
+                addresses = getAddressId(myLatLng);
             }else
-                addresses = getAddress(placeLatLngLoc);
+                addresses = getAddressId(placeLatLngLoc);
 
             if (addresses == null || addresses.size()  == 0) {
 

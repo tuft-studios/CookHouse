@@ -250,7 +250,7 @@ public class CartPresenter implements CartContract.Presenter {
                 order.getDelivery(),
                 order.getDiscount(),
                 order.getTotalPrice(),
-                order.getAddress(),
+                order.getAddressId(),
                 order.getMobile(),
                 order.getUserId(),
                 order.getSchedule(),

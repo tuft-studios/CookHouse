@@ -73,7 +73,7 @@ public class AddressesActivity extends AppCompatActivity implements AddressesCon
                     }
             );
         }else {
-            infoTextView.setText("You need to login to see your favorites");
+            infoTextView.setText("You need to login to see your addresses");
         }
     }
 

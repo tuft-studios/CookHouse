@@ -204,6 +204,7 @@ public class SessionManager {
             // Staring Login Activity
             _context.startActivity(i);
 
+
         }else if (this.isSkipped()){
             // user is logged in redirect him to Main Activity
             Intent i = new Intent(_context, MainActivity.class);

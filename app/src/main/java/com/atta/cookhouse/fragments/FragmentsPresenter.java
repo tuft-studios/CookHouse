@@ -294,7 +294,7 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
 
 
         //defining the call
-        Call<Result> call = service.removeFromFavorite(dishId, userId);
+        Call<Result> call = service.removeFromFavorite(userId, dishId);
 
         //calling the api
         call.enqueue(new Callback<Result>() {
