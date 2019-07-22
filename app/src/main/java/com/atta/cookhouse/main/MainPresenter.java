@@ -10,12 +10,14 @@ import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.AddFavResult;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.FavResult;
+import com.atta.cookhouse.model.PointsResult;
 import com.atta.cookhouse.model.Result;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -107,6 +109,51 @@ public class MainPresenter implements MainContract.Presenter {
 
             @Override
             public void onFailure(Call<AddFavResult> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getPoints(int userId) {
+
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+
+        //defining the call
+        Call<PointsResult> call = service.getPoints(userId);
+
+        //calling the api
+        call.enqueue(new Callback<PointsResult>() {
+            @Override
+            public void onResponse(Call<PointsResult> call, Response<PointsResult> response) {
+                //hiding progress dialog
+
+
+                //displaying the message from the response as toast
+                if (response.body() != null) {
+                    //mView.showMessage(response.body().getMessage());
+                    //if there is no error
+                    if (!response.body().getError()) {
+                        //starting Main activity
+                        mView.changeFavIcon(true);
+                        mView.setPoints(response.body().getPoints());
+                    }else {
+                        mView.showMessage(response.body().getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PointsResult> call, Throwable t) {
 
                 mView.showMessage(t.getMessage());
             }

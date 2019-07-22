@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity
     private static final int FINE_LOCATION_REQUEST_CODE = 101;
     private static final int COARSE_LOCATION_REQUEST_CODE = 102;
 
+    TextView pointsText;
+
     SessionManager sessionManager;
 
     String[] urls, tags;
@@ -131,6 +133,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        pointsText = navigationView.getHeaderView(0).findViewById(R.id.points_tv);
+
         // Find the view pager that will allow the user to swipe between fragments
         viewPager = findViewById(R.id.viewpager);
 
@@ -187,6 +191,7 @@ public class MainActivity extends AppCompatActivity
         mainPresenter = new MainPresenter(MainActivity.this, MainActivity.this, counterFab);
 
         mainPresenter.getCartItemsNum();
+        mainPresenter.getPoints(SessionManager.getInstance(this).getUserId());
 
 
         FirebaseInstanceId.getInstance().getInstanceId()
@@ -620,6 +625,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setFavId(int id) {
         favId = id;
+    }
+
+    @Override
+    public void setPoints(int points) {
+
+        pointsText.setText(String.valueOf(points));
     }
 
     @Override

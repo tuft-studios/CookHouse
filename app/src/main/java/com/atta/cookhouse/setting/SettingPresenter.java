@@ -96,7 +96,7 @@ public class SettingPresenter implements SettingContract.Presenter {
 
                     mView.showMessage(response.body().getMessage());
 
-                    SessionManager.getInstance(mContext).setPhone(response.body().getUser().getPhone());
+                    SessionManager.getInstance(mContext).setPhone(response.body().getDiscount().getPhone());
 
 
                 }else {

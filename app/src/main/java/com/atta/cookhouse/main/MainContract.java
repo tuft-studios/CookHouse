@@ -33,6 +33,8 @@ public interface MainContract {
 
         void setFavId(int id);
 
+        void setPoints(int points);
+
         void setDialog();
     }
 
@@ -47,6 +49,8 @@ public interface MainContract {
         void checkIfFav(int dishId, int userId);
 
         void saveToken(String token, int userId);
+
+        void getPoints(int userId);
 
     }
 }

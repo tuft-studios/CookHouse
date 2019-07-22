@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -55,7 +57,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     private RecyclerView recyclerView, summaryRecyclerView;
 
     TextView subtotalPrice, deliverPrice, totalPrice, subtotalPriceSum, deliverPriceSum, totalPriceSum, mobileNumberTxt, deliveryTimeTxt, deliveryAddTxt
-            , addAddresses, addPhone;
+            , addAddresses, addPhone, discountTv, discountTvSum;
 
     RelativeLayout confirmLayout;
 
@@ -71,17 +73,23 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     Dialog loginDialog;
 
-    EditText email,password, dateText, timeText, tempPhone;
+    CheckBox addPromo;
+
+    EditText email,password, dateText, timeText, tempPhone, promoCode;
 
     ProgressDialog progressDialog;
 
-    String orderTime, schedule, dateSelected, timeSelected, mobile, address, addressLocation;
+    String orderTime, schedule, dateSelected, timeSelected, mobile, address, addressLocation, promoCodeString, discountString;
 
     int deliveryAddId;
+
+    double subTotal;
 
     Animation mSlideFromBelow, mSlideToLift;
 
     Dialog myDialog;
+
+    Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +125,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         sessionManager = new SessionManager(this);
 
 
+        discountTv = findViewById(R.id.tv_discount);
+        deliverPriceSum = findViewById(R.id.tv_discount_sum);
         subtotalPrice = findViewById(R.id.tv_subtotal);
         deliverPrice = findViewById(R.id.tv_delivery);
         totalPrice = findViewById(R.id.tv_total);
@@ -127,6 +137,31 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         deliveryAddTxt = findViewById(R.id.tv_address_sum);
         backToCartBtn = findViewById(R.id.btn_back_to_cart);
         backToCartBtn.setOnClickListener(this);
+
+
+        addPromo = findViewById(R.id.promo_check) ;
+
+        promoCode = findViewById(R.id.promoCode) ;
+
+
+        addPromo.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                promoCode.setVisibility(View.VISIBLE);
+                showSnakbar(buttonView);
+            }else {
+                promoCode.setVisibility(View.INVISIBLE);
+                if (snackbar != null){
+                    snackbar.dismiss();
+                }
+            }
+        });
+
+        promoCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSnakbar(v);
+            }
+        });
 
         confirmLayout = findViewById(R.id.button);
         confirmLayout.setOnClickListener(this);
@@ -152,6 +187,44 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         orderBtn.setOnClickListener(this);
     }
 
+    private void showSnakbar(View buttonView) {
+        // Create the Snackbar
+        snackbar = Snackbar.make(buttonView, "", Snackbar.LENGTH_INDEFINITE);
+        // Get the Snackbar's layout view
+        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
+        // Hide the text
+        TextView textView = layout.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setVisibility(View.INVISIBLE);
+
+
+        // Inflate our custom view
+        View snackView = getLayoutInflater().inflate(R.layout.my_snackbar, null);
+        // Configure the view
+        EditText editText = snackView.findViewById(R.id.editText);
+
+        //promoCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        editText.setText(promoCodeString);
+
+
+        Button confirm = snackView.findViewById(R.id.button2);
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promoCodeString = editText.getText().toString();
+                cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), promoCodeString);
+                snackbar.dismiss();
+            }
+        });
+
+        //If the view is not covering the whole snackbar layout, add this line
+        layout.setPadding(0,0,0,0);
+
+        // Add the view to the Snackbar's layout
+        layout.addView(snackView, 0);
+        // Show the Snackbar
+        snackbar.show();
+    }
+
 
     @Override
     public void showAddresses(List<Address> mAddresses) {
@@ -172,6 +245,18 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     public void showAddressesMessage(String message) {
 
         addressesArray.add(message);
+    }
+
+    @Override
+    public void setDiscount(int discount) {
+        promoCode.setText(promoCodeString);
+            promoCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+
+        double discountAmount = subTotal * discount / 100;
+        discountString = String.valueOf(discountAmount);
+
+        discountTv.setText(discountString + " EGP");
+        deliverPriceSum.setText(discountString + " EGP");
     }
 
 
@@ -221,7 +306,9 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     }
 
     @Override
-    public void setTotalPrice(int subtotal, int delivery) {
+    public void setTotalPrice(double subtotal, double delivery) {
+
+        subTotal= subtotal;
 
         subtotalPrice.setText(String.valueOf(subtotal) + " EGP");
 
@@ -402,7 +489,6 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         TextView mobileTxt;
 
-
         Spinner addressesSpinner;
 
         ArrayAdapter<String> addressesAdapter;
@@ -446,6 +532,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
                 }
             }
         });
+
 
         addressesSpinner = myDialog.findViewById(R.id.delivery_addresses_spinner);
 

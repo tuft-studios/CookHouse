@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,214 +8,270 @@
     tools:context=".cart.CartActivity">
 
 
-    <RelativeLayout
+
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/cart_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
+    <RelativeLayout
+        android:id="@+id/ly2"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <RelativeLayout
-            android:id="@+id/ly2"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize">
-
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="12dp"
-                android:src="@drawable/left_arrow"/>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:textColor="@color/colorPrimary"
-                android:text="Your Cart"/>
-
-
-            <ImageView
-                android:id="@+id/delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginEnd="12dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/delete"/>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/ly"
-            android:layout_below="@+id/ly2"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/left_arrow"/>
 
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:layout_margin="12dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:text="Your Order"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorPrimary"
+            android:text="Your Cart"/>
 
 
-            <CheckBox
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:text="Use Points"/>
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_marginEnd="12dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/delete"/>
 
-        </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ly2">
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:layout_weight="2"
+            android:text="Your Order"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="Use Points" />
+
+    </LinearLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_cart"
-            android:layout_above="@+id/layout_all"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_below="@+id/ly">
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/promo_ly"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ly">
+
         </android.support.v7.widget.RecyclerView>
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/promo_ly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/layout_all"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <CheckBox
+                android:id="@+id/promo_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Add Promo Code"
+                app:layout_constraintBottom_toBottomOf="@+id/promoCode"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/promoCode" />
+
+            <EditText
+                android:id="@+id/promoCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:focusable="false"
+                android:gravity="end"
+                android:hint="Promo"
+                android:drawablePadding="8dp"
+                android:inputType="text"
+                android:singleLine="true"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
 
         <LinearLayout
             android:id="@+id/layout_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="12dp"
-            android:orientation="vertical">
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="5dp">
+
                 <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".25"
-                    android:layout_width="match_parent"
                     android:gravity="right"
-                    android:text="Subtotal: ">
-                </TextView>
+                    android:text="Subtotal: "></TextView>
 
                 <TextView
                     android:id="@+id/tv_subtotal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
                     android:gravity="right"
-                    android:text="0 EGP">
-                </TextView>
+                    android:text="0 EGP"></TextView>
             </LinearLayout>
 
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/black"
-                android:layout_marginLeft="120dp"/>
+                android:layout_marginLeft="120dp"
+                android:background="@android:color/black" />
 
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="5dp">
+
                 <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".25"
-                    android:layout_width="match_parent"
                     android:gravity="right"
-                    android:text="Delivery fee: ">
-                </TextView>
+                    android:text="Delivery fee: "></TextView>
 
                 <TextView
                     android:id="@+id/tv_delivery"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
                     android:gravity="right"
-                    android:text="0 EGP">
-                </TextView>
+                    android:text="0 EGP"></TextView>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="5dp">
+
                 <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".25"
-                    android:layout_width="match_parent"
-                    android:textColor="#DE7047"
                     android:gravity="right"
-                    android:text="Points discount: ">
-                </TextView>
+                    android:text="Points discount: "
+                    android:textColor="#DE7047"></TextView>
 
                 <TextView
                     android:id="@+id/tv_discount"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:textColor="#DE7047"
                     android:gravity="right"
-                    android:text="0 EGP">
-                </TextView>
+                    android:text="0 EGP"
+                    android:textColor="#DE7047"></TextView>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:padding="5dp">
+
                 <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".25"
-                    android:layout_width="match_parent"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:gravity="right"
+                    android:text="Total: "
                     android:textColor="@android:color/black"
-                    android:text="Total: ">
-                </TextView>
+                    android:textSize="18sp"
+                    android:textStyle="bold"></TextView>
 
                 <TextView
                     android:id="@+id/tv_total"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
                     android:gravity="right"
-                    android:text="0 EGP">
-                </TextView>
+                    android:text="0 EGP"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"></TextView>
             </LinearLayout>
 
 
             <Button
                 android:id="@+id/btn_placeorder"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="Place Order"
+                android:layout_height="wrap_content"
                 android:layout_margin="12dp"
-                android:enabled="false"
                 android:drawableRight="@drawable/right_arrow"
-                android:textColor="@color/white">
-            </Button>
+                android:enabled="false"
+                android:text="Place Order"
+                android:textColor="@color/white"></Button>
 
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 
     <android.support.constraint.ConstraintLayout
@@ -502,4 +558,4 @@
     </android.support.constraint.ConstraintLayout>
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

@@ -18,7 +18,7 @@ public interface CartContract {
 
         void disableOrderBtn();
 
-        void setTotalPrice(int subtotal, int delivery);
+        void setTotalPrice(double subtotal, double delivery);
 
         void showMessage(String message);
 
@@ -42,6 +42,7 @@ public interface CartContract {
 
         void showAddressesMessage(String message);
 
+        void setDiscount(int discount);
     }
 
     interface Presenter{
@@ -63,5 +64,7 @@ public interface CartContract {
         boolean validate(String email, String password);
 
         void getAddresses(int userId);
+
+        void checkPromoCode(int userId, String promoCode);
     }
 }

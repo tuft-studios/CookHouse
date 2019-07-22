@@ -26,4 +26,11 @@
 
     <!-- dots active colors -->
     <color name="dot_active_color">#000000</color>
+
+
+    <color name="colorWaiting">#2196f3</color>
+    <color name="colorCooking">#ffc107</color>
+    <color name="colorReady">#9E9E9E</color>
+    <color name="colorDelivered">#4caf50</color>
+    <color name="colorCanceled">#f44336</color>
 </resources>

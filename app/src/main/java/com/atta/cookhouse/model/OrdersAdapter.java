@@ -1,6 +1,7 @@
 package com.atta.cookhouse.model;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +22,19 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView id, date, status, orderInfo;
+        public TextView textViewOrderId;
+        public TextView textViewOrderTime;
+        public TextView textViewStatus;
+
+        public CardView cardView;
 
         public MyViewHolder(View view) {
             super(view);
-            id = view.findViewById(R.id.order_num);
-            date = view.findViewById(R.id.order_date);
-            status = view.findViewById(R.id.status_tv);
-            orderInfo = view.findViewById(R.id.details_btn);
+
+            textViewOrderId = itemView.findViewById(R.id.textViewOrderId);
+            textViewOrderTime = itemView.findViewById(R.id.textViewOrderTime);
+            textViewStatus = itemView.findViewById(R.id.textViewStatus);
+            cardView = itemView.findViewById(R.id.cardViewId);
         }
     }
 
@@ -66,40 +72,34 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
         switch (statusValue){
             case 0:
-                holder.status.setText("Waiting");
-
-                holder.status.setBackgroundResource(R.drawable.waiting_status_shape);
+                holder.textViewStatus.setText("Waiting");
+                holder.textViewStatus.setBackgroundResource(R.color.colorWaiting);
                 break;
             case 1:
-                holder.status.setText("Received");
-
-                holder.status.setBackgroundResource(R.drawable.received_status_shape);
+                holder.textViewStatus.setText("Cooking");
+                holder.textViewStatus.setBackgroundResource(R.color.colorCooking);
                 break;
             case 2:
-                holder.status.setText("Ready");
-
-                holder.status.setBackgroundResource(R.drawable.ready_status_shape);
+                holder.textViewStatus.setText("Ready");
+                holder.textViewStatus.setBackgroundResource(R.color.colorReady);
                 break;
             case 3:
-                holder.status.setText("Delivered");
-
-                holder.status.setBackgroundResource(R.drawable.delivered_status_shape);
+                holder.textViewStatus.setText("Delivered");
+                holder.textViewStatus.setBackgroundResource(R.color.colorDelivered);
                 break;
             case 4:
-                holder.status.setText("Cancelled");
-
-                holder.status.setBackgroundResource(R.drawable.cancelled_status_shape);
+                holder.textViewStatus.setText("Canceled");
+                holder.textViewStatus.setBackgroundResource(R.color.colorCanceled);
                 break;
             default:
-                holder.status.setText("Waiting");
-
-                holder.status.setBackgroundResource(R.drawable.waiting_status_shape);
+                holder.textViewStatus.setText("Waiting");
+                holder.textViewStatus.setBackgroundResource(R.color.colorWaiting);
                 break;
         }
 
-        holder.id.setText(orderNumber);
-        holder.date.setText(orderDate);
-        holder.orderInfo.setOnClickListener(new View.OnClickListener() {
+        holder.textViewOrderId.setText(String.valueOf(order.getId()));
+        holder.textViewOrderTime.setText(order.getOrderTime());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

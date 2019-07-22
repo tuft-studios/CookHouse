@@ -19,6 +19,7 @@ import com.atta.cookhouse.model.CartAdapter;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.Order;
 import com.atta.cookhouse.model.OrdersResult;
+import com.atta.cookhouse.model.PromoCodeResult;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -354,6 +355,53 @@ public class CartPresenter implements CartContract.Presenter {
 
             @Override
             public void onFailure(Call<Addresses> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+            }
+        });
+    }
+
+
+    @Override
+    public void checkPromoCode(int userId, String promoCode) {
+
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+        //Defining the user object as we need to pass it with the call
+        //User user = new User(name, email, password, phone, birthdayString, locationSting);
+
+        //defining the call
+        Call<PromoCodeResult> call = service.checkPromoCode(userId, promoCode);
+
+        //calling the api
+        call.enqueue(new Callback<PromoCodeResult>() {
+            @Override
+            public void onResponse(Call<PromoCodeResult> call, Response<PromoCodeResult> response) {
+
+                if (response.body() != null){
+                    if (!response.body().getError()){
+
+                        mView.showMessage(response.body().getMessage());
+                        mView.setDiscount(response.body().getDiscount());
+
+                    }else {
+                        mView.showMessage(response.body().getMessage());
+                    }
+                }else {
+                    mView.showMessage("something wrong, please try again");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<PromoCodeResult> call, Throwable t) {
 
                 mView.showMessage(t.getMessage());
             }

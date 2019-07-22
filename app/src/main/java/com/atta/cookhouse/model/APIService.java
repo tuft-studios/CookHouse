@@ -77,6 +77,15 @@ public interface APIService {
             @Field("password") String password
     );
 
+
+    //the signin call
+    @FormUrlEncoded
+    @POST("check_promocode")
+    Call<PromoCodeResult> checkPromoCode(
+            @Field("user_id") int userId,
+            @Field("promocode") String promocode
+    );
+
     @FormUrlEncoded
     @POST("get_profile")
     Call<Profile> getProfile(
@@ -173,6 +182,12 @@ public interface APIService {
     @FormUrlEncoded
     @POST("get_favorite")
     Call<Dishes> getFavorite(
+            @Field("user_id") int userId
+    );
+
+    @FormUrlEncoded
+    @POST("get_user_points")
+    Call<PointsResult> getPoints(
             @Field("user_id") int userId
     );
 
