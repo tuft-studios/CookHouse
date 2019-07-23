@@ -47,7 +47,7 @@ public interface CartContract {
 
     interface Presenter{
 
-        void getCartItems(boolean view, int userId, String location, int deliveryAdd, String mobile, String schedule, String orderTime);
+        void getCartItems(boolean view, int userId, String location, int deliveryAdd, String mobile, String schedule, String orderTime, double discountAmount);
 
         int totalPriceCalculation(List<CartItem> cartItems);
 

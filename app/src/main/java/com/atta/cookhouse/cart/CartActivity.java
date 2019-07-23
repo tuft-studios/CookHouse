@@ -83,7 +83,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     int deliveryAddId;
 
-    double subTotal;
+    double subTotal, deliveryAmount, totalAmount, discountAmount;
 
     Animation mSlideFromBelow, mSlideToLift;
 
@@ -104,7 +104,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         cartPresenter = new CartPresenter(CartActivity.this, CartActivity.this, recyclerView, summaryRecyclerView,  progressDialog);
 
-        cartPresenter.getCartItems(true, 0, null, 0, null, null, null);
+        cartPresenter.getCartItems(true, 0, null, 0, null, null, null, discountAmount);
 
 
         cartPresenter.getAddresses(sessionManager.getUserId());
@@ -126,7 +126,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
 
         discountTv = findViewById(R.id.tv_discount);
-        deliverPriceSum = findViewById(R.id.tv_discount_sum);
+        discountTvSum = findViewById(R.id.tv_discount_sum);
         subtotalPrice = findViewById(R.id.tv_subtotal);
         deliverPrice = findViewById(R.id.tv_delivery);
         totalPrice = findViewById(R.id.tv_total);
@@ -147,7 +147,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         addPromo.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked){
                 promoCode.setVisibility(View.VISIBLE);
-                showSnakbar(buttonView);
+                showSnackbar(buttonView);
             }else {
                 promoCode.setVisibility(View.INVISIBLE);
                 if (snackbar != null){
@@ -159,7 +159,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         promoCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSnakbar(v);
+                showSnackbar(v);
             }
         });
 
@@ -187,7 +187,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         orderBtn.setOnClickListener(this);
     }
 
-    private void showSnakbar(View buttonView) {
+    private void showSnackbar(View buttonView) {
         // Create the Snackbar
         snackbar = Snackbar.make(buttonView, "", Snackbar.LENGTH_INDEFINITE);
         // Get the Snackbar's layout view
@@ -252,11 +252,16 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         promoCode.setText(promoCodeString);
             promoCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
 
-        double discountAmount = subTotal * discount / 100;
+        discountAmount = subTotal * discount / 100;
         discountString = String.valueOf(discountAmount);
 
         discountTv.setText(discountString + " EGP");
-        deliverPriceSum.setText(discountString + " EGP");
+        discountTvSum.setText(discountString + " EGP");
+
+        double total = subTotal + deliveryAmount - discountAmount;
+
+        totalPrice.setText(String.valueOf(total) + " EGP");
+        totalPriceSum.setText("TOTAL " + String.valueOf(total) + " EGP");
     }
 
 
@@ -310,6 +315,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         subTotal= subtotal;
 
+        deliveryAmount = delivery;
+
         subtotalPrice.setText(String.valueOf(subtotal) + " EGP");
 
         deliverPrice.setText(" 5 EGP");
@@ -320,7 +327,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         deliverPriceSum.setText(" 5 EGP");
 
-        totalPriceSum.setText("TOTAL " + String.valueOf(subtotal + delivery) + " EGP");
+        totalPriceSum.setText("TOTAL " + String.valueOf(subtotal + delivery - discountAmount) + " EGP");
     }
 
     @Override
@@ -473,7 +480,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         if (addressLocation.equals(location)){
 
-            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , schedule, orderTime);
+            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , schedule, orderTime, discountAmount);
         }else {
             showMessage("select or add address within the area");
         }
@@ -577,7 +584,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         confirmButton.setOnClickListener(v -> {
 
 
-            cartPresenter.getCartItems(true, 0, null, 0, null, null, null);
+            cartPresenter.getCartItems(true, 0, null, 0, null, null, null, discountAmount);
 
 
             String languageToLoad = sessionManager.getLanguage();

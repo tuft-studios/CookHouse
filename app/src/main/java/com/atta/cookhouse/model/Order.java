@@ -16,7 +16,8 @@ public class Order implements Serializable {
     private ArrayList<Dish> dishesList;
 
 
-    private int orderId, subtotal, delivery, total, discount, userId, addressId, status;
+    private int orderId, userId, addressId, status;
+    double subtotal, delivery, total, discount;
     private String location, schedule, orderTime, creationTime, phone, kitchen;
 
 
@@ -24,7 +25,7 @@ public class Order implements Serializable {
     private Address fullAddress;
 
 
-    public Order(int orderId, ArrayList<Dish> dishesList, int status, int subtotal, int delivery, int total, int discount, int userId, String location,
+    public Order(int orderId, ArrayList<Dish> dishesList, int status, double subtotal, double delivery, double total, double discount, int userId, String location,
                  int addressId, String phone, String schedule, String orderTime, String creationTime, Address fullAddress, String kitchen) {
         this.dishesList = dishesList;
         this.orderId = orderId;
@@ -44,7 +45,7 @@ public class Order implements Serializable {
         this.kitchen = kitchen;
     }
 
-    public Order(Map<String, String> dishes, Map<String, String> count, int subtotal, int delivery, int total, int discount, int userId, String location,
+    public Order(Map<String, String> dishes, Map<String, String> count, double subtotal, double delivery, double total, double discount, int userId, String location,
                  int addressId, String phone, String schedule, String orderTime, String creationTime) {
         this.dishes = dishes;
         this.count = count;
@@ -80,19 +81,19 @@ public class Order implements Serializable {
         return count;
     }
 
-    public int getSubtotalPrice() {
+    public double getSubtotalPrice() {
         return subtotal;
     }
 
-    public int getDelivery() {
+    public double getDelivery() {
         return delivery;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return total;
     }
 
-    public int getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 

@@ -64,7 +64,7 @@ public class CartPresenter implements CartContract.Presenter {
 
     @Override
     public void getCartItems(final boolean view, @Nullable final int userId, @Nullable final String location,
-                             final int deliveryAdd, @Nullable final String mobile, @Nullable final String schedule, @Nullable final String orderTime) {
+                             final int deliveryAdd, @Nullable final String mobile, @Nullable final String schedule, @Nullable final String orderTime, @Nullable final double discountAmount) {
 
 
         class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
@@ -83,9 +83,9 @@ public class CartPresenter implements CartContract.Presenter {
             protected void onPostExecute(List<CartItem> cartItems) {
                 super.onPostExecute(cartItems);
 
-                int totalPrice = totalPriceCalculation(cartItems);
-                int deliveryPrice = 5;
-                int discount = 5;
+                double totalPrice = totalPriceCalculation(cartItems);
+                double deliveryPrice = 5;
+                double discount = 5;
 
                 if (view){
 
@@ -157,8 +157,10 @@ public class CartPresenter implements CartContract.Presenter {
                         kitchen = 6;
 */
 
-                    Order order = new Order(dishes, count,  totalPrice, deliveryPrice , totalPrice+deliveryPrice
-                            , discount, userId, location, deliveryAdd, mobile,  schedule, orderTime, creationTime);
+                    double total = totalPrice+deliveryPrice-discountAmount;
+
+                    Order order = new Order(dishes, count,  totalPrice, deliveryPrice , total
+                            , discountAmount, userId, location, deliveryAdd, mobile,  schedule, orderTime, creationTime);
 
                     addOrder(order);
                 }
