@@ -2,13 +2,11 @@ package com.atta.cookhouse.model;
 
 import com.squareup.okhttp.ResponseBody;
 
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -32,8 +30,8 @@ public interface APIService {
     @FormUrlEncoded
     @POST("add_order")
     Call<OrdersResult> addOrder(
-            @FieldMap Map<String, String> dishes ,
-            @FieldMap Map<String, String> quantities,
+            @Field("dishes") String dishes,
+            @Field("quantities") String quantities,
             @Field("subtotal") double subtotal,
             @Field("delivery") double delivery,
             @Field("discount") double discount,
@@ -41,7 +39,6 @@ public interface APIService {
             @Field("address_id") int address,
             @Field("phone") String phone,
             @Field("user_id") int userId,
-            @Field("schedule") String schedule,
             @Field("order_time") String orderTime,
             @Field("creation_time") String creationTime,
             @Field("location") String location
@@ -86,11 +83,20 @@ public interface APIService {
             @Field("promocode") String promocode
     );
 
+
+    @GET("get_categories")
+    Call<CategoriesResult> getCategories();
+
+    @GET("get_options")
+    Call<OptionsResult> getoOptions();
+
+
     @FormUrlEncoded
     @POST("get_profile")
     Call<Profile> getProfile(
             @Field("user_id") int userId
     );
+
 
     @FormUrlEncoded
     @POST("update_user")
@@ -140,7 +146,7 @@ public interface APIService {
     @FormUrlEncoded
     @POST("get_menu")
     Call<Dishes> getMenu(
-            @Field("type") String type,
+            @Field("category") int type,
             @Field("location") String location
     );
 

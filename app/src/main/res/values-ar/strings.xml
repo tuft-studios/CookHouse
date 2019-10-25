@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Cook House</string>
+    <string name="app_name">كرشو مان</string>
 
 
     <string name="arabic" translatable="false">عربي</string>
@@ -15,8 +15,13 @@
 
     <string name="category_salads">السلطة</string>
 
-    <string name="category_soups">الشرية</string>
+    <string name="category_soups">الشورية</string>
 
+    <string-array name="categories">
+        <item>الطبق الرئيسي</item>
+        <item>سلطة</item>
+        <item>شوربة</item>
+    </string-array>
 
     <string-array name="locations1">
         <item> </item>
@@ -32,4 +37,26 @@
         <item>السادس من اكتوبر</item>
         <item>مصر الجديدة</item>
     </string-array>
+
+
+    <string name="profile">حسابي الشخصي</string>
+    <string name="action_add" translatable="false">اضف</string>
+    <string name="action_cart">عربة التسوق</string>
+    <string name="action_logout">تسجيل الخروج</string>
+    <string name="action_settings">الاعدادات</string>
+    <string name="action_skip">تخطي</string>
+    <string name="add_name">اسم العنوان</string>
+    <string name="addresses">العناوين</string>
+    <string name="already_user">لديك حساب؟ تسجيل الدخول</string>
+    <string name="apartment">رقم الشقة</string>
+    <string name="area">المنطقة</string>
+    <string name="back" translatable="false">الرجوع</string>
+    <string name="birth_date">تاريخ الميلاد</string>
+    <string name="btn_link_to_login">مسجل بالفعل؟ قم بتسجيل الدخول</string>
+    <string name="btn_link_to_register">ليس لديك حساب؟ قم بالتسجيل</string>
+    <string name="btn_login">سجل الدخول</string>
+    <string name="btn_register">انشاء حساب</string>
+    <string name="building_num">رقم العمارة</string>
+    <string name="change_password">تغير كلمة السر</string>
+    <string name="change_phone">تغير رقم الموبايل</string>
 </resources>

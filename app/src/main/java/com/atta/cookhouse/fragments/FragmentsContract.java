@@ -35,9 +35,9 @@ public interface FragmentsContract {
     interface Presenter{
 
 
-        void getMenu(final RecyclerView recyclerView, String type, String location);
+        void getMenu(final RecyclerView recyclerView, int type, String location);
 
-        void getCartItem(int id, String dishName, String price, int count, int kitchen);
+        void getCartItem(int id, String dishName, String price, int count);
 
         void checkIfFav(int propertyId, int userId);
 

@@ -14,10 +14,16 @@ public class OrdersResult {
     @SerializedName("dishes")
     private ArrayList<Dish> dishes;
 
+
+    @SerializedName("order_kitchens")
+    private ArrayList<Integer> order_kitchens;
+
     @SerializedName("address")
     private Address address;
 
-
+    public ArrayList<Integer> getOrder_kitchens() {
+        return order_kitchens;
+    }
 
     public Boolean getError() {
         return error;

@@ -87,7 +87,7 @@ public class QueryUtils {
     }
 
     public static void getCartItem(final int id, final String dishName, final String price, final int count,
-                                   final int kitchen, final Context mContext, final CounterFab mCounterFab) {
+                                   final Context mContext, final CounterFab mCounterFab) {
 
 
         class GetTasks extends AsyncTask<Void, Void, CartItem> {
@@ -112,7 +112,7 @@ public class QueryUtils {
                     getCartItem(cartItem.getId(), mContext, count);
                 }else {
 
-                    addToCart(id, dishName, count, kitchen, price, mContext);
+                    addToCart(id, dishName, count, price, mContext);
 
                     if (mCounterFab != null){
 
@@ -157,7 +157,7 @@ public class QueryUtils {
     }
 
     public static void addToCart(final int dishId, final String dishName, final int count,
-                                 final int kitchen, final String dishPrice, final Context mContext) {
+                                 final String dishPrice, final Context mContext) {
         class SaveTask extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -169,7 +169,7 @@ public class QueryUtils {
                 cartItem.setDishName(dishName);
                 cartItem.setCount(count);
                 cartItem.setDishPrice(dishPrice);
-                cartItem.setKitchen(kitchen);
+                cartItem.setKitchen(0);
 
                 //adding to database
                 DatabaseClient.getInstance(mContext).getAppDatabase()

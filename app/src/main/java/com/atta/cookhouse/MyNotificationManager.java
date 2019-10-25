@@ -41,7 +41,7 @@ public class MyNotificationManager {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mCtx, "channel_id")
                 .setContentTitle(title)
                 .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(new NotificationCompat.BigTextStyle())
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.logo)

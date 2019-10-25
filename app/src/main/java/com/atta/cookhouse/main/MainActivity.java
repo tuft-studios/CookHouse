@@ -29,6 +29,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +44,9 @@ import com.atta.cookhouse.favorites.FavoritesActivity;
 import com.atta.cookhouse.fragments.FragmentsPresenter;
 import com.atta.cookhouse.login.LoginActivity;
 import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.Category;
 import com.atta.cookhouse.model.Dish;
+import com.atta.cookhouse.model.Option;
 import com.atta.cookhouse.model.SessionManager;
 import com.atta.cookhouse.myorders.MyOrdersActivity;
 import com.atta.cookhouse.profile.ProfileActivity;
@@ -132,25 +136,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         pointsText = navigationView.getHeaderView(0).findViewById(R.id.points_tv);
 
         // Find the view pager that will allow the user to swipe between fragments
         viewPager = findViewById(R.id.viewpager);
-
-        // Create an adapter that knows which fragment should be shown on each page
-        adapter = new ViewFragmentPagerAdapter(getSupportFragmentManager(), this);
-
-        // Set the adapter onto the view pager
-        viewPager.setAdapter(adapter);
-        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
-
-        // Connect the tab layout with the view pager. This will
-        //   1. Update the tab layout when the view pager is swiped
-        //   2. Update the view pager when a tab is selected
-        //   3. Set the tab layout's tab names with the view pager's adapter's titles
-        //      by calling onPageTitle()
-        tabLayout.setupWithViewPager(viewPager);
 
 
         sliderLayout = findViewById(R.id.slider);
@@ -190,8 +179,12 @@ public class MainActivity extends AppCompatActivity
 
         mainPresenter = new MainPresenter(MainActivity.this, MainActivity.this, counterFab);
 
+
+        mainPresenter.getCategories();
+
+
         mainPresenter.getCartItemsNum();
-        mainPresenter.getPoints(SessionManager.getInstance(this).getUserId());
+        //mainPresenter.getPoints(SessionManager.getInstance(this).getUserId());
 
 
         FirebaseInstanceId.getInstance().getInstanceId()
@@ -399,10 +392,10 @@ public class MainActivity extends AppCompatActivity
         if (position != 0){
             if (position != 1){
                 locationSpinner.setSelection(1);
-                locationString = locationsArray.get(0);
+                locationString = locationsEnglish.get(0);
                 showMessage("Available on Maadi only, Coming Soon");
             }else {
-                locationString = locationsArray.get(position);
+                locationString = locationsEnglish.get(position -1);
 
 
                 SessionManager.getInstance(MainActivity.this).setOrderLocation(locationString);
@@ -454,7 +447,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showOrderDialog(Dish dish, final FragmentsPresenter fragmentsPresenter,
-                                RecyclerView recyclerView, String type, String location) {
+                                RecyclerView recyclerView, int type, String location) {
 
         final Dialog myDialog = new Dialog(MainActivity.this);
 
@@ -466,8 +459,7 @@ public class MainActivity extends AppCompatActivity
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final int kitchen = dish.getKitchen();
-        final int price = dish.getPrice();
+        final int price = dish.getPriceM();
 
         count = 1;
 
@@ -477,6 +469,10 @@ public class MainActivity extends AppCompatActivity
 
         Button addToCart;
 
+        RadioGroup radioGroup;
+
+        RadioButton mediumBtn, largeBtn;
+
         dishName = myDialog.findViewById(R.id.dish_name);
         dishDisc = myDialog.findViewById(R.id.dish_disc);
         quantity = myDialog.findViewById(R.id.quantity);
@@ -485,6 +481,7 @@ public class MainActivity extends AppCompatActivity
         removeImage = myDialog.findViewById(R.id.decrease);
         dishImage = myDialog.findViewById(R.id.dish_image);
         favBtn = myDialog.findViewById(R.id.fav);
+        radioGroup = myDialog.findViewById(R.id.size_radio);
 
         dishName.setText(name);
         dishDisc.setText(disc);
@@ -499,6 +496,10 @@ public class MainActivity extends AppCompatActivity
         Picasso.get()
                 .load(imageURL)
                 .into(dishImage);
+
+        if (dish.getSize() == 0){
+            radioGroup.setVisibility(View.GONE);
+        }
 
         favBtn.setOnClickListener(v -> {
 
@@ -548,7 +549,7 @@ public class MainActivity extends AppCompatActivity
 
             String total = String.valueOf(price * count);
 
-            fragmentsPresenter.getCartItem(id, name, total, count, kitchen);
+            fragmentsPresenter.getCartItem(id, name, total, count);
 
             myDialog.dismiss();
 
@@ -619,6 +620,32 @@ public class MainActivity extends AppCompatActivity
         }
         progressDialog = new ProgressDialog(MainActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
+    }
+
+    @Override
+    public void setVewPager(ArrayList<Category> categories) {
+
+        // Create an adapter that knows which fragment should be shown on each page
+        adapter = new ViewFragmentPagerAdapter(getSupportFragmentManager(), this, categories);
+
+        // Set the adapter onto the view pager
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+
+        // Connect the tab layout with the view pager. This will
+        //   1. Update the tab layout when the view pager is swiped
+        //   2. Update the view pager when a tab is selected
+        //   3. Set the tab layout's tab names with the view pager's adapter's titles
+        //      by calling onPageTitle()
+        tabLayout.setupWithViewPager(viewPager);
+
+    }
+
+    @Override
+    public void setOptions(ArrayList<Option> options) {
+
+        SessionManager.getInstance(this).setOptions(options);
     }
 
 

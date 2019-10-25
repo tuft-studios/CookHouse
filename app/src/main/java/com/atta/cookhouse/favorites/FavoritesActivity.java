@@ -176,8 +176,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final int kitchen = dish.getKitchen();
-        final int price = dish.getPrice();
+        final int price = dish.getPriceM();
 
         count = 1;
 
@@ -248,7 +247,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
                 String total = String.valueOf(price * count);
 
-                QueryUtils.getCartItem(id, name, total, count, kitchen, FavoritesActivity.this, null);
+                QueryUtils.getCartItem(id, name, total, count, FavoritesActivity.this, null);
 
                 myDialog.dismiss();
 

@@ -25,17 +25,20 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     Button confirmButton, skipBtn;
 
-    Place myPlace;
+    PlacesClient placesClient;
 
     boolean placeSelected;
 
@@ -65,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
-    private PlaceAutocompleteFragment placeAutocompleteFragment;
+    private AutocompleteSupportFragment autocompleteFragment;
 
     Marker marker;
 
@@ -96,15 +99,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         skipBtn = findViewById(R.id.skip_maps);
         skipBtn.setOnClickListener(this);
 
-        placeAutocompleteFragment = (PlaceAutocompleteFragment)getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         //placeAutocompleteFragment.setFilter(new AutocompleteFilter.Builder().setCountry("ID").build());
 
-        placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        // Initialize the SDK
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+        }
+
+        // Create a new Places client instance
+        placesClient = Places.createClient(this);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+//
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
+
+                Log.i("gfd", "Place: " + place.getName() + ", " + place.getId());
+                placeLatLngLoc = place.getLatLng();
                 myLatLng = place.getLatLng();
-                myPlace = place;
                 placeSelected = true;
                 if(marker!=null){
                     marker.remove();

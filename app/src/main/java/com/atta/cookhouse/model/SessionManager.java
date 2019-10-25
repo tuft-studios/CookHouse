@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.atta.cookhouse.Local.QueryUtils;
-import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.login.LoginActivity;
+import com.atta.cookhouse.main.MainActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class SessionManager {
 
@@ -64,6 +69,8 @@ public class SessionManager {
     //key for first time launch
     private static final String IS_FIRST_LAUNCH="IsFirstLaunch";
 
+    private static final String KEY_OPTIONS ="options";
+
 
     // Constructor
     public SessionManager(Context context){
@@ -114,6 +121,33 @@ public class SessionManager {
     // Get Login State
     public String  getEmail(){
         return pref.getString(KEY_EMAIL, "no email");
+    }
+
+
+    // call in intro activity to set false after first launch
+    public void setOptions(ArrayList<Option> options){
+        Gson gson = new Gson();
+        String optionsJson = gson.toJson(options);
+
+        //Set<Option> set = new HashSet<Option>();
+        //set.addAll(options);
+        editor.putString(KEY_OPTIONS, optionsJson);
+        editor.commit();
+    }
+
+    public ArrayList<Option> getOptions(){
+        Gson gson = new Gson();
+        String optionsJson = pref.getString(KEY_OPTIONS, null);
+
+        Type type = new TypeToken<ArrayList<Option>>(){}.getType();
+        if (optionsJson != null){
+            ArrayList<Option> options = gson.fromJson(optionsJson, type );
+
+            return  options;
+        }else {
+            return null;
+        }
+
     }
 
     // Get Login State
@@ -312,10 +346,10 @@ public class SessionManager {
         return pref.getString(KEY_USER_LOCATION, "");
     }
 
-    public void setOrderLocation(String locationSting) {
+    public void setOrderLocation(String location) {
 
         // Storing national ID in pref
-        editor.putString(KEY_ORDER_LOCATION, locationSting);
+        editor.putString(KEY_ORDER_LOCATION, location);
 
 
         // commit changes

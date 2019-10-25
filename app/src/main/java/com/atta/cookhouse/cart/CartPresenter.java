@@ -22,10 +22,9 @@ import com.atta.cookhouse.model.OrdersResult;
 import com.atta.cookhouse.model.PromoCodeResult;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -64,7 +63,7 @@ public class CartPresenter implements CartContract.Presenter {
 
     @Override
     public void getCartItems(final boolean view, @Nullable final int userId, @Nullable final String location,
-                             final int deliveryAdd, @Nullable final String mobile, @Nullable final String schedule, @Nullable final String orderTime, @Nullable final double discountAmount) {
+                             final int deliveryAdd, @Nullable final String mobile, @Nullable final String orderTime, @Nullable final double discountAmount) {
 
 
         class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
@@ -115,52 +114,24 @@ public class CartPresenter implements CartContract.Presenter {
 
                     String creationTime = sdf.format(new Date());
 
-                    Map<String, String> dishes = new HashMap<String, String>(), count = new HashMap<String, String>();
-                    for (CartItem element : cartItems) {
-                        dishes.put("dishes[" + cartItems.indexOf(element) + "]", String.valueOf(element.getDishId()));
-                        count.put("quantities[" + cartItems.indexOf(element) + "]", String.valueOf(element.getCount()));
-                    }
-/*
+                    ArrayList<String> dishes = new ArrayList<>(), count = new ArrayList<>();
 
-                    boolean m1 = false, m2 = false, m3 = false;
+                    StringBuilder dishesBuilder = new StringBuilder(), countBuilder = new StringBuilder();
 
-                    for (CartItem element : cartItems) {
+                    for (int i = 0; i <  cartItems.size(); i++) {
+                        dishesBuilder.append(cartItems.get(i).getDishId());
+                        countBuilder.append(cartItems.get(i).getCount());
 
-                        switch (element.getKitchen()){
-                            case 0:
-                                m1 = true;
-                                break;
-                            case 1:
-                                m2 = true;
-                                break;
-                            case 2:
-                                m3 = true;
-                                break;
+                        if (i != (cartItems.size() -1)){
+                            dishesBuilder.append(",");
+                            countBuilder.append(",");
                         }
                     }
 
-                    int kitchen = 0;
-
-                    if (m1 & !m2 & !m3)
-                        kitchen = 0;
-                    else if (!m1 & m2 & !m3)
-                        kitchen = 1;
-                    else if (!m1 & !m2 & m3)
-                        kitchen = 2;
-                    else if (m1 & m2 & !m3)
-                        kitchen = 3;
-                    else if (m1 & !m2 & m3)
-                        kitchen = 4;
-                    else if (!m1 & m2 & m3)
-                        kitchen = 5;
-                    else if (m1 & m2 & m3)
-                        kitchen = 6;
-*/
-
                     double total = totalPrice+deliveryPrice-discountAmount;
 
-                    Order order = new Order(dishes, count,  totalPrice, deliveryPrice , total
-                            , discountAmount, userId, location, deliveryAdd, mobile,  schedule, orderTime, creationTime);
+                    Order order = new Order(dishesBuilder.toString(), countBuilder.toString(),  totalPrice, deliveryPrice , total
+                            , discountAmount, userId, location, deliveryAdd, mobile,  orderTime, creationTime);
 
                     addOrder(order);
                 }
@@ -256,7 +227,6 @@ public class CartPresenter implements CartContract.Presenter {
                 order.getAddressId(),
                 order.getMobile(),
                 order.getUserId(),
-                order.getSchedule(),
                 order.getOrderTime(),
                 order.getCreationTime(),
                 order.getLocation()

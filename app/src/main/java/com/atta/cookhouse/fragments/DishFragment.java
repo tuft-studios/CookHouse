@@ -22,8 +22,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,8 @@ import com.atta.cookhouse.model.SessionManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DishFragment extends Fragment implements FragmentsContract.View {
 
@@ -55,7 +61,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
     IntentFilter filter;
 
-    String category;
+    int category;
 
     private int count;
 
@@ -85,7 +91,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
         if (getArguments() != null) {
 
-            category = getArguments().getString("category");
+            category = getArguments().getInt("category");
         }
         getMenu();
 
@@ -191,7 +197,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
     public void showOrderDialog2(Dish dish) {
 
-        ((MainActivity)getActivity()).showOrderDialog(dish, fragmentsPresenter, recyclerView, "main dish", location);
+        ((MainActivity)getActivity()).showOrderDialog(dish, fragmentsPresenter, recyclerView, 1, location);
 
     }
 
@@ -238,15 +244,18 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final int kitchen = dish.getKitchen();
-        final int price = dish.getPrice();
+        final int price = dish.getPriceM();
 
 
-        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice;
+        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice, sizeTxt, optionsTxt, sidesTxt;
 
         final ImageView dishImage, addImage, removeImage;
 
         Button addToCart;
+
+        RadioGroup radioGroup;
+
+        Spinner optionsSpinner, sidesSpinner;
 
         dishName = myDialog.findViewById(R.id.dish_name);
         dishDisc = myDialog.findViewById(R.id.dish_disc);
@@ -257,10 +266,19 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         removeImage = myDialog.findViewById(R.id.decrease);
         dishImage = myDialog.findViewById(R.id.dish_image);
         favBtn = myDialog.findViewById(R.id.fav);
+        radioGroup = myDialog.findViewById(R.id.size_radio);
+        sizeTxt = myDialog.findViewById(R.id.size_textView);
+        optionsSpinner = myDialog.findViewById(R.id.options_spinner);
+        sidesSpinner = myDialog.findViewById(R.id.sides_spinner);
+        optionsTxt = myDialog.findViewById(R.id.optionsTv);
+        sidesTxt = myDialog.findViewById(R.id.sidesTv);
 
         dishName.setText(name);
         dishDisc.setText(disc);
 
+        if (count == 0){
+            count++;
+        }
         quantity.setText(String.valueOf(count));
 
         totalPrice.setText(String.valueOf(price * count) + " EGP");
@@ -273,6 +291,70 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         Picasso.get()
                 .load(imageURL)
                 .into(dishImage);
+
+
+        if (dish.getSize() == 0){
+            radioGroup.setVisibility(View.GONE);
+            sizeTxt.setVisibility(View.GONE);
+        }else {
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.mediumBtn){
+
+
+                    }else if (checkedId == R.id.largeBtn){
+
+                    }
+                }
+            });
+        }
+
+        if (dish.getOptions() == null) {
+            optionsSpinner.setVisibility(View.GONE);
+            optionsTxt.setVisibility(View.GONE);
+        }else {
+            List<String> options = new ArrayList<String>(Arrays.asList(dish.getOptions().split(",")));
+
+            ArrayAdapter<String> optionsAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, options);
+            optionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            optionsSpinner.setAdapter(optionsAdapter);
+            optionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
+        if (dish.getSides() == null) {
+            sidesSpinner.setVisibility(View.GONE);
+            sidesTxt.setVisibility(View.GONE);
+        }else {
+            List<String> sides = new ArrayList<String>(Arrays.asList(dish.getSides().split(",")));
+
+            ArrayAdapter<String> sidesAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides);
+            sidesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sidesSpinner.setAdapter(sidesAdapter);
+            sidesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
 
         favBtn.setOnClickListener(v -> {
 
@@ -319,7 +401,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         addToCart = myDialog.findViewById(R.id.add_to_cart);
 
 
-        if (count >= 1){
+        if (count > 1){
             addToCart.setText("Update Cart");
         }
 
@@ -332,7 +414,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
                 String total = String.valueOf(price * count);
 
-                fragmentsPresenter.getCartItem(id, name, total, count, kitchen);
+                fragmentsPresenter.getCartItem(id, name, total, count);
 
                 myDialog.dismiss();
             }else Toast.makeText(getContext(),"set number of dishes",Toast.LENGTH_LONG).show();

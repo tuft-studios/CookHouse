@@ -7,10 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.atta.cookhouse.R;
 import com.atta.cookhouse.fragments.DishFragment;
+import com.atta.cookhouse.model.Category;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ViewFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -18,17 +18,22 @@ public class ViewFragmentPagerAdapter extends FragmentPagerAdapter {
     /** Context of the app */
     private Context mContext;
 
-    List<String> categories;
+    List<String> categories, categoriesEnglish;
 
-    public ViewFragmentPagerAdapter(FragmentManager fm, Context context) {
+    ArrayList<Category> mCategories;
+
+    public ViewFragmentPagerAdapter(FragmentManager fm, Context context, ArrayList<Category> categories) {
         super(fm);
         mContext = context;
+        mCategories = categories;
 
 
-        String[] categories = mContext.getResources().getStringArray(R.array.categories);
+        //String[] categories = mContext.getResources().getStringArray(R.array.categories);
+        //String[] categoriesEnglish = mContext.getResources().getStringArray(R.array.categories_english);
 
 
-        this.categories = Arrays.asList(categories);
+        //this.categories = Arrays.asList(categories);
+        //this.categoriesEnglish = Arrays.asList(categoriesEnglish);
     }
 
     @Override
@@ -36,7 +41,7 @@ public class ViewFragmentPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = new DishFragment();
         Bundle bundle = new Bundle();
 
-        bundle.putString("category", categories.get(position));
+        bundle.putInt("category", mCategories.get(position).getId());
 
         fragment.setArguments(bundle);
         return fragment;
@@ -44,12 +49,12 @@ public class ViewFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return categories.size();
+        return mCategories.size();
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return categories.get(position);
+        return mCategories.get(position).getCategory();
     }
 }

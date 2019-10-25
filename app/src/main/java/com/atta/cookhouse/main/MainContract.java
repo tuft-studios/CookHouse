@@ -3,7 +3,11 @@ package com.atta.cookhouse.main;
 import android.support.v7.widget.RecyclerView;
 
 import com.atta.cookhouse.fragments.FragmentsPresenter;
+import com.atta.cookhouse.model.Category;
 import com.atta.cookhouse.model.Dish;
+import com.atta.cookhouse.model.Option;
+
+import java.util.ArrayList;
 
 public interface MainContract {
 
@@ -23,7 +27,7 @@ public interface MainContract {
 
         void setName();
 
-        void showOrderDialog(Dish dish, FragmentsPresenter fragmentsPresenter, RecyclerView recyclerView, String type, String location);
+        void showOrderDialog(Dish dish, FragmentsPresenter fragmentsPresenter, RecyclerView recyclerView, int type, String location);
 
         void showPasswordDialog();
 
@@ -36,6 +40,10 @@ public interface MainContract {
         void setPoints(int points);
 
         void setDialog();
+
+        void setVewPager(ArrayList<Category> categories);
+
+        void setOptions(ArrayList<Option> options);
     }
 
     interface Presenter{
@@ -51,6 +59,10 @@ public interface MainContract {
         void saveToken(String token, int userId);
 
         void getPoints(int userId);
+
+        void getCategories();
+
+        void getOptions();
 
     }
 }

@@ -9,9 +9,12 @@ import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.APIUrl;
 import com.atta.cookhouse.model.AddFavResult;
 import com.atta.cookhouse.model.CartItem;
+import com.atta.cookhouse.model.CategoriesResult;
 import com.atta.cookhouse.model.FavResult;
+import com.atta.cookhouse.model.OptionsResult;
 import com.atta.cookhouse.model.PointsResult;
 import com.atta.cookhouse.model.Result;
+import com.atta.cookhouse.model.SessionManager;
 
 import java.util.List;
 
@@ -156,6 +159,105 @@ public class MainPresenter implements MainContract.Presenter {
             public void onFailure(Call<PointsResult> call, Throwable t) {
 
                 mView.showMessage(t.getMessage());
+            }
+        });
+    }
+
+
+    @Override
+    public void getCategories() {
+
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+
+        //defining the call
+        Call<CategoriesResult> call = service.getCategories();
+
+        //calling the api
+        call.enqueue(new Callback<CategoriesResult>() {
+            @Override
+            public void onResponse(Call<CategoriesResult> call, Response<CategoriesResult> response) {
+                //hiding progress dialog
+
+
+                //displaying the message from the response as toast
+                if (response.body() != null) {
+                    //mView.showMessage(response.body().getMessage());
+                    //if there is no error
+                    if (!response.body().getError()) {
+                        //starting Main activity
+                        mView.changeFavIcon(true);
+                        mView.setVewPager(response.body().getCategories());
+                    }
+                }else {
+                    mView.showMessage("something wrong, try again ");
+                }
+
+                getOptions();
+            }
+
+            @Override
+            public void onFailure(Call<CategoriesResult> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+                getOptions();
+            }
+        });
+    }
+
+
+
+    @Override
+    public void getOptions() {
+
+        //building retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Defining retrofit api service
+        APIService service = retrofit.create(APIService.class);
+
+
+        //defining the call
+        Call<OptionsResult> call = service.getoOptions();
+
+        //calling the api
+        call.enqueue(new Callback<OptionsResult>() {
+            @Override
+            public void onResponse(Call<OptionsResult> call, Response<OptionsResult> response) {
+                //hiding progress dialog
+
+
+                //displaying the message from the response as toast
+                if (response.body() != null) {
+                    //mView.showMessage(response.body().getMessage());
+                    //if there is no error
+                    if (!response.body().getError()) {
+                        //starting Main activity
+                        mView.changeFavIcon(true);
+                        mView.setOptions(response.body().getOptions());
+                    }
+                }else {
+                    mView.showMessage("something wrong, try again ");
+                }
+
+                getPoints(SessionManager.getInstance(mContext).getUserId());
+            }
+
+            @Override
+            public void onFailure(Call<OptionsResult> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+                getPoints(SessionManager.getInstance(mContext).getUserId());
             }
         });
     }

@@ -65,11 +65,20 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
 
+        String languageToLoad = SessionManager.getInstance(context).getLanguage();
+
         final Dish dish = dishes.get(position) ;
 
         final int id = dish.getDishId();
-        final String name = dish.getDishName();
-        final int price = dish.getPrice();
+        String name = "";
+        if (languageToLoad.equals("ar")){
+
+            name = dish.getDishNameArabic();
+        }else if (languageToLoad.equals("en")){
+
+            name = dish.getDishName();
+        }
+        final int price = dish.getPriceM();
         //final int likes = dish.getLikes();
         if (dish.getImageUrl() != null){
 

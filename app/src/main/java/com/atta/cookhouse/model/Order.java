@@ -4,12 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Order implements Serializable {
 
 
-    private Map<String, String> dishes, count ;
+    private String dishes, count ;
 
 
     @SerializedName("dishesList")
@@ -45,8 +44,8 @@ public class Order implements Serializable {
         this.kitchen = kitchen;
     }
 
-    public Order(Map<String, String> dishes, Map<String, String> count, double subtotal, double delivery, double total, double discount, int userId, String location,
-                 int addressId, String phone, String schedule, String orderTime, String creationTime) {
+    public Order(String dishes, String count, double subtotal, double delivery, double total, double discount, int userId, String location,
+                 int addressId, String phone, String orderTime, String creationTime) {
         this.dishes = dishes;
         this.count = count;
         this.subtotal = subtotal;
@@ -72,12 +71,12 @@ public class Order implements Serializable {
         return orderTime;
     }
 
-    public Map<String, String> getDishes() {
+    public String getDishes() {
 
         return dishes;
     }
 
-    public Map<String, String> getCount() {
+    public String getCount() {
         return count;
     }
 

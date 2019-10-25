@@ -43,7 +43,7 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
 
 
     @Override
-    public void getMenu(final RecyclerView recyclerView, String type, String location) {
+    public void getMenu(final RecyclerView recyclerView, int type, String location) {
 
         ArrayList<Dish> dishes = null;
 
@@ -82,6 +82,7 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
                 }else {
                     mView.showError("An error");
                 }
+
 
 
             }
@@ -183,9 +184,9 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
     }
 
     @Override
-    public void getCartItem(final int id, final String dishName, final String price, final int count, final int kitchen) {
+    public void getCartItem(final int id, final String dishName, final String price, final int count) {
 
-        QueryUtils.getCartItem(id, dishName, price, count, kitchen, mContext, mCounterFab);
+        QueryUtils.getCartItem(id, dishName, price, count, mContext, mCounterFab);
 
 
     }

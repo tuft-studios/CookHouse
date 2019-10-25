@@ -104,7 +104,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         cartPresenter = new CartPresenter(CartActivity.this, CartActivity.this, recyclerView, summaryRecyclerView,  progressDialog);
 
-        cartPresenter.getCartItems(true, 0, null, 0, null, null, null, discountAmount);
+        cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount);
 
 
         cartPresenter.getAddresses(sessionManager.getUserId());
@@ -480,7 +480,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         if (addressLocation.equals(location)){
 
-            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , schedule, orderTime, discountAmount);
+            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , orderTime, discountAmount);
         }else {
             showMessage("select or add address within the area");
         }
@@ -584,7 +584,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         confirmButton.setOnClickListener(v -> {
 
 
-            cartPresenter.getCartItems(true, 0, null, 0, null, null, null, discountAmount);
+            cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount);
 
 
             String languageToLoad = sessionManager.getLanguage();
