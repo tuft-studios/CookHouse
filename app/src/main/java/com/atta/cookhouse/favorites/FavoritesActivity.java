@@ -13,9 +13,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,13 +27,14 @@ import com.atta.cookhouse.Local.QueryUtils;
 import com.atta.cookhouse.Local.RecyclerItemTouchHelper;
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.main.MainActivity;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.DishesLinearAdapter;
 import com.atta.cookhouse.model.SessionManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -99,7 +104,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
         recyclerView.setVisibility(View.VISIBLE);
         infoTextView.setVisibility(View.GONE);
-        myAdapter = new DishesLinearAdapter(this, dishes);
+        myAdapter = new DishesLinearAdapter(this, dishes, favoritesPresenter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(myAdapter);
@@ -163,6 +168,15 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
         infoTextView.setText("No dishes added to your favorites");
     }
 
+    @Override
+    public void setCount(int count, Dish dish) {
+        this.count = count;
+
+
+
+        showOrderDialog(dish);
+    }
+
 
     @Override
     public void showOrderDialog(Dish dish) {
@@ -176,36 +190,147 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final int price = dish.getPriceM();
+        final int[] price = {dish.getPriceM()};
 
-        count = 1;
+        //count = 1;
 
-        final TextView dishName, dishDisc, quantity, totaalPrice;
+        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice;
 
-        final ImageView dishImage, addImage, removeImage;
+        final ImageView dishImage, addImage, removeImage, favBtn;
 
         Button addToCart;
+
+        RadioGroup radioGroup;
+
+        Spinner optionsSpinner, sides1Spinner, sides2Spinner;
+
 
         dishName = myDialog.findViewById(R.id.dish_name);
         dishDisc = myDialog.findViewById(R.id.dish_disc);
         quantity = myDialog.findViewById(R.id.quantity);
-        totaalPrice = myDialog.findViewById(R.id.total_price);
+        totalPrice = myDialog.findViewById(R.id.total_price);
+        dishPrice = myDialog.findViewById(R.id.dish_price);
         addImage = myDialog.findViewById(R.id.increase);
         removeImage = myDialog.findViewById(R.id.decrease);
         dishImage = myDialog.findViewById(R.id.dish_image);
+        favBtn = myDialog.findViewById(R.id.fav);
+        radioGroup = myDialog.findViewById(R.id.size_radio);
+        optionsSpinner = myDialog.findViewById(R.id.options_spinner);
+        sides1Spinner = myDialog.findViewById(R.id.sides1_spinner);
+        sides2Spinner = myDialog.findViewById(R.id.sides2_spinner);
+
+        favBtn.setVisibility(View.GONE);
 
         dishName.setText(name);
         dishDisc.setText(disc);
 
+        if (count == 0){
+            count++;
+        }
         quantity.setText(String.valueOf(count));
 
-        totaalPrice.setText(String.valueOf(price * count) + " EGP");
+
+        if (dish.getSize() == 0){
+            radioGroup.setVisibility(View.GONE);
+        }else {
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.mediumBtn){
+                        price[0] = dish.getPriceM();
+                        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
+                        dishPrice.setText(String.valueOf(price[0]) + " EGP");
+
+                    }else if (checkedId == R.id.largeBtn){
+
+                        price[0] = dish.getPriceL();
+                        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
+                        dishPrice.setText(String.valueOf(price[0]) + " EGP");
+                    }
+                }
+            });
+        }
 
 
-        final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
+
+        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
+        dishPrice.setText(String.valueOf(price[0]) + " EGP");
+
+
+        final String imageURL = APIClient.Images_BASE_URL + dish.getImageUrl();
         Picasso.get()
                 .load(imageURL)
                 .into(dishImage);
+
+
+
+        if (dish.getOptions() == null) {
+            optionsSpinner.setVisibility(View.GONE);
+        }else {
+            List<String> options = new ArrayList<String>(Arrays.asList(dish.getOptions().split(",")));
+
+            ArrayAdapter<String> optionsAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, options);
+            optionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            optionsSpinner.setAdapter(optionsAdapter);
+            optionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
+        if (dish.getSides1() == null) {
+            sides1Spinner.setVisibility(View.GONE);
+        }else {
+            List<String> sides1 = new ArrayList<String>(Arrays.asList(dish.getSides1().split(",")));
+
+            ArrayAdapter<String> sides1Adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, sides1);
+            sides1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sides1Spinner.setAdapter(sides1Adapter);
+            sides1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
+
+        if (dish.getSides2() == null) {
+            sides2Spinner.setVisibility(View.GONE);
+        }else {
+            List<String> sides2 = new ArrayList<String>(Arrays.asList(dish.getSides2().split(",")));
+
+            ArrayAdapter<String> sides2Adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, sides2);
+            sides2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sides2Spinner.setAdapter(sides2Adapter);
+            sides2Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
 
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +340,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
                 quantity.setText(String.valueOf(count));
 
-                totaalPrice.setText(String.valueOf(price * count) + " EGP");
+                totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
 
                 removeImage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -225,7 +350,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
                         quantity.setText(String.valueOf(count));
 
-                        totaalPrice.setText(String.valueOf(price * count) + " EGP");
+                        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
 
                         if (count == 1){
                             removeImage.setOnClickListener(null);
@@ -245,7 +370,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
                 Toast.makeText(FavoritesActivity.this,"Dish added",Toast.LENGTH_LONG).show();
 
-                String total = String.valueOf(price * count);
+                String total = String.valueOf(price[0] * count);
 
                 QueryUtils.getCartItem(id, name, total, count, FavoritesActivity.this, null);
 

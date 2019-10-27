@@ -43,7 +43,7 @@ import com.atta.cookhouse.cart.CartActivity;
 import com.atta.cookhouse.favorites.FavoritesActivity;
 import com.atta.cookhouse.fragments.FragmentsPresenter;
 import com.atta.cookhouse.login.LoginActivity;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Category;
 import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.Option;
@@ -127,13 +127,13 @@ public class MainActivity extends AppCompatActivity
             }else showMessage("Cart is empty");
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         pointsText = navigationView.getHeaderView(0).findViewById(R.id.points_tv);
@@ -353,10 +353,10 @@ public class MainActivity extends AppCompatActivity
 
 
         urls = new String[]{
-                APIUrl.Images_BASE_URL + "/food.jpeg",
-                APIUrl.Images_BASE_URL + "/pizza.jpg",
-                APIUrl.Images_BASE_URL + "/fruits.jpg",
-                APIUrl.Images_BASE_URL + "/candy.jpg"
+                APIClient.Images_BASE_URL + "/food.jpeg",
+                APIClient.Images_BASE_URL + "/pizza.jpg",
+                APIClient.Images_BASE_URL + "/fruits.jpg",
+                APIClient.Images_BASE_URL + "/candy.jpg"
 
         };
 
@@ -492,7 +492,7 @@ public class MainActivity extends AppCompatActivity
 
         //fragmentsPresenter.getRetrofitImage(dishImage, imageUrl);
 
-        final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
+        final String imageURL = APIClient.Images_BASE_URL + dish.getImageUrl();
         Picasso.get()
                 .load(imageURL)
                 .into(dishImage);

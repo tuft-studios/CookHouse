@@ -25,6 +25,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -35,7 +36,7 @@ import com.andremion.counterfab.CounterFab;
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.cart.CartActivity;
 import com.atta.cookhouse.main.MainActivity;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.DishesAdapter;
 import com.atta.cookhouse.model.SessionManager;
@@ -244,10 +245,11 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final int price = dish.getPriceM();
+        final int[] price = {dish.getPriceM()};
 
 
-        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice, sizeTxt, optionsTxt, sidesTxt;
+        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice,
+                optionsTv, sides1Tv, sides2Tv, sizeTv;
 
         final ImageView dishImage, addImage, removeImage;
 
@@ -255,7 +257,9 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
         RadioGroup radioGroup;
 
-        Spinner optionsSpinner, sidesSpinner;
+        EditText optionsEditText, sides1EditText, sides2EditText;
+
+        Spinner optionsSpinner, sides1Spinner, sides2Spinner;
 
         dishName = myDialog.findViewById(R.id.dish_name);
         dishDisc = myDialog.findViewById(R.id.dish_disc);
@@ -267,11 +271,16 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         dishImage = myDialog.findViewById(R.id.dish_image);
         favBtn = myDialog.findViewById(R.id.fav);
         radioGroup = myDialog.findViewById(R.id.size_radio);
-        sizeTxt = myDialog.findViewById(R.id.size_textView);
         optionsSpinner = myDialog.findViewById(R.id.options_spinner);
-        sidesSpinner = myDialog.findViewById(R.id.sides_spinner);
-        optionsTxt = myDialog.findViewById(R.id.optionsTv);
-        sidesTxt = myDialog.findViewById(R.id.sidesTv);
+        sides1Spinner = myDialog.findViewById(R.id.sides1_spinner);
+        sides2Spinner = myDialog.findViewById(R.id.sides2_spinner);
+        optionsEditText = myDialog.findViewById(R.id.editText);
+        sides1EditText = myDialog.findViewById(R.id.editText1);
+        sides2EditText = myDialog.findViewById(R.id.editText2);
+        optionsTv = myDialog.findViewById(R.id.options_tv);
+        sides1Tv = myDialog.findViewById(R.id.sides1_tv);
+        sides2Tv = myDialog.findViewById(R.id.sides2_tv);
+        sizeTv = myDialog.findViewById(R.id.size_tv);
 
         dishName.setText(name);
         dishDisc.setText(disc);
@@ -281,38 +290,46 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         }
         quantity.setText(String.valueOf(count));
 
-        totalPrice.setText(String.valueOf(price * count) + " EGP");
-        dishPrice.setText(String.valueOf(price) + " EGP");
-
-        //fragmentsPresenter.getRetrofitImage(dishImage, imageUrl);
-
-
-        final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
-        Picasso.get()
-                .load(imageURL)
-                .into(dishImage);
-
 
         if (dish.getSize() == 0){
             radioGroup.setVisibility(View.GONE);
-            sizeTxt.setVisibility(View.GONE);
+            sizeTv.setVisibility(View.GONE);
         }else {
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == R.id.mediumBtn){
-
+                        price[0] = dish.getPriceM();
+                        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
+                        dishPrice.setText(String.valueOf(price[0]) + " EGP");
 
                     }else if (checkedId == R.id.largeBtn){
 
+                        price[0] = dish.getPriceL();
+                        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
+                        dishPrice.setText(String.valueOf(price[0]) + " EGP");
                     }
                 }
             });
         }
 
+
+        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
+        dishPrice.setText(String.valueOf(price[0]) + " EGP");
+
+        //fragmentsPresenter.getRetrofitImage(dishImage, imageUrl);
+
+
+        final String imageURL = APIClient.Images_BASE_URL + dish.getImageUrl();
+        Picasso.get()
+                .load(imageURL)
+                .into(dishImage);
+
+
         if (dish.getOptions() == null) {
             optionsSpinner.setVisibility(View.GONE);
-            optionsTxt.setVisibility(View.GONE);
+            optionsEditText.setVisibility(View.GONE);
+            optionsTv.setVisibility(View.GONE);
         }else {
             List<String> options = new ArrayList<String>(Arrays.asList(dish.getOptions().split(",")));
 
@@ -333,16 +350,42 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
         }
 
-        if (dish.getSides() == null) {
-            sidesSpinner.setVisibility(View.GONE);
-            sidesTxt.setVisibility(View.GONE);
+        if (dish.getSides1() == null) {
+            sides1Spinner.setVisibility(View.GONE);
+            sides1EditText.setVisibility(View.GONE);
+            sides1Tv.setVisibility(View.GONE);
         }else {
-            List<String> sides = new ArrayList<String>(Arrays.asList(dish.getSides().split(",")));
+            List<String> sides1 = new ArrayList<String>(Arrays.asList(dish.getSides1().split(",")));
 
-            ArrayAdapter<String> sidesAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides);
-            sidesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sidesSpinner.setAdapter(sidesAdapter);
-            sidesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            ArrayAdapter<String> sides1Adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides1);
+            sides1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sides1Spinner.setAdapter(sides1Adapter);
+            sides1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
+
+        if (dish.getSides2() == null) {
+            sides2Spinner.setVisibility(View.GONE);
+            sides2EditText.setVisibility(View.GONE);
+            sides2Tv.setVisibility(View.GONE);
+        }else {
+            List<String> sides2 = new ArrayList<String>(Arrays.asList(dish.getSides2().split(",")));
+
+            ArrayAdapter<String> sides2Adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides2);
+            sides2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sides2Spinner.setAdapter(sides2Adapter);
+            sides2Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -378,7 +421,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
             quantity.setText(String.valueOf(count));
 
-            totalPrice.setText(String.valueOf(price * count) + " EGP");
+            totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
 
 
 
@@ -391,7 +434,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
                 quantity.setText(String.valueOf(count));
 
-                totalPrice.setText(String.valueOf(price * count) + " EGP");
+                totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
             }
 
         });
@@ -412,7 +455,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
                 Toast.makeText(getContext(),"Dish add",Toast.LENGTH_LONG).show();
 
-                String total = String.valueOf(price * count);
+                String total = String.valueOf(price[0] * count);
 
                 fragmentsPresenter.getCartItem(id, name, total, count);
 

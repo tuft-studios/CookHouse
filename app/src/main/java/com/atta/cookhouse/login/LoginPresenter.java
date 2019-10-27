@@ -3,15 +3,13 @@ package com.atta.cookhouse.login;
 import android.content.Context;
 
 import com.atta.cookhouse.Local.QueryUtils;
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Result;
 import com.atta.cookhouse.model.SmsResult;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class LoginPresenter implements LoginContract.Presenter{
 
@@ -45,20 +43,8 @@ public class LoginPresenter implements LoginContract.Presenter{
     @Override
     public void sendSms(String mobile) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.SMS_API_BASE_URL)
-                .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<SmsResult> call = service.sendPasswordSms(mobile);
+        Call<SmsResult> call = APIClient.getInstance().getApi().sendPasswordSms(mobile);
 
         //calling the api
         call.enqueue(new Callback<SmsResult>() {
@@ -90,20 +76,8 @@ public class LoginPresenter implements LoginContract.Presenter{
     @Override
     public void confirmCode(String mobile, String password, String rand) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, password, birthdayString, locationSting);
-
         //defining the call
-        Call<Result> call = service.confirmPasswordCode(password, mobile, rand);
+        Call<Result> call = APIClient.getInstance().getApi().confirmPasswordCode(password, mobile, rand);
 
         //calling the api
         call.enqueue(new Callback<Result>() {

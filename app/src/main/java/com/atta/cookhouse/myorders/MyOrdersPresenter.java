@@ -2,8 +2,7 @@ package com.atta.cookhouse.myorders;
 
 import android.content.Context;
 
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.MyOrdersResult;
 import com.atta.cookhouse.model.Order;
 import com.atta.cookhouse.model.Result;
@@ -13,8 +12,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyOrdersPresenter implements MyOrdersContract.Presenter {
 
@@ -30,20 +27,8 @@ public class MyOrdersPresenter implements MyOrdersContract.Presenter {
     @Override
     public void getMyOrders(int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<MyOrdersResult> call = service.getMyOrders(userId);
+        Call<MyOrdersResult> call = APIClient.getInstance().getApi().getMyOrders(userId);
 
         //calling the api
         call.enqueue(new Callback<MyOrdersResult>() {
@@ -88,18 +73,9 @@ public class MyOrdersPresenter implements MyOrdersContract.Presenter {
     @Override
     public void removeFromFav(int userId, int dishId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
 
         //defining the call
-        Call<Result> call = service.removeFromFavorite(userId, dishId);
+        Call<Result> call = APIClient.getInstance().getApi().removeFromFavorite(userId, dishId);
 
         //calling the api
         call.enqueue(new Callback<Result>() {

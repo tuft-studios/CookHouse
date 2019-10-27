@@ -11,8 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import com.atta.cookhouse.Local.DatabaseClient;
 import com.atta.cookhouse.Local.QueryUtils;
 import com.atta.cookhouse.R;
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Address;
 import com.atta.cookhouse.model.Addresses;
 import com.atta.cookhouse.model.CartAdapter;
@@ -26,13 +25,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CartPresenter implements CartContract.Presenter {
 
@@ -195,29 +190,8 @@ public class CartPresenter implements CartContract.Presenter {
     @Override
     public void addOrder(Order order) {
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        // set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        // add your other interceptors …
-
-        // add logging as last interceptor
-        httpClient.addInterceptor(logging);  // <-- this is the important line!
-
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<OrdersResult> call = service.addOrder(
+        Call<OrdersResult> call = APIClient.getInstance().getApi().addOrder(
                 order.getDishes(),
                 order.getCount(),
                 order.getSubtotalPrice(),
@@ -286,20 +260,8 @@ public class CartPresenter implements CartContract.Presenter {
     @Override
     public void getAddresses(int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<Addresses> call = service.getAddresses(userId);
+        Call<Addresses> call = APIClient.getInstance().getApi().getAddresses(userId);
 
         //calling the api
         call.enqueue(new Callback<Addresses>() {
@@ -337,20 +299,8 @@ public class CartPresenter implements CartContract.Presenter {
     @Override
     public void checkPromoCode(int userId, String promoCode) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<PromoCodeResult> call = service.checkPromoCode(userId, promoCode);
+        Call<PromoCodeResult> call = APIClient.getInstance().getApi().checkPromoCode(userId, promoCode);
 
         //calling the api
         call.enqueue(new Callback<PromoCodeResult>() {

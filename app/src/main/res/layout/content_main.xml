@@ -32,6 +32,7 @@
         android:background="@color/white"
         app:tabSelectedTextColor="@color/orange"
         app:tabTextColor="#ffc77d"
+        app:tabMode="scrollable"
         app:tabIndicatorColor="@color/orange"/>
 
     <android.support.v4.view.ViewPager

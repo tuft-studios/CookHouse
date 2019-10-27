@@ -82,7 +82,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
         //final int likes = dish.getLikes();
         if (dish.getImageUrl() != null){
 
-            final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
+            final String imageURL = APIClient.Images_BASE_URL + dish.getImageUrl();
             Picasso.get()
                     .load(imageURL)
                     .resize(180, 120)

@@ -2,8 +2,7 @@ package com.atta.cookhouse.orderdetails;
 
 import android.content.Context;
 
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.Dishes;
 
@@ -12,8 +11,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
 
@@ -29,20 +26,8 @@ public class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
     @Override
     public void getOrderDishes(int orderId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<Dishes> call = service.getOrderDishes(orderId);
+        Call<Dishes> call = APIClient.getInstance().getApi().getOrderDishes(orderId);
 
         //calling the api
         call.enqueue(new Callback<Dishes>() {

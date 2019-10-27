@@ -5,8 +5,7 @@ import android.os.AsyncTask;
 
 import com.andremion.counterfab.CounterFab;
 import com.atta.cookhouse.Local.DatabaseClient;
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.AddFavResult;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.CategoriesResult;
@@ -21,8 +20,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainPresenter implements MainContract.Presenter {
 
@@ -76,18 +73,9 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void addToFav(int dishId, int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
 
         //defining the call
-        Call<AddFavResult> call = service.addToFavorite(dishId, userId);
+        Call<AddFavResult> call = APIClient.getInstance().getApi().addToFavorite(dishId, userId);
 
         //calling the api
         call.enqueue(new Callback<AddFavResult>() {
@@ -121,18 +109,8 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void getPoints(int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<PointsResult> call = service.getPoints(userId);
+        Call<PointsResult> call = APIClient.getInstance().getApi().getPoints(userId);
 
         //calling the api
         call.enqueue(new Callback<PointsResult>() {
@@ -167,18 +145,8 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void getCategories() {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<CategoriesResult> call = service.getCategories();
+        Call<CategoriesResult> call = APIClient.getInstance().getApi().getCategories();
 
         //calling the api
         call.enqueue(new Callback<CategoriesResult>() {
@@ -217,18 +185,8 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void getOptions() {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<OptionsResult> call = service.getoOptions();
+        Call<OptionsResult> call = APIClient.getInstance().getApi().getoOptions();
 
         //calling the api
         call.enqueue(new Callback<OptionsResult>() {
@@ -270,18 +228,8 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void checkIfFav(int dishId, int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<FavResult> call = service.checkIfFavorite(dishId, userId);
+        Call<FavResult> call = APIClient.getInstance().getApi().checkIfFavorite(dishId, userId);
 
         //calling the api
         call.enqueue(new Callback<FavResult>() {
@@ -313,18 +261,8 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void saveToken(String token, int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<Result> call = service.saveToken(token, userId);
+        Call<Result> call = APIClient.getInstance().getApi().saveToken(token, userId);
 
         //calling the api
         call.enqueue(new Callback<Result>() {

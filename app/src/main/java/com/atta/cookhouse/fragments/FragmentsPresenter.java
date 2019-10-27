@@ -7,8 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import com.andremion.counterfab.CounterFab;
 import com.atta.cookhouse.Local.DatabaseClient;
 import com.atta.cookhouse.Local.QueryUtils;
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.AddFavResult;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.Dish;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FragmentsPresenter implements FragmentsContract.Presenter {
 
@@ -47,21 +44,8 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
 
         ArrayList<Dish> dishes = null;
 
-
-        //building retrofit object
-        retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        retrofit2.Call<Dishes> call = service.getMenu(type, location);
+        retrofit2.Call<Dishes> call = APIClient.getInstance().getApi().getMenu(type, location);
 
         //calling the api
         call.enqueue(new retrofit2.Callback<Dishes>() {
@@ -195,18 +179,8 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
     @Override
     public void checkIfFav(int propertyId, int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<FavResult> call = service.checkIfFavorite(propertyId, userId);
+        Call<FavResult> call = APIClient.getInstance().getApi().checkIfFavorite(propertyId, userId);
 
         //calling the api
         call.enqueue(new Callback<FavResult>() {
@@ -239,18 +213,8 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
     @Override
     public void addToFav(int propertyId, int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<AddFavResult> call = service.addToFavorite(propertyId, userId);
+        Call<AddFavResult> call = APIClient.getInstance().getApi().addToFavorite(propertyId, userId);
 
         //calling the api
         call.enqueue(new Callback<AddFavResult>() {
@@ -284,18 +248,9 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
     @Override
     public void removeFromFav(int dishId, int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
 
         //defining the call
-        Call<Result> call = service.removeFromFavorite(userId, dishId);
+        Call<Result> call = APIClient.getInstance().getApi().removeFromFavorite(userId, dishId);
 
         //calling the api
         call.enqueue(new Callback<Result>() {

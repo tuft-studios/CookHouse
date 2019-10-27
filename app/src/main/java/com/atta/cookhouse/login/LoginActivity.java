@@ -23,27 +23,38 @@ import com.atta.cookhouse.Register.RegisterActivity;
 import com.atta.cookhouse.main.MainActivity;
 import com.atta.cookhouse.model.SessionManager;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View ,
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class LoginActivity extends AppCompatActivity implements LoginContract.View,
         View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 
     ProgressDialog progressDialog;
 
-    // login button
-    Button login;
-
     // National ID, password edit text
-    EditText emailText, passwordText, phoneTextView, code, newPassword, newPasswordConfirm;
+    EditText  phoneTextView, code, newPassword, newPasswordConfirm;
 
-    TextView newAccount, skip, forgotPassword;
 
     Dialog passwordDialog, codeDialog;
 
     Button sendBtn, resetBtn;
 
     String phone;
-
-    private CheckBox show_hide_password;
+    @BindView(R.id.email)
+    EditText emailText;
+    @BindView(R.id.password)
+    EditText passwordText;
+    @BindView(R.id.show_hide_password)
+    CheckBox showHidePassword;
+    @BindView(R.id.forgot_password)
+    TextView forgotPassword;
+    @BindView(R.id.btnRegisterScreen)
+    TextView newAccount;
+    @BindView(R.id.btnSkip)
+    TextView skip;
+    @BindView(R.id.btn_login)
+    Button login;
 
     private LoginPresenter loginPresenter;
 
@@ -51,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
         setDialog();
         loginPresenter = new LoginPresenter(this, this);
@@ -60,53 +72,42 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     private void initiateViews() {
-        // National ID, Password input text
-        emailText = (EditText)findViewById(R.id.email);
-        passwordText = (EditText)findViewById(R.id.password);
 
-        newAccount = (TextView) findViewById(R.id.btnRegisterScreen);
         newAccount.setOnClickListener(this);
-        skip = (TextView) findViewById(R.id.btnSkip);
         skip.setOnClickListener(this);
-
-        // Login button
-        login = (Button)findViewById(R.id.btn_login);
         login.setOnClickListener(this);
 
-        show_hide_password = (CheckBox) findViewById(R.id.show_hide_password);
-        show_hide_password.setOnCheckedChangeListener(this);
-
-        forgotPassword = findViewById(R.id.forgot_password);
+        showHidePassword.setOnCheckedChangeListener(this);
         forgotPassword.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View view) {
-        if(view == login) {
+        if (view == login) {
             if (!loginPresenter.validate(emailText.getText().toString().trim(), passwordText.getText().toString())) {
                 showError("Invalid Login details");
                 return;
             }
 
             progressDialog.show();
-            loginPresenter.login(emailText.getText().toString(),passwordText.getText().toString());
-        }else if (view == newAccount){
+            loginPresenter.login(emailText.getText().toString(), passwordText.getText().toString());
+        } else if (view == newAccount) {
 
             navigateToRegister();
 
-        }else if (view == skip){
+        } else if (view == skip) {
 
             SessionManager.getInstance(this).setLanguage(SessionManager.getInstance(this).getLanguage());
             skipToMain();
-        }else if (view == forgotPassword){
+        } else if (view == forgotPassword) {
 
             showPasswordPopup();
-        }else if (view == sendBtn){
+        } else if (view == sendBtn) {
 
             phone = phoneTextView.getText().toString();
             loginPresenter.sendSms(phone);
-        }else if (view == resetBtn){
+        } else if (view == resetBtn) {
             resetPassword();
         }
     }
@@ -117,14 +118,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         // password
         if (isChecked) {
 
-            show_hide_password.setText(R.string.hide_pwd);// change
+            showHidePassword.setText(R.string.hide_pwd);// change
             // checkbox
             // text
 
             passwordText.setInputType(InputType.TYPE_CLASS_TEXT);
             passwordText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());// show password
         } else {
-            show_hide_password.setText(R.string.show_pwd);// change
+            showHidePassword.setText(R.string.show_pwd);// change
             // checkbox
             // text
 
@@ -155,11 +156,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         if (newPassword.isEmpty() || newPassword.length() < 4 || newPassword.length() > 10) {
             showError("wrong new password, Passwords  must be between 4 and 10 alphanumeric characters");
             valid = false;
-        } else if (passwordConfirm.isEmpty() || passwordConfirm.length() < 4 || passwordConfirm.length() > 10 ) {
+        } else if (passwordConfirm.isEmpty() || passwordConfirm.length() < 4 || passwordConfirm.length() > 10) {
 
             showError("wrong confirm password, Passwords  must be between 4 and 10 alphanumeric characters");
             valid = false;
-        } else if (!newPassword.equals(passwordConfirm)){
+        } else if (!newPassword.equals(passwordConfirm)) {
 
             showError("new password and confirm password not Matched");
             valid = false;
@@ -170,7 +171,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void showError(String error) {
 
-        Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
         login.setEnabled(true);
     }
 
@@ -178,20 +179,20 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void showViewError(String view, String error) {
 
         int id = getResources().getIdentifier(view, "id", this.getPackageName());
-        EditText editText = (EditText)findViewById(id);
+        EditText editText = (EditText) findViewById(id);
         editText.setError(error);
     }
 
     @Override
     public void showMessage() {
 
-        Toast.makeText(getApplicationContext(),"Login successfully",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Login successfully", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void navigateToMain() {
 
-        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
@@ -205,7 +206,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void dismissProgressDialog() {
-        if(progressDialog != null || progressDialog.isShowing() ){
+        if (progressDialog != null || progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
     }
@@ -244,10 +245,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         codeDialog = new Dialog(this);
 
 
-
         passwordDialog.setContentView(R.layout.password_code_popup);
 
-        resetBtn =passwordDialog.findViewById(R.id.btn_reset);
+        resetBtn = passwordDialog.findViewById(R.id.btn_reset);
         code = passwordDialog.findViewById(R.id.old_password);
         newPassword = passwordDialog.findViewById(R.id.new_password);
         newPasswordConfirm = passwordDialog.findViewById(R.id.new_password_confirm);
@@ -262,17 +262,17 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void navigateToRegister() {
 
-        Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void setDialog() {
 
-        if(progressDialog != null){
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
-        progressDialog = new ProgressDialog(LoginActivity.this,R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
     }

@@ -9,7 +9,7 @@ import com.atta.cookhouse.favorites.FavoritesContract;
 import com.atta.cookhouse.fragments.FragmentsContract;
 import com.atta.cookhouse.login.LoginContract;
 import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.Result;
 import com.atta.cookhouse.model.SessionManager;
@@ -221,7 +221,7 @@ public class QueryUtils {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
+                .baseUrl(APIClient.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -335,7 +335,7 @@ public class QueryUtils {
 
         //building retrofit object
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
+                .baseUrl(APIClient.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

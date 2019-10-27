@@ -1,9 +1,11 @@
 package com.atta.cookhouse.favorites;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.Local.DatabaseClient;
+import com.atta.cookhouse.model.APIClient;
+import com.atta.cookhouse.model.CartItem;
 import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.Dishes;
 import com.atta.cookhouse.model.Result;
@@ -13,8 +15,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FavoritesPresenter implements FavoritesContract.Presenter {
 
@@ -30,20 +30,8 @@ public class FavoritesPresenter implements FavoritesContract.Presenter {
     @Override
     public void getFavDishes(int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<Dishes> call = service.getFavorite(userId);
+        Call<Dishes> call = APIClient.getInstance().getApi().getFavorite(userId);
 
         //calling the api
         call.enqueue(new Callback<Dishes>() {
@@ -81,18 +69,8 @@ public class FavoritesPresenter implements FavoritesContract.Presenter {
     @Override
     public void removeFromFav(int userId, int dishId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<Result> call = service.removeFromFavorite(userId, dishId);
+        Call<Result> call = APIClient.getInstance().getApi().removeFromFavorite(userId, dishId);
 
         //calling the api
         call.enqueue(new Callback<Result>() {
@@ -117,5 +95,42 @@ public class FavoritesPresenter implements FavoritesContract.Presenter {
             }
         });
     }
+
+
+    @Override
+    public void checkCartItem(final Dish dish) {
+
+
+        class GetTasks extends AsyncTask<Void, Void, CartItem> {
+
+            @Override
+            protected CartItem doInBackground(Void... voids) {
+                CartItem cartItem = DatabaseClient
+                        .getInstance(mContext)
+                        .getAppDatabase()
+                        .itemDao()
+                        .checkItem(dish.getDishId());
+                return cartItem;
+            }
+
+            @Override
+            protected void onPostExecute(CartItem cartItem) {
+                super.onPostExecute(cartItem);
+
+                if (cartItem != null) {
+                    mView.setCount(cartItem.getCount(), dish);
+                }else mView.setCount(0, dish);
+
+
+            }
+        }
+
+        GetTasks gt = new GetTasks();
+        gt.execute();
+
+
+
+    }
+
 
 }

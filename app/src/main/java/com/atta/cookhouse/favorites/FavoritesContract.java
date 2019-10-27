@@ -15,12 +15,16 @@ public interface FavoritesContract {
         void showOrderDialog(Dish dish);
 
         void updateText();
+
+        void setCount(int count, Dish dish);
     }
 
     interface Presenter{
         void getFavDishes(int userId) ;
 
         void removeFromFav(int userId, int dishId);
+
+        void checkCartItem(final Dish dish);
 
     }
 }

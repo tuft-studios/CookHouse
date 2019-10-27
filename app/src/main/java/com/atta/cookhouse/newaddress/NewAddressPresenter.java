@@ -11,8 +11,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Address;
 import com.atta.cookhouse.model.Result;
 
@@ -23,8 +22,6 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewAddressPresenter implements NewAddressContract.Presenter {
 
@@ -175,18 +172,8 @@ public class NewAddressPresenter implements NewAddressContract.Presenter {
     @Override
     public void addAddress(Address address) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<Result> call = service.addAddress(
+        Call<Result> call = APIClient.getInstance().getApi().addAddress(
                 address.getUserId(),
                 address.getFloor(),
                 address.getApartmentNumber(),
@@ -236,18 +223,8 @@ public class NewAddressPresenter implements NewAddressContract.Presenter {
     @Override
     public void editAddress(Address address) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<Result> call = service.editAddress(
+        Call<Result> call = APIClient.getInstance().getApi().editAddress(
                 address.getId(),
                 address.getUserId(),
                 address.getFloor(),
@@ -297,18 +274,8 @@ public class NewAddressPresenter implements NewAddressContract.Presenter {
     @Override
     public void deleteAddress(int id) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<Result> call = service.removeAddress(id);
+        Call<Result> call = APIClient.getInstance().getApi().removeAddress(id);
 
         //calling the api
         call.enqueue(new Callback<Result>() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -88,13 +89,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
-        android:layout_marginTop="12dp"
         android:gravity="left"
         android:text="Quantity"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dish_disc" />
+        app:layout_constraintTop_toBottomOf="@+id/size_radio" />
 
     <ImageView
         android:id="@+id/decrease"
@@ -134,13 +134,14 @@
         app:layout_constraintTop_toTopOf="@+id/quantity" />
 
     <TextView
-        android:id="@+id/size_textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/size_tv"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Size:"
-        android:textColor="@android:color/black"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintBottom_toBottomOf="@+id/size_radio"
+        app:layout_constraintEnd_toStartOf="@+id/size_radio"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/size_radio" />
 
@@ -152,7 +153,8 @@
         android:layout_marginEnd="8dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quantity">
+        app:layout_constraintStart_toEndOf="@+id/size_tv"
+        app:layout_constraintTop_toBottomOf="@+id/sides2_spinner">
 
         <RadioButton
             android:id="@+id/mediumBtn"
@@ -171,57 +173,113 @@
 
     </RadioGroup>
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/options_spinner"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="@+id/options_spinner"
+        app:layout_constraintTop_toTopOf="@+id/options_spinner" />
 
     <TextView
-        android:id="@+id/optionsTv"
+        android:id="@+id/options_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Options:"
-        android:textColor="@android:color/black"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintBottom_toBottomOf="@+id/options_spinner"
         app:layout_constraintEnd_toStartOf="@+id/options_spinner"
-        app:layout_constraintHorizontal_weight="4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/options_spinner" />
+
 
     <Spinner
         android:id="@+id/options_spinner"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="3"
         android:gravity="center"
-        app:layout_constraintStart_toEndOf="@+id/optionsTv"
-        app:layout_constraintTop_toBottomOf="@+id/size_radio" />
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toEndOf="@+id/options_tv"
+        app:layout_constraintTop_toBottomOf="@+id/dish_disc" />
+
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/sides1_spinner"
+        app:layout_constraintStart_toStartOf="@+id/sides1_spinner"
+        app:layout_constraintTop_toTopOf="@+id/sides1_spinner" />
 
 
     <TextView
-        android:id="@+id/sidesTv"
+        android:id="@+id/sides1_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Sides:"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/sides_spinner"
-        app:layout_constraintEnd_toStartOf="@+id/sides_spinner"
-        app:layout_constraintHorizontal_weight="4"
+        android:text="Sides1:"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintBottom_toBottomOf="@+id/sides1_spinner"
+        app:layout_constraintEnd_toStartOf="@+id/sides1_spinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/sides_spinner" />
+        app:layout_constraintTop_toTopOf="@+id/sides1_spinner" />
 
     <Spinner
-        android:id="@+id/sides_spinner"
+        android:id="@+id/sides1_spinner"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        app:layout_constraintHorizontal_weight="3"
-        android:gravity="center"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/editText1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/sidesTv"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toEndOf="@+id/sides1_tv"
         app:layout_constraintTop_toBottomOf="@+id/options_spinner" />
+
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/sides2_spinner"
+        app:layout_constraintStart_toStartOf="@+id/sides2_spinner"
+        app:layout_constraintTop_toTopOf="@+id/sides2_spinner" />
+
+
+    <TextView
+        android:id="@+id/sides2_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Sides2:"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintBottom_toBottomOf="@+id/sides2_spinner"
+        app:layout_constraintEnd_toStartOf="@+id/sides2_spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sides2_spinner" />
+
+
+    <Spinner
+        android:id="@+id/sides2_spinner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/editText2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toEndOf="@+id/sides2_tv"
+        app:layout_constraintTop_toBottomOf="@+id/sides1_spinner" />
 
 
     <TextView
@@ -253,7 +311,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView12"
-        app:layout_constraintTop_toBottomOf="@+id/sidesTv" />
+        app:layout_constraintTop_toBottomOf="@+id/quantity" />
 
     <Button
         android:id="@+id/add_to_cart"

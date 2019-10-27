@@ -3,8 +3,7 @@ package com.atta.cookhouse.Register;
 import android.app.ProgressDialog;
 import android.content.Context;
 
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Result;
 import com.atta.cookhouse.model.SessionManager;
 import com.atta.cookhouse.model.User;
@@ -12,8 +11,6 @@ import com.atta.cookhouse.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterPresenter implements RegisterContract.Presenter{
 
@@ -36,18 +33,8 @@ public class RegisterPresenter implements RegisterContract.Presenter{
     @Override
     public void register(User user) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-
         //defining the call
-        Call<Result> call = service.createUser(
+        Call<Result> call = APIClient.getInstance().getApi().createUser(
                 user.getName(),
                 user.getEmail(),
                 user.getJob(),

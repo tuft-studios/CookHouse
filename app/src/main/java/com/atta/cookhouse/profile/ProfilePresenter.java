@@ -2,8 +2,7 @@ package com.atta.cookhouse.profile;
 
 import android.content.Context;
 
-import com.atta.cookhouse.model.APIService;
-import com.atta.cookhouse.model.APIUrl;
+import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Address;
 import com.atta.cookhouse.model.Profile;
 import com.atta.cookhouse.model.Result;
@@ -14,8 +13,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfilePresenter implements ProfileContract.Presenter {
 
@@ -31,20 +28,8 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     @Override
     public void getProfile(int userId) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<Profile> call = service.getProfile(userId);
+        Call<Profile> call = APIClient.getInstance().getApi().getProfile(userId);
 
         //calling the api
         call.enqueue(new Callback<Profile>() {
@@ -99,20 +84,8 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     @Override
     public void updateProfile(User user, int add_id) {
 
-        //building retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //Defining retrofit api service
-        APIService service = retrofit.create(APIService.class);
-
-        //Defining the user object as we need to pass it with the call
-        //User user = new User(name, email, password, phone, birthdayString, locationSting);
-
         //defining the call
-        Call<Result> call = service.updateProfile(
+        Call<Result> call = APIClient.getInstance().getApi().updateProfile(
                 user.getId(),
                 user.getName(),
                 add_id,

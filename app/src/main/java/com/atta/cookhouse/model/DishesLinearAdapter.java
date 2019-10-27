@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.atta.cookhouse.R;
 import com.atta.cookhouse.favorites.FavoritesContract;
+import com.atta.cookhouse.favorites.FavoritesPresenter;
 import com.atta.cookhouse.orderdetails.OrderDetailsContract;
 import com.squareup.picasso.Picasso;
 
@@ -26,6 +27,8 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
     FavoritesContract.View favView ;
 
     OrderDetailsContract.View orderView;
+
+    FavoritesPresenter favoritesPresenter;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -51,10 +54,11 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
     }
 
 
-    public DishesLinearAdapter(FavoritesContract.View view, ArrayList<Dish> data) {
+    public DishesLinearAdapter(FavoritesContract.View view, ArrayList<Dish> data, FavoritesPresenter favoritesPresenter) {
 
         this.dishes = data;
         this.favView = view;
+        this.favoritesPresenter = favoritesPresenter;
     }
 
     public DishesLinearAdapter(OrderDetailsContract.View view, ArrayList<Dish> data, Order order) {
@@ -96,7 +100,7 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
 
             if (dish.getImageUrl() != null) {
 
-                final String imageURL = APIUrl.Images_BASE_URL + dish.getImageUrl();
+                final String imageURL = APIClient.Images_BASE_URL + dish.getImageUrl();
                 Picasso.get()
                         .load(imageURL)
                         .resize(50, 50)
@@ -110,7 +114,7 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
                 @Override
                 public void onClick(View v) {
 
-                    favView.showOrderDialog(dish);
+                    favoritesPresenter.checkCartItem(dish);
 
 
                 }

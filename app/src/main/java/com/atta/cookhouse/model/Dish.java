@@ -5,19 +5,19 @@ import java.io.Serializable;
 public class Dish implements Serializable {
 
 
-    private int dId, priceM, priceL, cost, eta, size, quantity, cartCount, likes;
-    private String imageUrl, dishName, dishDisc, dishNameArabic, dishDiscArabic, location, options, sides;
+    private int dId, priceM, priceL, costM, costL, eta, size, quantity, cartCount, likes;
+    private String imageUrl, dishName, dishDisc, dishNameArabic, dishDiscArabic, location, options, sides1, sides2;
     boolean isFav;
 
 
-    public Dish(int dId, String dishName, String dishDisc, int size, int priceM, int priceL, int cost, int eta, String imageUrl, String location, int likes) {
+    public Dish(int dId, String dishName, String dishDisc, int size, int priceM, int priceL, int costM, int eta, String imageUrl, String location, int likes) {
         this.dId = dId;
         this.dishName = dishName;
         this.dishDisc = dishDisc;
         this.size = size;
         this.priceM = priceM;
         this.priceL = priceL;
-        this.cost = cost;
+        this.costM = costM;
         this.eta = eta;
         this.imageUrl = imageUrl;
         this.location = location;
@@ -29,12 +29,12 @@ public class Dish implements Serializable {
         this.quantity = quantity;
     }
 
-    public Dish(int dId, int size, int priceM, int priceL, int cost, int eta, int likes, int cartCount, String imageUrl, String dishName, String dishDisc, String location, boolean isFav) {
+    public Dish(int dId, int size, int priceM, int priceL, int costM, int eta, int likes, int cartCount, String imageUrl, String dishName, String dishDisc, String location, boolean isFav) {
         this.dId = dId;
         this.size = size;
         this.priceM = priceM;
         this.priceL = priceL;
-        this.cost = cost;
+        this.costM = costM;
         this.eta = eta;
         this.likes = likes;
         this.cartCount = cartCount;
@@ -45,12 +45,12 @@ public class Dish implements Serializable {
         this.isFav = isFav;
     }
 
-    public Dish(int dId, int size, int priceM, int priceL, int cost, int eta, int likes, int quantity, int cartCount, String imageUrl, String dishName, String dishDisc, String dishNameArabic, String dishDiscArabic, String location, boolean isFav) {
+    public Dish(int dId, int size, int priceM, int priceL, int costM, int eta, int likes, int quantity, int cartCount, String imageUrl, String dishName, String dishDisc, String dishNameArabic, String dishDiscArabic, String location, boolean isFav) {
         this.dId = dId;
         this.size = size;
         this.priceM = priceM;
         this.priceL = priceL;
-        this.cost = cost;
+        this.costM = costM;
         this.eta = eta;
         this.likes = likes;
         this.quantity = quantity;
@@ -124,8 +124,8 @@ public class Dish implements Serializable {
         return priceL;
     }
 
-    public int getCost() {
-        return cost;
+    public int getCostM() {
+        return costM;
     }
 
     public int getEta() {
@@ -140,7 +140,15 @@ public class Dish implements Serializable {
         return options;
     }
 
-    public String getSides() {
-        return sides;
+    public String getSides1() {
+        return sides1;
+    }
+
+    public int getCostL() {
+        return costL;
+    }
+
+    public String getSides2() {
+        return sides2;
     }
 }
