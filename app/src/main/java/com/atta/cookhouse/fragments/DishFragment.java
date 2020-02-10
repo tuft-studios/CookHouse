@@ -45,6 +45,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class DishFragment extends Fragment implements FragmentsContract.View {
 
@@ -71,6 +72,28 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
     boolean isFavorite;
 
     int favId;
+
+    private TextView quantity;
+
+    private Button addToCart;
+
+    private Dish dish;
+
+    private double price;
+
+    private String selectedOption, selectedSide1 ,selectedSide2, selectedSize;
+
+    private TextView dishName, dishDisc, totalPrice, dishPrice,
+            optionsTv, sides1Tv, sides2Tv, sizeTv;
+
+    private ImageView dishImage, addImage, removeImage;
+
+    RadioGroup radioGroup;
+
+    EditText optionsEditText, sides1EditText, sides2EditText;
+
+    Spinner optionsSpinner, sides1Spinner, sides2Spinner;
+
 
     ProgressDialog progressDialog;
 
@@ -133,15 +156,6 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         }
         progressDialog = new ProgressDialog(getContext(),R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-    }
-
-    @Override
-    public void setCount(int count, Dish dish) {
-        this.count = count;
-
-
-
-        showOrderDialog(dish);
     }
 
     @Override
@@ -223,7 +237,10 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
     @Override
     public void showMessage(String error) {
 
-        Toast.makeText(getContext(),error,Toast.LENGTH_LONG).show();
+        if (getContext() != null) {
+
+            Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+        }
 
         if(progressDialog != null || progressDialog.isShowing() ){
             progressDialog.dismiss();
@@ -232,7 +249,33 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
 
     @Override
-    public void showOrderDialog(Dish dish) {
+    public void setCount(int mCount, Dish dish) {
+
+        if (this.count == 1 && mCount!= 0){
+
+            this.count = mCount+1;
+
+            quantity.setText(String.valueOf(this.count));
+
+            if (this.count > 1){
+                addToCart.setText("Update Cart");
+            }
+
+        }else if (mCount == 0){
+
+            count = 1;
+
+            quantity.setText(String.valueOf(count));
+
+            setPrices();
+
+        }
+
+
+    }
+
+    @Override
+    public void showOrderDialog(Dish mDish) {
 
 
         final Dialog myDialog = new Dialog(getContext());
@@ -240,164 +283,27 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
         myDialog.setContentView(R.layout.add_to_cart_popup);
 
+        setDialogViews(myDialog);
+
+        dish = mDish;
+
         fragmentsPresenter.checkIfFav(dish.getDishId(), SessionManager.getInstance(getContext()).getUserId());
 
-        final int id = dish.getDishId();
-        final String name = dish.getDishName();
-        final String disc = dish.getDishDisc();
-        final int[] price = {dish.getPriceM()};
+        setDishData();
+
+        setSizeRadioGroup();
 
 
-        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice,
-                optionsTv, sides1Tv, sides2Tv, sizeTv;
-
-        final ImageView dishImage, addImage, removeImage;
-
-        Button addToCart;
-
-        RadioGroup radioGroup;
-
-        EditText optionsEditText, sides1EditText, sides2EditText;
-
-        Spinner optionsSpinner, sides1Spinner, sides2Spinner;
-
-        dishName = myDialog.findViewById(R.id.dish_name);
-        dishDisc = myDialog.findViewById(R.id.dish_disc);
-        quantity = myDialog.findViewById(R.id.quantity);
-        totalPrice = myDialog.findViewById(R.id.total_price);
-        dishPrice = myDialog.findViewById(R.id.dish_price);
-        addImage = myDialog.findViewById(R.id.increase);
-        removeImage = myDialog.findViewById(R.id.decrease);
-        dishImage = myDialog.findViewById(R.id.dish_image);
-        favBtn = myDialog.findViewById(R.id.fav);
-        radioGroup = myDialog.findViewById(R.id.size_radio);
-        optionsSpinner = myDialog.findViewById(R.id.options_spinner);
-        sides1Spinner = myDialog.findViewById(R.id.sides1_spinner);
-        sides2Spinner = myDialog.findViewById(R.id.sides2_spinner);
-        optionsEditText = myDialog.findViewById(R.id.editText);
-        sides1EditText = myDialog.findViewById(R.id.editText1);
-        sides2EditText = myDialog.findViewById(R.id.editText2);
-        optionsTv = myDialog.findViewById(R.id.options_tv);
-        sides1Tv = myDialog.findViewById(R.id.sides1_tv);
-        sides2Tv = myDialog.findViewById(R.id.sides2_tv);
-        sizeTv = myDialog.findViewById(R.id.size_tv);
-
-        dishName.setText(name);
-        dishDisc.setText(disc);
-
-        if (count == 0){
-            count++;
-        }
-        quantity.setText(String.valueOf(count));
+        setOptionsSpinner();
 
 
-        if (dish.getSize() == 0){
-            radioGroup.setVisibility(View.GONE);
-            sizeTv.setVisibility(View.GONE);
-        }else {
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    if (checkedId == R.id.mediumBtn){
-                        price[0] = dish.getPriceM();
-                        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
-                        dishPrice.setText(String.valueOf(price[0]) + " EGP");
-
-                    }else if (checkedId == R.id.largeBtn){
-
-                        price[0] = dish.getPriceL();
-                        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
-                        dishPrice.setText(String.valueOf(price[0]) + " EGP");
-                    }
-                }
-            });
-        }
+        setSides1Spinner();
 
 
-        totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
-        dishPrice.setText(String.valueOf(price[0]) + " EGP");
+        setSides2Spinner();
 
-        //fragmentsPresenter.getRetrofitImage(dishImage, imageUrl);
+        //fragmentsPresenter.checkCartItem(dish);
 
-
-        final String imageURL = APIClient.Images_BASE_URL + dish.getImageUrl();
-        Picasso.get()
-                .load(imageURL)
-                .into(dishImage);
-
-
-        if (dish.getOptions() == null) {
-            optionsSpinner.setVisibility(View.GONE);
-            optionsEditText.setVisibility(View.GONE);
-            optionsTv.setVisibility(View.GONE);
-        }else {
-            List<String> options = new ArrayList<String>(Arrays.asList(dish.getOptions().split(",")));
-
-            ArrayAdapter<String> optionsAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, options);
-            optionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            optionsSpinner.setAdapter(optionsAdapter);
-            optionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-        }
-
-        if (dish.getSides1() == null) {
-            sides1Spinner.setVisibility(View.GONE);
-            sides1EditText.setVisibility(View.GONE);
-            sides1Tv.setVisibility(View.GONE);
-        }else {
-            List<String> sides1 = new ArrayList<String>(Arrays.asList(dish.getSides1().split(",")));
-
-            ArrayAdapter<String> sides1Adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides1);
-            sides1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sides1Spinner.setAdapter(sides1Adapter);
-            sides1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-        }
-
-
-        if (dish.getSides2() == null) {
-            sides2Spinner.setVisibility(View.GONE);
-            sides2EditText.setVisibility(View.GONE);
-            sides2Tv.setVisibility(View.GONE);
-        }else {
-            List<String> sides2 = new ArrayList<String>(Arrays.asList(dish.getSides2().split(",")));
-
-            ArrayAdapter<String> sides2Adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides2);
-            sides2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sides2Spinner.setAdapter(sides2Adapter);
-            sides2Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-        }
 
         favBtn.setOnClickListener(v -> {
 
@@ -421,9 +327,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
             quantity.setText(String.valueOf(count));
 
-            totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
-
-
+            setPrices();
 
         });
 
@@ -434,44 +338,254 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
                 quantity.setText(String.valueOf(count));
 
-                totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
+                setPrices();
             }
 
         });
 
 
 
-        addToCart = myDialog.findViewById(R.id.add_to_cart);
-
-
-        if (count > 1){
-            addToCart.setText("Update Cart");
-        }
-
-
         addToCart.setOnClickListener(v -> {
 
             if (count != 0){
 
+
+                if (selectedSide1.equals("Pasta Red Sauce") || selectedSide1.equals("Pasta White Sauce")){
+
+                    dish.setSelectedSide2("None");
+                }
                 Toast.makeText(getContext(),"Dish add",Toast.LENGTH_LONG).show();
 
-                String total = String.valueOf(price[0] * count);
+                String total = String.valueOf(price * count);
 
-                fragmentsPresenter.getCartItem(id, name, total, count);
+                fragmentsPresenter.addToCard(dish, total, count);
 
                 myDialog.dismiss();
+
             }else Toast.makeText(getContext(),"set number of dishes",Toast.LENGTH_LONG).show();
 
         });
 
 
         myDialog.setCancelable(true);
-        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(myDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         myDialog.show();
         Window window = myDialog.getWindow();
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
+    }
+
+    public void setDishData() {
+
+        price = dish.getPriceL();
+
+        String name = dish.getDishName();
+        String disc = dish.getDishDisc();
+
+        dishName.setText(name);
+        dishDisc.setText(disc);
+
+        final String imageURL = APIClient.Images_BASE_URL + dish.getImageUrl();
+        Picasso.get()
+                .load(imageURL)
+                .into(dishImage);
+
+
+        count = 1;
+
+        quantity.setText(String.valueOf(count));
+
+        setPrices();
+
+    }
+
+    public void setPrices() {
+        String totalPriceString = (price * count) + " EGP";
+        String dishPriceString = price + " EGP";
+
+        totalPrice.setText(totalPriceString);
+        dishPrice.setText(dishPriceString);
+    }
+
+    public void setDialogViews(Dialog myDialog) {
+        dishName = myDialog.findViewById(R.id.dish_name);
+        dishDisc = myDialog.findViewById(R.id.dish_disc);
+        quantity = myDialog.findViewById(R.id.quantity);
+        totalPrice = myDialog.findViewById(R.id.total_price);
+        dishPrice = myDialog.findViewById(R.id.dish_price);
+        addImage = myDialog.findViewById(R.id.increase);
+        removeImage = myDialog.findViewById(R.id.decrease);
+        dishImage = myDialog.findViewById(R.id.dish_image);
+        favBtn = myDialog.findViewById(R.id.fav);
+        radioGroup = myDialog.findViewById(R.id.size_radio);
+        optionsSpinner = myDialog.findViewById(R.id.options_spinner);
+        sides1Spinner = myDialog.findViewById(R.id.sides1_spinner);
+        sides2Spinner = myDialog.findViewById(R.id.sides2_spinner);
+        optionsEditText = myDialog.findViewById(R.id.editText);
+        sides1EditText = myDialog.findViewById(R.id.editText1);
+        sides2EditText = myDialog.findViewById(R.id.editText2);
+        optionsTv = myDialog.findViewById(R.id.options_tv);
+        sides1Tv = myDialog.findViewById(R.id.sides1_tv);
+        sides2Tv = myDialog.findViewById(R.id.sides2_tv);
+        sizeTv = myDialog.findViewById(R.id.size_tv);
+        addToCart = myDialog.findViewById(R.id.add_to_cart);
+
+
+    }
+
+    public void setSides2Spinner() {
+        if (dish.getSides2() == null) {
+            sides2Spinner.setVisibility(View.GONE);
+            sides2EditText.setVisibility(View.GONE);
+            sides2Tv.setVisibility(View.GONE);
+            selectedSide2 = "None";
+            dish.setSelectedSide2(selectedSide2);
+        }else {
+            //String[] sides2Array = dish.getSides2().split(",");
+            //Arrays.sort(sides2Array, String.CASE_INSENSITIVE_ORDER);
+            List<String> sides2 = new ArrayList<String>(Arrays.asList(dish.getSides2().split(",")));
+
+            selectedSide2 = sides2.get(0);
+            dish.setSelectedSide2(selectedSide2);
+            ArrayAdapter<String> sides2Adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides2);
+            sides2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sides2Spinner.setAdapter(sides2Adapter);
+            sides2Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    selectedSide2 = sides2.get(position);
+                    dish.setSelectedSide2(selectedSide2);
+                    //fragmentsPresenter.checkCartItem(dish);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+    }
+
+    public void setSides1Spinner() {
+        if (dish.getSides1() == null) {
+            sides1Spinner.setVisibility(View.GONE);
+            sides1EditText.setVisibility(View.GONE);
+            sides1Tv.setVisibility(View.GONE);
+            selectedSide1 = "None";
+            dish.setSelectedSide1(selectedSide1);
+        }else {
+            //String[] sides1Array = dish.getSides1().split(",");
+            //Arrays.sort(sides1Array, String.CASE_INSENSITIVE_ORDER);
+            List<String> sides1 = new ArrayList<String>(Arrays.asList(dish.getSides1().split(",")));
+
+            selectedSide1 = sides1.get(0);
+            dish.setSelectedSide1(selectedSide1);
+            ArrayAdapter<String> sides1Adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, sides1);
+            sides1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sides1Spinner.setAdapter(sides1Adapter);
+            sides1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    selectedSide1 = sides1.get(position);
+                    dish.setSelectedSide1(selectedSide1);
+                    //fragmentsPresenter.checkCartItem(dish);
+
+                    if (sides1.get(position).equals("Pasta Red Sauce") || sides1.get(position).equals("Pasta White Sauce")){
+                        sides2Spinner.setVisibility(View.GONE);
+                        sides2EditText.setVisibility(View.GONE);
+                        sides2Tv.setVisibility(View.GONE);
+                    }else {
+                        if (dish.getSides2() != null) {
+                            sides2Spinner.setVisibility(View.VISIBLE);
+                            sides2EditText.setVisibility(View.VISIBLE);
+                            sides2Tv.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+    }
+
+    public void setOptionsSpinner() {
+        if (dish.getOptions() == null) {
+            optionsSpinner.setVisibility(View.GONE);
+            optionsEditText.setVisibility(View.GONE);
+            optionsTv.setVisibility(View.GONE);
+            selectedOption= "None";
+            dish.setSelectedOption(selectedOption);
+        }else {
+            //String[] optionsArray = dish.getOptions().split(",");
+            //Arrays.sort(optionsArray);
+            List<String> options = new ArrayList<String>(Arrays.asList(dish.getOptions().split(",")));
+
+            selectedOption = options.get(0);
+            dish.setSelectedOption(selectedOption);
+            ArrayAdapter<String> optionsAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, options);
+            optionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            optionsSpinner.setAdapter(optionsAdapter);
+            optionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    selectedOption = options.get(position);
+                    dish.setSelectedOption(selectedOption);
+                    //fragmentsPresenter.checkCartItem(dish);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+    }
+
+    public void setSizeRadioGroup() {
+        if (dish.getSize() == 0){
+            radioGroup.setVisibility(View.GONE);
+            sizeTv.setVisibility(View.GONE);
+            selectedSize = "Large";
+            dish.setSelectedSize(selectedSize);
+        }else {
+            selectedSize = "Large";
+            dish.setSelectedSize(selectedSize);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.mediumBtn){
+                        price = dish.getPriceM();
+                        totalPrice.setText(String.valueOf(price * count) + " EGP");
+                        dishPrice.setText(String.valueOf(price) + " EGP");
+
+                        selectedSize = "Medium";
+                        dish.setSelectedSize(selectedSize);
+                        //fragmentsPresenter.checkCartItem(dish);
+
+                    }else if (checkedId == R.id.largeBtn){
+
+                        price = dish.getPriceL();
+                        totalPrice.setText(String.valueOf(price * count) + " EGP");
+                        dishPrice.setText(String.valueOf(price) + " EGP");
+
+                        selectedSize = "Large";
+                        dish.setSelectedSize(selectedSize);
+                        //fragmentsPresenter.checkCartItem(dish);
+                    }
+                }
+            });
+        }
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {

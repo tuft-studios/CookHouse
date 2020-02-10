@@ -1,12 +1,12 @@
 package com.atta.cookhouse.model;
 
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atta.cookhouse.R;
@@ -43,11 +43,43 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
     public void onBindViewHolder(final TasksViewHolder holder, final int position) {
         final CartItem cartItem = cartItems.get(position);
 
-        int price = Integer.valueOf(cartItem.getDishPrice()) * cartItem.getCount();
+        double price = Double.valueOf(cartItem.getDishPrice()) * cartItem.getCount();
 
         holder.textViewDishName.setText(cartItem.getDishName());
         holder.textViewDishPrice.setText(String.valueOf(price) + " EGP");
         holder.textViewDishCount.setText(String.valueOf(cartItem.getCount()));
+
+        String details = "";
+
+        if (!cartItem.getSize().equals("None")){
+            details = details.concat(cartItem.getSize());
+        }
+
+        if (!cartItem.getOption().equals("None")){
+
+            if (!cartItem.getSize().equals("None")){
+                details = details.concat(", ");
+            }
+            details = details.concat(cartItem.getOption());
+        }
+
+        if (!cartItem.getSide1().equals("None")){
+
+            if (!cartItem.getOption().equals("None")){
+                details = details.concat(", ");
+            }
+            details = details.concat(cartItem.getSide1());
+        }
+
+        if (!cartItem.getSide2().equals("None")){
+
+            if (!cartItem.getSide1().equals("None")){
+                details = details.concat(", ");
+            }
+            details = details.concat(cartItem.getSide2());
+        }
+
+        holder.textViewdetails.setText(details);
 
 
         holder.addOne.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +90,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
 
                 holder.textViewDishCount.setText(String.valueOf(cartItem.getCount()));
 
-                int price = Integer.valueOf(cartItem.getDishPrice())* cartItem.getCount();
+                double price = Double.valueOf(cartItem.getDishPrice())* cartItem.getCount();
 
                 holder.textViewDishPrice.setText(String.valueOf(price) + " EGP");
 
@@ -81,7 +113,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
 
                     holder.textViewDishCount.setText(String.valueOf(cartItem.getCount()));
 
-                    int price = Integer.valueOf(cartItem.getDishPrice())* cartItem.getCount();
+                    double price = Double.valueOf(cartItem.getDishPrice())* cartItem.getCount();
 
                     holder.textViewDishPrice.setText(String.valueOf(price) + " EGP");
 
@@ -133,11 +165,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
     public class TasksViewHolder  extends RecyclerView.ViewHolder {
 
 
-        TextView textViewDishName, textViewDishPrice, textViewDishCount;
+        TextView textViewDishName, textViewDishPrice, textViewDishCount, textViewdetails;
 
         ImageView addOne, removeOne, removeItem;
 
-        RelativeLayout relativeLayout;
+        ConstraintLayout constraintLayout;
 
         public TasksViewHolder(View itemView) {
             super(itemView);
@@ -145,12 +177,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
             textViewDishName = itemView.findViewById(R.id.item_name);
             textViewDishPrice = itemView.findViewById(R.id.item_price);
             textViewDishCount = itemView.findViewById(R.id.count);
+            textViewdetails = itemView.findViewById(R.id.details_tv);
 
             addOne = itemView.findViewById(R.id.add_one);
             removeOne = itemView.findViewById(R.id.remove_one);
             removeItem = itemView.findViewById(R.id.remove_item);
 
-            relativeLayout = itemView.findViewById(R.id.background_layout);
+            constraintLayout = itemView.findViewById(R.id.background_layout);
 
             if (summary){
 
@@ -158,19 +191,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
                 removeOne.setVisibility(View.GONE);
                 removeItem.setVisibility(View.GONE);
 
-                relativeLayout.setBackgroundResource(0);
+                constraintLayout.setBackgroundResource(0);
 
-                relativeLayout.requestLayout();
+                constraintLayout.requestLayout();
 
-                relativeLayout.getLayoutParams().height = dpToPx(40);
+                constraintLayout.getLayoutParams().height = dpToPx(40);
 /*
                 final float scale = mCtx.getResources().getDisplayMetrics().density;
                 int pixels = (int) (60 * scale + 0.5f);
 
-                RelativeLayout.LayoutParams relativeLayout = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams constraintLayout = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, pixels);
 
-                relativeLayout.height*/
+                constraintLayout.height*/
             }
 
 

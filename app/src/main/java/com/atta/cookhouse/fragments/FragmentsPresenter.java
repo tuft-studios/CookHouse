@@ -59,7 +59,10 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
 
                         if (dishes.size() > 0){
 
-                            checkCartItems(dishes);
+                            //checkCartItems(dishes);
+
+
+                            mView.showRecyclerView(dishes);
                         }
 
                     }
@@ -99,7 +102,8 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
                             .getInstance(mContext)
                             .getAppDatabase()
                             .itemDao()
-                            .checkItem(dish.getDishId());
+                            .checkItem(dish.getDishId(), dish.getSelectedOption(), dish.getSelectedSide1() ,
+                                    dish.getSelectedSide2(), dish.getSelectedSize());
                     return cartItem;
                 }
 
@@ -140,12 +144,13 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
 
             @Override
             protected CartItem doInBackground(Void... voids) {
-                CartItem cartItem = DatabaseClient
+                return DatabaseClient
                         .getInstance(mContext)
                         .getAppDatabase()
                         .itemDao()
-                        .checkItem(dish.getDishId());
-                return cartItem;
+                        .checkItem(dish.getDishId(), dish.getSelectedOption(),
+                                dish.getSelectedSide1() ,dish.getSelectedSide2(),
+                                dish.getSelectedSize());
             }
 
             @Override
@@ -168,9 +173,9 @@ public class FragmentsPresenter implements FragmentsContract.Presenter {
     }
 
     @Override
-    public void getCartItem(final int id, final String dishName, final String price, final int count) {
+    public void addToCard(final Dish dish, final String price, final int count) {
 
-        QueryUtils.getCartItem(id, dishName, price, count, mContext, mCounterFab);
+        QueryUtils.checkCartItem(dish, price, count, mContext, mCounterFab);
 
 
     }

@@ -8,11 +8,10 @@
     android:layout_margin="12dp"
     android:background="@color/white">
 
-
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -98,7 +97,7 @@
 
     <ImageView
         android:id="@+id/decrease"
-        android:layout_width="wrap_content"
+        android:layout_width="30dp"
         android:layout_height="0dp"
         android:src="@drawable/decrease"
         app:layout_constraintBottom_toBottomOf="@+id/quantity"
@@ -124,7 +123,7 @@
 
     <ImageView
         android:id="@+id/increase"
-        android:layout_width="wrap_content"
+        android:layout_width="30dp"
         android:layout_height="0dp"
         android:src="@drawable/increase"
         app:layout_constraintBottom_toBottomOf="@+id/quantity"
@@ -188,7 +187,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Options:"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintHorizontal_weight="3"
         app:layout_constraintBottom_toBottomOf="@+id/options_spinner"
         app:layout_constraintEnd_toStartOf="@+id/options_spinner"
         app:layout_constraintStart_toStartOf="parent"
@@ -202,10 +201,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/editText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@+id/options_tv"
         app:layout_constraintTop_toBottomOf="@+id/dish_disc" />
 
@@ -225,7 +224,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Sides1:"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintBottom_toBottomOf="@+id/sides1_spinner"
         app:layout_constraintEnd_toStartOf="@+id/sides1_spinner"
         app:layout_constraintStart_toStartOf="parent"
@@ -241,7 +240,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/editText1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintHorizontal_weight="3"
         app:layout_constraintStart_toEndOf="@+id/sides1_tv"
         app:layout_constraintTop_toBottomOf="@+id/options_spinner" />
 
@@ -261,7 +260,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Sides2:"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintBottom_toBottomOf="@+id/sides2_spinner"
         app:layout_constraintEnd_toStartOf="@+id/sides2_spinner"
         app:layout_constraintStart_toStartOf="parent"
@@ -277,7 +276,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/editText2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintHorizontal_weight="3"
         app:layout_constraintStart_toEndOf="@+id/sides2_tv"
         app:layout_constraintTop_toBottomOf="@+id/sides1_spinner" />
 

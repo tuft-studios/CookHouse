@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Kersho Man</string>
+    <string name="app_name">KershoMan</string>
 
 
     <string name="hint_email" translatable="false">Email</string>
@@ -48,8 +48,8 @@
     <string name="registered_emailid" translatable="false">Please enter your Registered Email Id below:</string>
     <string name="submit" translatable="false">SUBMIT</string>
     <string name="back">BACK</string>
-    <string name="login_to" translatable="false">Welcome to CHEF</string>
-    <string name="register_text" translatable="false">New to CHEF? \n join us to enjoy our offers and deals!</string>
+    <string name="login_to" translatable="false">Welcome to KershoMan</string>
+    <string name="register_text" translatable="false">New to KershoMan? \n join us to enjoy our offers and deals!</string>
     <string name="register_later" translatable="false">register later</string>
     <string name="birth_date">Birth Date</string>
     <string name="select_area" translatable="false">Select Your ِArea…</string>

@@ -78,7 +78,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
 
             name = dish.getDishName();
         }
-        final int price = dish.getPriceM();
+        final double price = dish.getPriceL();
         //final int likes = dish.getLikes();
         if (dish.getImageUrl() != null){
 
@@ -97,7 +97,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.MyViewHold
             @Override
             public void onClick(View v) {
 
-                fragmentsPresenter.checkCartItem(dish);
+                view.showOrderDialog(dish);
 
 
 

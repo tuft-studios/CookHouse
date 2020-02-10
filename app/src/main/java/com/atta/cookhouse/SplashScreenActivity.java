@@ -1,20 +1,16 @@
 package com.atta.cookhouse;
 
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import com.atta.cookhouse.model.SessionManager;
 
-import java.util.Locale;
-
 public class SplashScreenActivity extends AppCompatActivity {
 
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 200;
+    private static int SPLASH_TIME_OUT = 700;
     // Session Manager Class
     SessionManager session;
 
@@ -40,7 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                if (!session.checkIfLanguageSelected()){
+                /*if (!session.checkIfLanguageSelected()){
                     Intent intent = new Intent(SplashScreenActivity.this, LanguageActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -55,12 +51,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                     Configuration config = new Configuration();
                     config.locale = locale;
                     getResources().updateConfiguration(config,getResources().getDisplayMetrics());
-
+*/
                     session.checkLogin();
 
                     // close this activity
                     finish();
-                }
+                //}
             }
         }, SPLASH_TIME_OUT);
     }

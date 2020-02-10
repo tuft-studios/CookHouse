@@ -21,9 +21,9 @@ import com.atta.cookhouse.model.OrdersResult;
 import com.atta.cookhouse.model.PromoCodeResult;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,7 +58,8 @@ public class CartPresenter implements CartContract.Presenter {
 
     @Override
     public void getCartItems(final boolean view, @Nullable final int userId, @Nullable final String location,
-                             final int deliveryAdd, @Nullable final String mobile, @Nullable final String orderTime, @Nullable final double discountAmount) {
+                             final int deliveryAdd, @Nullable final String mobile, @Nullable final String orderTime,
+                             @Nullable final double discountAmount, @Nullable final String promocode, final int numOfPoints) {
 
 
         class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
@@ -105,28 +106,49 @@ public class CartPresenter implements CartContract.Presenter {
                     }
                 }else {
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.ENGLISH);
 
                     String creationTime = sdf.format(new Date());
 
-                    ArrayList<String> dishes = new ArrayList<>(), count = new ArrayList<>();
+                    //ArrayList<String> dishes = new ArrayList<>(), count = new ArrayList<>();
 
-                    StringBuilder dishesBuilder = new StringBuilder(), countBuilder = new StringBuilder();
+                    StringBuilder dishesBuilder = new StringBuilder(), countBuilder = new StringBuilder(),
+                            optionstBuilder = new StringBuilder(), sides1Builder = new StringBuilder(),
+                            sides2Builder = new StringBuilder(), sizeBuilder = new StringBuilder();
+
+                    int eta = 0;
 
                     for (int i = 0; i <  cartItems.size(); i++) {
                         dishesBuilder.append(cartItems.get(i).getDishId());
                         countBuilder.append(cartItems.get(i).getCount());
+                        optionstBuilder.append(cartItems.get(i).getOption());
+                        sides1Builder.append(cartItems.get(i).getSide1());
+                        sides2Builder.append(cartItems.get(i).getSide2());
+                        sizeBuilder.append(cartItems.get(i).getSize());
 
                         if (i != (cartItems.size() -1)){
                             dishesBuilder.append(",");
                             countBuilder.append(",");
+                            optionstBuilder.append(",");
+                            sides1Builder.append(",");
+                            sides2Builder.append(",");
+                            sizeBuilder.append(",");
+                        }
+
+                        if (cartItems.get(i).getEta() > eta){
+
+                            eta = cartItems.get(i).getEta();
                         }
                     }
 
+                    eta += 30;
+
                     double total = totalPrice+deliveryPrice-discountAmount;
 
-                    Order order = new Order(dishesBuilder.toString(), countBuilder.toString(),  totalPrice, deliveryPrice , total
-                            , discountAmount, userId, location, deliveryAdd, mobile,  orderTime, creationTime);
+                    Order order = new Order(dishesBuilder.toString(), countBuilder.toString(),
+                            optionstBuilder.toString(), sizeBuilder.toString(), sides1Builder.toString(),
+                            sides2Builder.toString(), totalPrice, deliveryPrice, total, discountAmount,
+                            userId, location, deliveryAdd, mobile,  orderTime, creationTime, eta, "test", promocode, numOfPoints);
 
                     addOrder(order);
                 }
@@ -138,11 +160,11 @@ public class CartPresenter implements CartContract.Presenter {
     }
 
     @Override
-    public int totalPriceCalculation(List<CartItem> cartItems) {
-        int total = 0;
+    public double totalPriceCalculation(List<CartItem> cartItems) {
+        double total = 0;
 
         for (CartItem cartItem : cartItems){
-            total += (Integer.valueOf(cartItem.getDishPrice())* cartItem.getCount());
+            total += (Double.valueOf(cartItem.getDishPrice())* cartItem.getCount());
         }
         return total;
     }
@@ -194,6 +216,10 @@ public class CartPresenter implements CartContract.Presenter {
         Call<OrdersResult> call = APIClient.getInstance().getApi().addOrder(
                 order.getDishes(),
                 order.getCount(),
+                order.getOptions(),
+                order.getSides1(),
+                order.getSides2(),
+                order.getSizes(),
                 order.getSubtotalPrice(),
                 order.getDelivery(),
                 order.getDiscount(),
@@ -203,7 +229,11 @@ public class CartPresenter implements CartContract.Presenter {
                 order.getUserId(),
                 order.getOrderTime(),
                 order.getCreationTime(),
-                order.getLocation()
+                order.getLocation(),
+                order.getEta(),
+                order.getComment(),
+                order.getPromocode(),
+                order.getPoints()
         );
 
         //calling the api
@@ -315,6 +345,8 @@ public class CartPresenter implements CartContract.Presenter {
 
                     }else {
                         mView.showMessage(response.body().getMessage());
+
+                        mView.wrongPromo();
                     }
                 }else {
                     mView.showMessage("something wrong, please try again");

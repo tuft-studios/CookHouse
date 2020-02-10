@@ -109,7 +109,8 @@ public class FavoritesPresenter implements FavoritesContract.Presenter {
                         .getInstance(mContext)
                         .getAppDatabase()
                         .itemDao()
-                        .checkItem(dish.getDishId());
+                        .checkItem(dish.getDishId(), dish.getSelectedOption(), dish.getSelectedSide1() ,
+                                dish.getSelectedSide2(), dish.getSelectedSize());
                 return cartItem;
             }
 

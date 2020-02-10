@@ -32,6 +32,10 @@ public interface APIService {
     Call<OrdersResult> addOrder(
             @Field("dishes") String dishes,
             @Field("quantities") String quantities,
+            @Field("options") String options,
+            @Field("sides1") String sides1,
+            @Field("sides2") String sides2,
+            @Field("sizes") String sizes,
             @Field("subtotal") double subtotal,
             @Field("delivery") double delivery,
             @Field("discount") double discount,
@@ -41,7 +45,11 @@ public interface APIService {
             @Field("user_id") int userId,
             @Field("order_time") String orderTime,
             @Field("creation_time") String creationTime,
-            @Field("location") String location
+            @Field("location") String location,
+            @Field("eta") int eta,
+            @Field("comment") String comment,
+            @Field("promocode") String promocode,
+            @Field("points") int points
     );
 
 

@@ -24,12 +24,12 @@ public interface ItemDao {
     void deleteAll();
 
 
-    @Query("SELECT * FROM cartItem WHERE dishId = :dishId")
-    CartItem checkItem(int dishId);
+    @Query("SELECT * FROM cartItem WHERE dishId = :dishId and option = :option and side1 = :side1 and side2 = :side2 and size = :size")
+    CartItem checkItem(int dishId, String option, String side1, String side2, String size);
 
 
-    @Query("SELECT * from cartItem where dishName = :dishName")
-    CartItem getItem(String dishName);
+    @Query("SELECT * from cartItem where dishName = :dishName and option = :option and side1 = :side1 and side2 = :side2 and size = :size")
+    CartItem getItem(String dishName, String option, String side1, String side2, String size);
 
     @Insert
     void insert(CartItem cartItem);

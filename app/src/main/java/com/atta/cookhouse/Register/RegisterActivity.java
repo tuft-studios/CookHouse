@@ -207,10 +207,16 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     }
 
     @Override
-    public void showViewError(String view, String error) {
+    public void showViewError(String view, String oldView, String error) {
 
         int id = getResources().getIdentifier(view, "id", this.getPackageName());
-        EditText editText = (EditText)findViewById(id);
+        EditText editText = findViewById(id);
+        if (oldView != null) {
+            int oldIdd = getResources().getIdentifier(oldView, "id", this.getPackageName());
+            EditText oldEditText = findViewById(id);
+            oldEditText.setError(null);
+        }
+        editText.requestFocus();
         editText.setError(error);
     }
 
@@ -242,64 +248,42 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
 
         if (name.isEmpty()) {
-
-            showViewError("name","Enter your name");
+            showViewError("name",null,"Enter your name");
             valid = false;
-        } else {
-
-            showViewError("name",null);
-        }
-
-        if (!email.matches(emailPattern) || email.isEmpty())
-        {
-            showViewError("email","Invalid email address");
+        } else if (!email.matches(emailPattern) || email.isEmpty()) {
+            showViewError("email","name","Invalid email address");
             valid = false;
 
-        }else {
-            showViewError("email",null);
-        }
+        }else if (phone.length() != 11) {
+            showViewError("phone","email","Enter a valid Phone number");
+            valid = false;
+        }else if (birthdayString == null || birthdayString.isEmpty() || birthdayString.equals("null")){
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            showViewError("password","password must be between 4 and 10 alphanumeric characters");
+            showMessage("Enter Your Birth date");
+            phoneText.setError(null);
+            valid = false;
+        }else if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+
+            showViewError("password","bd","password must be between 4 and 10 alphanumeric characters");
             valid = false;
         } else if (passwordConfirm.isEmpty() || passwordConfirm.length() < 4 || passwordConfirm.length() > 10 ) {
 
-            showViewError("password_confirm","password must be between 4 and 10 alphanumeric characters");
+            showViewError("password_confirm","bd","password must be between 4 and 10 alphanumeric characters");
             valid = false;
         } else if (!password.equals(passwordConfirm)){
 
-            showViewError("password","passwords not Matched");
+            showViewError("password","bd","passwords not Matched");
             valid = false;
-        }else {
-            showViewError("password",null);
-            showViewError("password_confirm",null);
-        }
+        } else if(locationSting == null){
 
-        if (phone.isEmpty() || phone.length()!= 11) {
-            showViewError("phone","Enter a valid Phone number");
-            valid = false;
-        } else {
-            showViewError("phone",null);
-        }
-
-        if(locationSting == null){
+            passwordText.setError(null);
+            confirmPasswordText.setError(null);
 
             showMessage("Enter Your Location");
             valid = false;
         }else if (locationSting.isEmpty() || locationSting.equals("null")){
 
             showMessage("Enter Your Location");
-            valid = false;
-        }
-
-
-        if(birthdayString == null){
-
-            showViewError("bd","Enter Your Birthday");
-            valid = false;
-        }else if (birthdayString.isEmpty() || birthdayString.equals("null")){
-
-            showViewError("bd","Enter Your Birthday");
             valid = false;
         }
 

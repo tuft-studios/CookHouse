@@ -1,12 +1,9 @@
 package com.atta.cookhouse.main;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,10 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +51,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.smarteist.autoimageslider.SliderLayout;
 import com.smarteist.autoimageslider.SliderView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -448,7 +441,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showOrderDialog(Dish dish, final FragmentsPresenter fragmentsPresenter,
                                 RecyclerView recyclerView, int type, String location) {
-
+/*
         final Dialog myDialog = new Dialog(MainActivity.this);
 
 
@@ -549,7 +542,7 @@ public class MainActivity extends AppCompatActivity
 
             String total = String.valueOf(price * count);
 
-            fragmentsPresenter.getCartItem(id, name, total, count);
+            fragmentsPresenter.addToCard(id, name, total, count);
 
             myDialog.dismiss();
 
@@ -558,7 +551,7 @@ public class MainActivity extends AppCompatActivity
 
         myDialog.setCancelable(true);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        myDialog.show();
+        myDialog.show();*/
     }
 
     @Override
@@ -658,6 +651,7 @@ public class MainActivity extends AppCompatActivity
     public void setPoints(int points) {
 
         pointsText.setText(String.valueOf(points));
+        SessionManager.getInstance(this).setUserPoints(points);
     }
 
     @Override

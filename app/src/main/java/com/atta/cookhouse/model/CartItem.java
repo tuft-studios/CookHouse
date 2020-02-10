@@ -21,14 +21,27 @@ public class CartItem implements Serializable {
     @ColumnInfo(name = "dishPrice")
     String dishPrice;
 
-
     @ColumnInfo(name = "count")
     int count;
-
 
     @ColumnInfo(name = "kitchen")
     int kitchen;
 
+    @ColumnInfo(name = "option")
+    String option;
+
+    @ColumnInfo(name = "side1")
+    String side1;
+
+    @ColumnInfo(name = "side2")
+    String side2;
+
+
+    @ColumnInfo(name = "size")
+    String size;
+
+    @ColumnInfo(name = "eta")
+    int eta;
 
     public String getDishName() {
         return dishName;
@@ -76,5 +89,45 @@ public class CartItem implements Serializable {
 
     public int getKitchen() {
         return kitchen;
+    }
+
+    public String getOption() {
+        return option;
+    }
+
+    public String getSide1() {
+        return side1;
+    }
+
+    public String getSide2() {
+        return side2;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setOption(String option) {
+        this.option = option;
+    }
+
+    public void setSide1(String side1) {
+        this.side1 = side1;
+    }
+
+    public void setSide2(String side2) {
+        this.side2 = side2;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public int getEta() {
+        return eta;
+    }
+
+    public void setEta(int eta) {
+        this.eta = eta;
     }
 }

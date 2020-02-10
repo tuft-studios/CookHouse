@@ -51,7 +51,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements OrderDeta
         if (getIntent().getSerializableExtra("order") != null){
             order = (Order) getIntent().getSerializableExtra("order");
 
-            orderDetailsPresenter.getOrderDishes(order.getId());
+            //orderDetailsPresenter.getOrderDishes(order.getId());
             setOrderData();
 
 
@@ -118,12 +118,14 @@ public class OrderDetailsActivity extends AppCompatActivity implements OrderDeta
 
     private void setOrderData() {
         timeTv.setText(order.getOrderTime());
-        addressTv.setText(order.getFullAddress().getFullAddress());
+        addressTv.setText(order.getFullAddress());
         mobileTv.setText(order.getMobile());
         subTotalTv.setText(order.getSubtotalPrice() + " EGP");
         deliveryFeesTv.setText(order.getDelivery() + " EGP");
         discountTv.setText(order.getDiscount() + " EGP");
         totalTx.setText(order.getTotalPrice() + " EGP");
+
+        showRecyclerView(order.getDishesList());
 
         switch (order.getStatus()){
             case 0:

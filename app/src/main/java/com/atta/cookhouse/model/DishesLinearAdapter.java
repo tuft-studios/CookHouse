@@ -92,7 +92,7 @@ public class DishesLinearAdapter extends RecyclerView.Adapter<DishesLinearAdapte
 
         final int id = dish.getDishId();
         final String name = dish.getDishName();
-        final int price = dish.getPriceM();
+        final double price = dish.getPriceL();
 
         holder.title.setText(name);
 

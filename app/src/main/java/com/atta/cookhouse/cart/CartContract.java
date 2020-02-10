@@ -43,13 +43,16 @@ public interface CartContract {
         void showAddressesMessage(String message);
 
         void setDiscount(int discount);
+
+        void wrongPromo();
     }
 
     interface Presenter{
 
-        void getCartItems(boolean view, int userId, String location, int deliveryAdd, String mobile, String orderTime, double discountAmount);
+        void getCartItems(boolean view, int userId, String location, int deliveryAdd, String mobile,
+                          String orderTime, double discountAmount, String promocode, int numOfPoints);
 
-        int totalPriceCalculation(List<CartItem> cartItems);
+        double totalPriceCalculation(List<CartItem> cartItems);
 
         void removeCartItems();
 

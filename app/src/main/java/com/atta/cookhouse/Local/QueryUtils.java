@@ -11,6 +11,7 @@ import com.atta.cookhouse.login.LoginContract;
 import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.CartItem;
+import com.atta.cookhouse.model.Dish;
 import com.atta.cookhouse.model.Result;
 import com.atta.cookhouse.model.SessionManager;
 
@@ -24,7 +25,9 @@ public class QueryUtils {
 
     public static void updateCount(final CartItem cartItem, final Context mContext, int count) {
 
-        cartItem.setCount(count);
+        int itemCount = cartItem.getCount();
+
+        cartItem.setCount(itemCount + count);
 
         class SaveTask extends AsyncTask<Void, Void, Void> {
 
@@ -86,20 +89,20 @@ public class QueryUtils {
 
     }
 
-    public static void getCartItem(final int id, final String dishName, final String price, final int count,
-                                   final Context mContext, final CounterFab mCounterFab) {
+    public static void checkCartItem(final Dish dish, final String price, final int count,
+                                     final Context mContext, final CounterFab mCounterFab) {
 
 
         class GetTasks extends AsyncTask<Void, Void, CartItem> {
 
             @Override
             protected CartItem doInBackground(Void... voids) {
-                CartItem cartItem = DatabaseClient
+                return DatabaseClient
                         .getInstance(mContext)
                         .getAppDatabase()
                         .itemDao()
-                        .getItem(dishName);
-                return cartItem;
+                        .getItem(dish.getDishName(), dish.getSelectedOption(), dish.getSelectedSide1(),
+                                dish.getSelectedSide2(), dish.getSelectedSize());
             }
 
             @Override
@@ -109,10 +112,10 @@ public class QueryUtils {
                 //itemInserted[0] = id > -1 ;
 
                 if (cartItem != null){
-                    getCartItem(cartItem.getId(), mContext, count);
+                    updateCount(cartItem, mContext, count);
                 }else {
 
-                    addToCart(id, dishName, count, price, mContext);
+                    addToCart(dish, count, price, mContext);
 
                     if (mCounterFab != null){
 
@@ -127,36 +130,8 @@ public class QueryUtils {
         gt.execute();
 
     }
-    public static void getCartItem(final int id, final Context mContext, int count) {
 
-        class GetTasks extends AsyncTask<Void, Void, CartItem> {
-
-            @Override
-            protected CartItem doInBackground(Void... voids) {
-                CartItem cartItem = DatabaseClient
-                        .getInstance(mContext)
-                        .getAppDatabase()
-                        .itemDao()
-                        .getItem(id);
-                return cartItem;
-            }
-
-            @Override
-            protected void onPostExecute(CartItem cartItem) {
-                super.onPostExecute(cartItem);
-
-                QueryUtils.updateCount(cartItem, mContext, count);
-
-
-            }
-        }
-
-
-        GetTasks gt = new GetTasks();
-        gt.execute();
-    }
-
-    public static void addToCart(final int dishId, final String dishName, final int count,
+    public static void addToCart(final Dish dish, final int count,
                                  final String dishPrice, final Context mContext) {
         class SaveTask extends AsyncTask<Void, Void, Void> {
 
@@ -165,11 +140,16 @@ public class QueryUtils {
 
                 //creating a task
                 CartItem cartItem = new CartItem();
-                cartItem.setDishId(dishId);
-                cartItem.setDishName(dishName);
+                cartItem.setDishId(dish.getDishId());
+                cartItem.setDishName(dish.getDishName());
                 cartItem.setCount(count);
                 cartItem.setDishPrice(dishPrice);
                 cartItem.setKitchen(0);
+                cartItem.setOption(dish.getSelectedOption());
+                cartItem.setSide1(dish.getSelectedSide1());
+                cartItem.setSide2(dish.getSelectedSide2());
+                cartItem.setSize(dish.getSelectedSize());
+                cartItem.setEta(dish.getEta());
 
                 //adding to database
                 DatabaseClient.getInstance(mContext).getAppDatabase()
@@ -326,10 +306,6 @@ public class QueryUtils {
     }
 
 
-
-    public static void addToFav(int id) {
-
-    }
 
     public static void removeFromFav(int fId, final FragmentsContract.View mainView, final FavoritesContract.View favView) {
 

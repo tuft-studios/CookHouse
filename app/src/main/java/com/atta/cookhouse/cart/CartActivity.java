@@ -9,10 +9,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +31,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -73,15 +78,15 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     Dialog loginDialog;
 
-    CheckBox addPromo;
+    CheckBox usePoints, addPromo;
 
-    EditText email,password, dateText, timeText, tempPhone, promoCode;
+    EditText email,password, dateText, timeText, tempPhone, promoCodeText;
 
     ProgressDialog progressDialog;
 
     String orderTime, schedule, dateSelected, timeSelected, mobile, address, addressLocation, promoCodeString, discountString;
 
-    int deliveryAddId;
+    int deliveryAddId, numOfPoints;
 
     double subTotal, deliveryAmount, totalAmount, discountAmount;
 
@@ -104,7 +109,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         cartPresenter = new CartPresenter(CartActivity.this, CartActivity.this, recyclerView, summaryRecyclerView,  progressDialog);
 
-        cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount);
+        cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount, null, 0);
 
 
         cartPresenter.getAddresses(sessionManager.getUserId());
@@ -140,26 +145,138 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
 
         addPromo = findViewById(R.id.promo_check) ;
+        usePoints = findViewById(R.id.points_check) ;
 
-        promoCode = findViewById(R.id.promoCode) ;
+        promoCodeText = findViewById(R.id.promoCode) ;
 
 
         addPromo.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked){
-                promoCode.setVisibility(View.VISIBLE);
-                showSnackbar(buttonView);
+                promoCodeText.setVisibility(View.VISIBLE);
+                usePoints.setEnabled(false);
+                //showSnackbar(buttonView);
             }else {
-                promoCode.setVisibility(View.INVISIBLE);
-                if (snackbar != null){
+                promoCodeText.setVisibility(View.INVISIBLE);
+
+                promoCodeText.setText("");
+
+                promoCodeText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                usePoints.setEnabled(true);
+
+
+                discountTv.setText("0 EGP");
+                discountTvSum.setText("0 EGP");
+
+                double total = subTotal + deliveryAmount;
+
+                totalPrice.setText(String.valueOf(total) + " EGP");
+                totalPriceSum.setText("TOTAL " + String.valueOf(total) + " EGP");
+                /*if (snackbar != null){
                     snackbar.dismiss();
-                }
+                }*/
             }
         });
 
-        promoCode.setOnClickListener(new View.OnClickListener() {
+
+        usePoints.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+
+                int userPoints = SessionManager.getInstance(this).getUserPoints();
+                if (userPoints >= 50) {
+                    addPromo.setEnabled(false);
+
+
+                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
+                    View bottomSheetView = LayoutInflater.from(getApplicationContext())
+                            .inflate(R.layout.bottom_sheet_layout,
+                                    findViewById(R.id.bottomSheetContainer));
+
+                    bottomSheetDialog.setContentView(bottomSheetView);
+                    TextView pointsTv = bottomSheetView.findViewById(R.id.pointsTv);
+                    pointsTv.setText("you have " + userPoints + " point");
+
+                    RadioGroup radioGroup = bottomSheetView.findViewById(R.id.radioGroup);
+                    if (userPoints < 100){
+                        bottomSheetView.findViewById(R.id.points_100).setVisibility(View.GONE);
+                        if (userPoints < 75){
+                            bottomSheetView.findViewById(R.id.points_75).setVisibility(View.GONE);
+
+                        }
+                    }
+                    radioGroup.check(R.id.points_50);
+                    radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                        if (checkedId == R.id.points_50){
+                            numOfPoints = 50;
+                        }else if (checkedId == R.id.points_75){
+                            numOfPoints = 75;
+                        }else if (checkedId == R.id.points_100){
+                            numOfPoints = 100;
+                        }
+
+                        discountAmount = numOfPoints / 10;
+                    });
+
+                    bottomSheetView.findViewById(R.id.cancel_button).setOnClickListener(v -> {
+                        bottomSheetDialog.dismiss();
+                        usePoints.setChecked(false);
+                    });
+                    bottomSheetView.findViewById(R.id.confirm_button).setOnClickListener(v -> {
+                        discountString = String.valueOf(discountAmount);
+
+                        discountTv.setText(discountString + " EGP");
+                        discountTvSum.setText(discountString + " EGP");
+
+                        double total = subTotal + deliveryAmount - discountAmount;
+
+                        totalPrice.setText(String.valueOf(total) + " EGP");
+                        totalPriceSum.setText("TOTAL " + String.valueOf(total) + " EGP");
+                        bottomSheetDialog.dismiss();
+
+                    });
+                    bottomSheetDialog.setCancelable(false);
+                    bottomSheetDialog.show();
+                }else {
+                    showMessage("number of points must more than 50 point");
+                }
+
+            }else {
+                promoCodeText.setVisibility(View.INVISIBLE);
+                addPromo.setEnabled(true);
+
+
+                discountTv.setText("0 EGP");
+                discountTvSum.setText("0 EGP");
+
+                double total = subTotal + deliveryAmount;
+
+                totalPrice.setText(String.valueOf(total) + " EGP");
+                totalPriceSum.setText("TOTAL " + String.valueOf(total) + " EGP");
+
+            }
+        });
+
+        //promoCodeText.setOnClickListener(v -> showSnackbar(v));
+
+
+        promoCodeText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                showSnackbar(v);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count == 6 && (before == 5 || before == 7))     //size as per your requirement
+                {
+                    promoCodeString = s.toString();
+                    cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), s.toString());
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -187,7 +304,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         orderBtn.setOnClickListener(this);
     }
 
-    private void showSnackbar(View buttonView) {
+/*    private void showSnackbar(View buttonView) {
         // Create the Snackbar
         snackbar = Snackbar.make(buttonView, "", Snackbar.LENGTH_INDEFINITE);
         // Get the Snackbar's layout view
@@ -202,8 +319,30 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         // Configure the view
         EditText editText = snackView.findViewById(R.id.editText);
 
-        //promoCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        //promoCodeText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         editText.setText(promoCodeString);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(editText.getText().toString().length() == 6)     //size as per your requirement
+                {
+                    promoCodeString = editText.getText().toString();
+                    cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), promoCodeString);
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
 
         Button confirm = snackView.findViewById(R.id.button2);
@@ -216,6 +355,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
             }
         });
 
+
         //If the view is not covering the whole snackbar layout, add this line
         layout.setPadding(0,0,0,0);
 
@@ -225,7 +365,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         snackbar.show();
     }
 
-
+*/
     @Override
     public void showAddresses(List<Address> mAddresses) {
 
@@ -249,8 +389,11 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     @Override
     public void setDiscount(int discount) {
-        promoCode.setText(promoCodeString);
-            promoCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+        //promoCodeText.setText(promoCodeString);
+
+        promoCodeText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
+
+        //snackbar.dismiss();
 
         discountAmount = subTotal * discount / 100;
         discountString = String.valueOf(discountAmount);
@@ -262,6 +405,27 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         totalPrice.setText(String.valueOf(total) + " EGP");
         totalPriceSum.setText("TOTAL " + String.valueOf(total) + " EGP");
+    }
+
+
+
+    @Override
+    public void wrongPromo() {
+        //promoCodeText.setText(promoCodeString);
+        promoCodeText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_close, 0);
+
+
+        discountAmount = 0;
+        discountString = String.valueOf(discountAmount);
+
+        discountTv.setText(discountString + " EGP");
+        discountTvSum.setText(discountString + " EGP");
+
+        double total = subTotal + deliveryAmount - discountAmount;
+
+        totalPrice.setText(String.valueOf(total) + " EGP");
+        totalPriceSum.setText("TOTAL " + String.valueOf(total) + " EGP");
+
     }
 
 
@@ -480,7 +644,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         if (addressLocation.equals(location)){
 
-            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , orderTime, discountAmount);
+            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , orderTime, discountAmount, promoCodeString, numOfPoints);
         }else {
             showMessage("select or add address within the area");
         }
@@ -493,6 +657,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         Button confirmButton;
         RadioButton now, later;
         Switch mobileSwitch;
+        CheckBox commentCheckBox;
+        TextView commentTxt;
 
         TextView mobileTxt;
 
@@ -514,6 +680,18 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         addAddresses.setOnClickListener(this);
         addPhone = myDialog.findViewById(R.id.edit_mobile);
         addPhone.setOnClickListener(this);
+        commentCheckBox = myDialog.findViewById(R.id.comment_check);
+        commentTxt = myDialog.findViewById(R.id.comment_txt);
+        commentCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    commentTxt.setVisibility(View.VISIBLE);
+                }else {
+                    commentTxt.setVisibility(View.GONE);
+                }
+            }
+        });
 
         dateText = myDialog.findViewById(R.id.day);
         timeText = myDialog.findViewById(R.id.time);
@@ -584,7 +762,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         confirmButton.setOnClickListener(v -> {
 
 
-            cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount);
+            cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount, null, 0);
 
 
             String languageToLoad = sessionManager.getLanguage();

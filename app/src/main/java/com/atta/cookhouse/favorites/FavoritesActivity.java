@@ -13,9 +13,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -50,6 +52,8 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
     SessionManager sessionManager;
 
     TextView infoTextView;
+
+    private String selectedOption, selectedSide1 ,selectedSide2, selectedSize;
 
     int count;
 
@@ -184,23 +188,33 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
         final Dialog myDialog = new Dialog(this);
 
 
-        myDialog.setContentView(R.layout.add_to_cart_popup);
+        myDialog.setContentView(R.layout.add_to_cart_popup_fav);
+
+        WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
+        lWindowParams.width = WindowManager.LayoutParams.MATCH_PARENT; // this is where the magic happens
+        lWindowParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
 
 
         final int id = dish.getDishId();
         final String name = dish.getDishName();
         final String disc = dish.getDishDisc();
-        final int[] price = {dish.getPriceM()};
+        final double[] price = {dish.getPriceM()};
 
         //count = 1;
 
-        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice;
+        final TextView dishName, dishDisc, quantity, totalPrice, dishPrice,
+                optionsTv, sides1Tv, sides2Tv, sizeTv;
+
 
         final ImageView dishImage, addImage, removeImage, favBtn;
 
         Button addToCart;
 
         RadioGroup radioGroup;
+
+        EditText optionsEditText, sides1EditText, sides2EditText;
+
 
         Spinner optionsSpinner, sides1Spinner, sides2Spinner;
 
@@ -218,6 +232,13 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
         optionsSpinner = myDialog.findViewById(R.id.options_spinner);
         sides1Spinner = myDialog.findViewById(R.id.sides1_spinner);
         sides2Spinner = myDialog.findViewById(R.id.sides2_spinner);
+        optionsEditText = myDialog.findViewById(R.id.editText);
+        sides1EditText = myDialog.findViewById(R.id.editText1);
+        sides2EditText = myDialog.findViewById(R.id.editText2);
+        optionsTv = myDialog.findViewById(R.id.options_tv);
+        sides1Tv = myDialog.findViewById(R.id.sides1_tv);
+        sides2Tv = myDialog.findViewById(R.id.sides2_tv);
+        sizeTv = myDialog.findViewById(R.id.size_tv);
 
         favBtn.setVisibility(View.GONE);
 
@@ -232,7 +253,12 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
         if (dish.getSize() == 0){
             radioGroup.setVisibility(View.GONE);
+            sizeTv.setVisibility(View.GONE);
+            selectedSize = "Large";
+            dish.setSelectedSize(selectedSize);
         }else {
+            selectedSize = "Large";
+            dish.setSelectedSize(selectedSize);
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -241,11 +267,16 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
                         totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
                         dishPrice.setText(String.valueOf(price[0]) + " EGP");
 
+                        selectedSize = "Medium";
+                        dish.setSelectedSize(selectedSize);
                     }else if (checkedId == R.id.largeBtn){
 
                         price[0] = dish.getPriceL();
                         totalPrice.setText(String.valueOf(price[0] * count) + " EGP");
                         dishPrice.setText(String.valueOf(price[0]) + " EGP");
+
+                        selectedSize = "Large";
+                        dish.setSelectedSize(selectedSize);
                     }
                 }
             });
@@ -266,6 +297,8 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
         if (dish.getOptions() == null) {
             optionsSpinner.setVisibility(View.GONE);
+            optionsEditText.setVisibility(View.GONE);
+            optionsTv.setVisibility(View.GONE);
         }else {
             List<String> options = new ArrayList<String>(Arrays.asList(dish.getOptions().split(",")));
 
@@ -276,6 +309,8 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                    selectedOption = options.get(position);
+                    dish.setSelectedOption(selectedOption);
                 }
 
                 @Override
@@ -288,6 +323,8 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
         if (dish.getSides1() == null) {
             sides1Spinner.setVisibility(View.GONE);
+            sides1EditText.setVisibility(View.GONE);
+            sides1Tv.setVisibility(View.GONE);
         }else {
             List<String> sides1 = new ArrayList<String>(Arrays.asList(dish.getSides1().split(",")));
 
@@ -298,6 +335,19 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                    selectedSide1 = sides1.get(position);
+                    dish.setSelectedSide1(selectedSide1);
+                    //fragmentsPresenter.checkCartItem(dish);
+
+                    if (sides1.get(position).equals("Pasta Red Sauce") || sides1.get(position).equals("Pasta White Sauce")){
+                        sides2Spinner.setVisibility(View.GONE);
+                        sides2EditText.setVisibility(View.GONE);
+                        sides2Tv.setVisibility(View.GONE);
+                    }else {
+                        sides2Spinner.setVisibility(View.VISIBLE);
+                        sides2EditText.setVisibility(View.VISIBLE);
+                        sides2Tv.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
@@ -311,6 +361,8 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
         if (dish.getSides2() == null) {
             sides2Spinner.setVisibility(View.GONE);
+            sides2EditText.setVisibility(View.GONE);
+            sides2Tv.setVisibility(View.GONE);
         }else {
             List<String> sides2 = new ArrayList<String>(Arrays.asList(dish.getSides2().split(",")));
 
@@ -321,6 +373,8 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                    selectedSide2 = sides2.get(position);
+                    dish.setSelectedSide2(selectedSide2);
                 }
 
                 @Override
@@ -368,11 +422,17 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
             @Override
             public void onClick(View v) {
 
+
+                if (selectedSide1.equals("Pasta Red Sauce") || selectedSide1.equals("Pasta White Sauce")){
+
+                    dish.setSelectedSide2("None");
+                }
+
                 Toast.makeText(FavoritesActivity.this,"Dish added",Toast.LENGTH_LONG).show();
 
                 String total = String.valueOf(price[0] * count);
 
-                QueryUtils.getCartItem(id, name, total, count, FavoritesActivity.this, null);
+                QueryUtils.checkCartItem(dish, total, count, FavoritesActivity.this, null);
 
                 myDialog.dismiss();
 
@@ -381,6 +441,7 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesCon
 
 
         myDialog.setCancelable(true);
+        myDialog.getWindow().setAttributes(lWindowParams);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }

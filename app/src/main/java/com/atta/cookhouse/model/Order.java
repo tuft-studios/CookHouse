@@ -7,25 +7,18 @@ import java.util.ArrayList;
 
 public class Order implements Serializable {
 
-
-    private String dishes, count ;
-
-
-    @SerializedName("dishesList")
+    @SerializedName("order_dishes")
     private ArrayList<Dish> dishesList;
 
 
-    private int orderId, userId, addressId, status;
-    double subtotal, delivery, total, discount;
-    private String location, schedule, orderTime, creationTime, phone, kitchen;
+    private int orderId, userId, addressId, status, eta, points;
+    private double subtotal, delivery, total, discount;
+    private String location, schedule, orderTime, creationTime, phone, fullAddress, addressName,
+            dishes, count, options, sizes, sides1, sides2, comment, promocode;
 
-
-    @SerializedName("fullAddress")
-    private Address fullAddress;
-
-
-    public Order(int orderId, ArrayList<Dish> dishesList, int status, double subtotal, double delivery, double total, double discount, int userId, String location,
-                 int addressId, String phone, String schedule, String orderTime, String creationTime, Address fullAddress, String kitchen) {
+    public Order(int orderId, ArrayList<Dish> dishesList, int status, double subtotal, double delivery, double total, double discount,
+                 String phone, String orderTime, String creationTime, String fullAddress, String addressName, int eta,
+                 String comment) {
         this.dishesList = dishesList;
         this.orderId = orderId;
         this.status = status;
@@ -33,21 +26,24 @@ public class Order implements Serializable {
         this.delivery = delivery;
         this.total = total;
         this.discount = discount;
-        this.userId = userId;
-        this.location = location;
-        this.addressId = addressId;
-        this.schedule = schedule;
         this.phone = phone;
         this.orderTime = orderTime;
         this.creationTime = creationTime;
         this.fullAddress = fullAddress;
-        this.kitchen = kitchen;
+        this.addressName = addressName;
+        this.comment = comment;
+        this.eta = eta;
     }
 
-    public Order(String dishes, String count, double subtotal, double delivery, double total, double discount, int userId, String location,
-                 int addressId, String phone, String orderTime, String creationTime) {
+    public Order(String dishes, String count, String options, String sizes, String sides1, String sides2,
+                 double subtotal, double delivery, double total, double discount, int userId, String location,
+                 int addressId, String phone, String orderTime, String creationTime, int eta, String comment, String promocode, int points) {
         this.dishes = dishes;
         this.count = count;
+        this.options = options;
+        this.sizes = sizes;
+        this.sides1 = sides1;
+        this.sides2 = sides2;
         this.subtotal = subtotal;
         this.delivery = delivery;
         this.total = total;
@@ -55,10 +51,13 @@ public class Order implements Serializable {
         this.userId = userId;
         this.location = location;
         this.addressId = addressId;
-        this.schedule = schedule;
         this.phone = phone;
         this.orderTime = orderTime;
         this.creationTime = creationTime;
+        this.eta = eta;
+        this.comment = comment;
+        this.promocode = promocode;
+        this.points = points;
     }
 
     public String getSchedule() {
@@ -138,7 +137,7 @@ public class Order implements Serializable {
         return dishesList;
     }
 
-    public Address getFullAddress() {
+    public String getFullAddress() {
         return fullAddress;
     }
 
@@ -147,11 +146,45 @@ public class Order implements Serializable {
         return orderId;
     }
 
-    public String getKitchen() {
-        return kitchen;
-    }
 
     public int getStatus() {
         return status;
+    }
+
+
+    public String getOptions() {
+        return options;
+    }
+
+    public String getSizes() {
+        return sizes;
+    }
+
+    public String getSides1() {
+        return sides1;
+    }
+
+    public String getSides2() {
+        return sides2;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public int getEta() {
+        return eta;
+    }
+
+    public String getAddressName() {
+        return addressName;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public String getPromocode() {
+        return promocode;
     }
 }

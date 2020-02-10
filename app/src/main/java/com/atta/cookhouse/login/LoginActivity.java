@@ -180,6 +180,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
         int id = getResources().getIdentifier(view, "id", this.getPackageName());
         EditText editText = (EditText) findViewById(id);
+        editText.requestFocus();
         editText.setError(error);
     }
 

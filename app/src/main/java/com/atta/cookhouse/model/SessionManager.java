@@ -56,6 +56,8 @@ public class SessionManager {
 
     public static final String KEY_USER_IMAGE = "userImage";
 
+    public static final String KEY_USER_POINTS = "userPoints";
+
     private static final String KEY_USER_BIRTHDAY = "birthday";
 
     private static final String KEY_USER_PHONE = "phone";
@@ -368,4 +370,20 @@ public class SessionManager {
         // commit changes
         editor.commit();
     }
+
+
+    public void setUserPoints(int points) {
+
+        // Storing national ID in pref
+        editor.putInt(KEY_USER_POINTS, points);
+
+
+        // commit changes
+        editor.commit();
+    }
+
+    public int getUserPoints(){
+        return pref.getInt(KEY_USER_POINTS, 0);
+    }
+
 }

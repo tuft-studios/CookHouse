@@ -8,7 +8,7 @@ public interface RegisterContract {
 
         void showMessage(String error);
 
-        void showViewError(String view ,String error);
+        void showViewError(String view ,String oldView, String error);
 
         void navigateToMain();
 

@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
+    android:layout_width="match_parent"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/alert_shape">
@@ -112,6 +114,31 @@
         app:layout_constraintTop_toBottomOf="@+id/temp_phone" />
 
 
+    <CheckBox
+        android:id="@+id/comment_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Add a comment"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_mobile"/>
+
+    <EditText
+        android:id="@+id/comment_txt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@android:drawable/editbox_background_normal"
+        android:hint="Write a comment"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comment_check" />
+
+
+
+
     <TextView
         android:id="@+id/edit_mobile"
         android:layout_width="wrap_content"
@@ -167,7 +194,7 @@
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/switch_group"
-        app:layout_constraintTop_toBottomOf="@+id/edit_mobile" />
+        app:layout_constraintTop_toBottomOf="@+id/comment_txt" />
 
     <EditText
         android:id="@+id/time"
