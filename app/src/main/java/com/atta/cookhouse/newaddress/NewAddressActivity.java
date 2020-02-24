@@ -3,6 +3,7 @@ package com.atta.cookhouse.newaddress;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,7 +89,7 @@ public class NewAddressActivity extends AppCompatActivity  implements OnMapReady
         longitude = address.getLongitude();
         id = address.getId();
 
-        saveBtn.setText("Update");
+        saveBtn.setText(getString(R.string.update));
     }
 
     @Override
@@ -202,10 +203,11 @@ public class NewAddressActivity extends AppCompatActivity  implements OnMapReady
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(NewAddressActivity.this, "fill your data manually", Toast.LENGTH_LONG).show();
+                Toast.makeText(NewAddressActivity.this, "fill your address data manually", Toast.LENGTH_LONG).show();
 
 
                 LatLng myLatLng = new LatLng(29.960426, 31.257656);
+                //setFullAddress(null);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 16.0f));
 
             }
@@ -253,8 +255,25 @@ public class NewAddressActivity extends AppCompatActivity  implements OnMapReady
         mMap = googleMap;
 
         mMap.setOnMapClickListener(latLng -> {
-            Intent intent1 = new Intent(NewAddressActivity.this, MapsActivity.class);
-            startActivityForResult(intent1,1);
+            // 1. Instantiate an AlertDialog.Builder with its constructor
+            AlertDialog.Builder builder = new AlertDialog.Builder(NewAddressActivity.this);
+
+            // 2. Chain together various setter methods to set the dialog characteristics
+            builder.setMessage(R.string.maps_message)
+                    .setTitle(R.string.maps_title);
+
+            // Add the buttons
+            builder.setPositiveButton(R.string.confirm, (dialog, id) -> {
+                Intent intent1 = new Intent(NewAddressActivity.this, MapsActivity.class);
+                startActivityForResult(intent1,1);
+            });
+            builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+                // User cancelled the dialog
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
         });
 
 
@@ -277,12 +296,19 @@ public class NewAddressActivity extends AppCompatActivity  implements OnMapReady
 
             int userId = new SessionManager(this).getUserId();
             if (addEdie) {
+                if (fullAddress == null){
+                    fullAddress = buildingNumberEditText.getText().toString() + streetEditText.getText().toString() + areaEditText.getText().toString();
+                }
 
                 Address address = new Address(userId, floorEditText.getText().toString(), apartmentNumberEditText.getText().toString(), buildingNumberEditText.getText().toString(),
                         areaEditText.getText().toString(), addressNameEditText.getText().toString(), fullAddress, streetEditText.getText().toString(),
                         landMarkEditText.getText().toString(), latitude, longitude);
                 newAddressPresenter.addAddress(address);
             }else {
+
+                if (fullAddress == null){
+                    fullAddress = buildingNumberEditText.getText().toString() + streetEditText.getText().toString() + areaEditText.getText().toString();
+                }
 
                 Address address = new Address(id, userId, floorEditText.getText().toString(), apartmentNumberEditText.getText().toString(), buildingNumberEditText.getText().toString(),
                         areaEditText.getText().toString(), addressNameEditText.getText().toString(), fullAddress, streetEditText.getText().toString(),

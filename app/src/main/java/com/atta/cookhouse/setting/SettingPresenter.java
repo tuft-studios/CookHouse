@@ -3,12 +3,17 @@ package com.atta.cookhouse.setting;
 import android.content.Context;
 
 import com.atta.cookhouse.model.APIClient;
+import com.atta.cookhouse.model.APIService;
 import com.atta.cookhouse.model.Result;
 import com.atta.cookhouse.model.SmsResult;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingPresenter implements SettingContract.Presenter {
 
@@ -101,10 +106,28 @@ public class SettingPresenter implements SettingContract.Presenter {
     }
 
     @Override
-    public void sendSms(int userId, String phone) {
+    public void sendSms(int userId, String phone, boolean forgetPwd) {
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        // set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        // add your other interceptors …
+
+        // add logging as last interceptor
+        httpClient.addInterceptor(logging);  // <-- this is the important line!
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://52.15.188.41/cookhouse/nexmo/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
+                .build();
+
 
         //defining the call
-        Call<SmsResult> call = APIClient.getInstance().getApi().sendSms("201001970483", userId);
+        Call<SmsResult> call = retrofit.create(APIService.class).sendSms("201001970483", userId);
 
         //calling the api
         call.enqueue(new Callback<SmsResult>() {
@@ -116,13 +139,18 @@ public class SettingPresenter implements SettingContract.Presenter {
 
                 if (!response.body().getError()){
 
-                    mView.showMessage(response.body().getStatus());
+                    if (forgetPwd){
 
-                    mView.showCodePopup("201001970483");
+                        mView.showForgetPwdPopup();
+                    }else {
 
-                }else {
-                    mView.showMessage("An error");
+                        mView.showCodePopup("201001970483");
+                    }
+
                 }
+
+
+                mView.showMessage(response.body().getStatus());
 
             }
 
@@ -168,4 +196,36 @@ public class SettingPresenter implements SettingContract.Presenter {
         });
     }
 
+
+
+    @Override
+    public void confirmResetCode(int id,  String password, String rand) {
+
+        //defining the call
+        Call<Result> call = APIClient.getInstance().getApi().confirmPwdCodeById(password, id, rand);
+
+        //calling the api
+        call.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+
+                mView.hideCodePopup();
+
+                if (!response.body().getError()){
+
+                    mView.showMessage(response.body().getMessage());
+
+                }else {
+                    mView.showMessage("An error");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+
+                mView.showMessage(t.getMessage());
+            }
+        });
+    }
 }

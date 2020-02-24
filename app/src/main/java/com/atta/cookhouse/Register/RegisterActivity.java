@@ -124,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.register, menu);
+        //getMenuInflater().inflate(R.menu.register, menu);
         return true;
     }
 
@@ -136,12 +136,12 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.skip) {
+        /*if (id == R.id.skip) {
 
             SessionManager.getInstance(this).setLanguage(SessionManager.getInstance(this).getLanguage());
             navigateToMain();
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -213,7 +213,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         EditText editText = findViewById(id);
         if (oldView != null) {
             int oldIdd = getResources().getIdentifier(oldView, "id", this.getPackageName());
-            EditText oldEditText = findViewById(id);
+            EditText oldEditText = findViewById(oldIdd);
             oldEditText.setError(null);
         }
         editText.requestFocus();

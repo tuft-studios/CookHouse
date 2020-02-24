@@ -4,13 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.atta.cookhouse.Local.DatabaseClient;
 import com.atta.cookhouse.Local.QueryUtils;
-import com.atta.cookhouse.R;
 import com.atta.cookhouse.model.APIClient;
 import com.atta.cookhouse.model.Address;
 import com.atta.cookhouse.model.Addresses;
@@ -93,11 +90,14 @@ public class CartPresenter implements CartContract.Presenter {
 
                         CartAdapter summaryAdapter = new CartAdapter(mContext, cartItems, CartPresenter.this, mView, true);
                         mSummaryRecyclerView.setAdapter(summaryAdapter);
+/*
+
                         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext,
                                 LinearLayoutManager.VERTICAL);
                         dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.line_divider));
                         mSummaryRecyclerView.addItemDecoration(dividerItemDecoration);
 
+*/
 
                         mView.setTotalPrice(totalPrice, deliveryPrice);
                     }else {

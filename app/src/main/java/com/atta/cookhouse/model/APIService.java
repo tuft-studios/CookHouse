@@ -150,6 +150,15 @@ public interface APIService {
             @Field("rand") String rand
     );
 
+
+    @FormUrlEncoded
+    @POST("confirm_password_code")
+    Call<Result> confirmPwdCodeById(
+            @Field("password") String password,
+            @Field("user_id") int id,
+            @Field("rand") String rand
+    );
+
     //the signin call
     @FormUrlEncoded
     @POST("get_menu")

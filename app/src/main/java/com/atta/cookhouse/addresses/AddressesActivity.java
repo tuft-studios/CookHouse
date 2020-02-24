@@ -175,5 +175,6 @@ public class AddressesActivity extends AppCompatActivity implements AddressesCon
 
         Intent intent = new Intent(AddressesActivity.this, NewAddressActivity.class);
         startActivity(intent);
+        //finish();
     }
 }

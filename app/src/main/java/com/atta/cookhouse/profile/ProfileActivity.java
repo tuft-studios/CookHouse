@@ -122,7 +122,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         locationsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, locationsArray);
         locationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(locationsAdapter);
+        locationSpinner.setEnabled(false);
         locationSpinner.setOnItemSelectedListener(this);
+        locationSpinner.setSelection(1);
+        locationString = locationsArray.get(0);
 
     }
 

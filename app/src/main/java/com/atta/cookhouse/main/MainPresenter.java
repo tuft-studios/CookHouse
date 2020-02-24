@@ -128,7 +128,10 @@ public class MainPresenter implements MainContract.Presenter {
                         mView.changeFavIcon(true);
                         mView.setPoints(response.body().getPoints());
                     }else {
-                        mView.showMessage(response.body().getMessage());
+                        if (response.body().getMessage().equals("no points add till now")) {
+                            mView.setPoints(0);
+                        }
+
                     }
                 }
             }

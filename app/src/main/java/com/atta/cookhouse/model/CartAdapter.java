@@ -57,17 +57,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
 
         if (!cartItem.getOption().equals("None")){
 
-            if (!cartItem.getSize().equals("None")){
-                details = details.concat(", ");
-            }
+            details = details.concat(", ");
+
             details = details.concat(cartItem.getOption());
         }
 
         if (!cartItem.getSide1().equals("None")){
 
-            if (!cartItem.getOption().equals("None")){
-                details = details.concat(", ");
-            }
+            details = details.concat(", ");
+
             details = details.concat(cartItem.getSide1());
         }
 
@@ -192,10 +190,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.TasksViewHolde
                 removeItem.setVisibility(View.GONE);
 
                 constraintLayout.setBackgroundResource(0);
-
+/*
                 constraintLayout.requestLayout();
 
-                constraintLayout.getLayoutParams().height = dpToPx(40);
+                constraintLayout.getLayoutParams().height = dpToPx(40);*/
 /*
                 final float scale = mCtx.getResources().getDisplayMetrics().density;
                 int pixels = (int) (60 * scale + 0.5f);

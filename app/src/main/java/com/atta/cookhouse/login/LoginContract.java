@@ -4,7 +4,7 @@ public interface LoginContract {
 
     interface View{
 
-        void showError(String error);
+        void showMessage(String error);
 
         void showViewError(String view ,String error);
 

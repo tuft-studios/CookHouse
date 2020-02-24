@@ -20,16 +20,18 @@ import com.atta.cookhouse.addresses.AddressesActivity;
 import com.atta.cookhouse.model.SessionManager;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener, SettingContract.View {
 
-    TextView resetPassword, changeLanguage, addresses, changePhoneText;
+    TextView resetPassword, changeLanguage, addresses, changePhoneText, forgetPassword;
 
-    Dialog languageDialog, passwordDialog, phoneDialog, codeDialog;
+    Dialog languageDialog, passwordDialog, phoneDialog, codeDialog, passwordCodeDialog;
 
-    Button btnArabic, btnEnglish, resetBtn, changePhoneBtn, codeConfirm;
+    Button btnArabic, btnEnglish, resetBtn, changePhoneBtn, codeConfirm, sendBtn, forgetResetBtn;
 
-    EditText oldPassword, newPassword, newPasswordConfirm, newPhone, codeText;
+    EditText oldPassword, newPassword, newPasswordConfirm, newPhone, codeText, phoneTextView,
+            forgetNewPassword, forgetNewPasswordConfirm, forgetCode;
 
     SessionManager session;
 
@@ -57,6 +59,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         addresses.setOnClickListener(this);
         changePhoneText = findViewById(R.id.change_phone);
         changePhoneText.setOnClickListener(this);
+        forgetPassword = findViewById(R.id.forget_password);
+        forgetPassword.setOnClickListener(this);
 
         mProgressView = findViewById(R.id.login_progress);
 
@@ -87,8 +91,54 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         }else if (v == resetBtn){
 
             resetPassword();
+        }else if (v == forgetPassword){
+            showForgetPwdPopup();
+
+        }else if (v == sendBtn){
+
+            if (phoneTextView.getText().toString().length() != 12 || phoneTextView.getText().toString().charAt(0) != '2') {
+                phoneTextView.setError("Enter a valid Phone number");
+
+                phoneTextView.requestFocus();
+            }else {
+
+                settingPresenter.sendSms(SessionManager.getInstance(this).getUserId(), phoneTextView.getText().toString(), true);
+            }
+        }else if (v == forgetResetBtn){
+            showForgetPwdPopup();
+
         }
     }
+
+
+    @Override
+    public void showForgetPwdPopup() {
+
+        passwordDialog = new Dialog(this);
+
+
+        passwordDialog.setContentView(R.layout.forgot_password);
+
+        sendBtn = passwordDialog.findViewById(R.id.btn_send);
+        phoneTextView = passwordDialog.findViewById(R.id.user_phone);
+
+        sendBtn.setOnClickListener(this);
+
+        Objects.requireNonNull(passwordDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        passwordDialog.show();
+    }
+
+
+    @Override
+    public void changePassword() {
+        if (!validate(forgetCode.getText().toString(), forgetNewPassword.getText().toString(), forgetNewPasswordConfirm.getText().toString())) {
+
+            return;
+        }
+
+        settingPresenter.confirmResetCode(SessionManager.getInstance(this).getUserId(), newPassword.getText().toString(), forgetCode.getText().toString());
+    }
+
 
     private void showPhonePopup() {
 
@@ -111,7 +161,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
     public void changePhone(){
 
-        settingPresenter.sendSms(SessionManager.getInstance(this).getUserId(), newPhone.getText().toString());
+        if (newPhone.getText().toString().length() != 12 || newPhone.getText().toString().charAt(0) != '2') {
+            newPhone.setError("Enter a valid Phone number");
+
+            newPhone.requestFocus();
+        }else {
+            settingPresenter.sendSms(SessionManager.getInstance(this).getUserId(), newPhone.getText().toString(), false);
+        }
     }
 
     @Override
@@ -139,6 +195,26 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         codeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         codeDialog.show();
 
+    }
+
+    @Override
+    public void showPwdCodePopup() {
+
+        passwordCodeDialog = new Dialog(this);
+
+
+        passwordCodeDialog.setContentView(R.layout.password_code_popup);
+
+        forgetResetBtn = passwordDialog.findViewById(R.id.btn_reset);
+        forgetCode = passwordDialog.findViewById(R.id.code);
+        forgetNewPassword = passwordDialog.findViewById(R.id.new_password);
+        forgetNewPasswordConfirm = passwordDialog.findViewById(R.id.new_password_confirm);
+
+        forgetResetBtn.setOnClickListener(this);
+
+
+        passwordCodeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        passwordCodeDialog.show();
     }
 
 

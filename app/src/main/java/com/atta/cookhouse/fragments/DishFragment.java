@@ -111,7 +111,27 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         fragmentsPresenter = new FragmentsPresenter(this, getContext(), counterFab);
         //return rootView;
         View view = inflater.inflate(R.layout.grid_view,container,false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
+
+            recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy != 0){
+
+                        ((MainActivity)getActivity()).hideViews();
+                    }else if (dy == 0){
+
+                        ((MainActivity)getActivity()).showViews();
+                    }
+                }
+            });
+
 
         if (getArguments() != null) {
 
@@ -354,7 +374,7 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
 
                     dish.setSelectedSide2("None");
                 }
-                Toast.makeText(getContext(),"Dish add",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(),"Dish add",Toast.LENGTH_LONG).show();
 
                 String total = String.valueOf(price * count);
 

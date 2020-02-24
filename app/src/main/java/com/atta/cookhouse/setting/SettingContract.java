@@ -26,6 +26,12 @@ public interface SettingContract {
 
         void showCodePopup(String phone);
 
+        void showForgetPwdPopup();
+
+        void showPwdCodePopup();
+
+        void changePassword();
+
     }
 
     interface Presenter{
@@ -33,8 +39,10 @@ public interface SettingContract {
 
         void updatePhone(int userId, String phone);
 
-        void sendSms(int UserId, String phone);
+        void sendSms(int UserId, String phone, boolean forgetPwd);
 
         void confirmCode(int userId, String phone, String rand);
+
+        void confirmResetCode(int userId, String password, String code);
     }
 }

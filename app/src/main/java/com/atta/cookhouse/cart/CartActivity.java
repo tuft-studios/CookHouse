@@ -204,6 +204,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
                         }
                     }
                     radioGroup.check(R.id.points_50);
+                    numOfPoints = 50;
+                    discountAmount = numOfPoints / 10;
                     radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
                         if (checkedId == R.id.points_50){
                             numOfPoints = 50;
@@ -217,6 +219,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
                     });
 
                     bottomSheetView.findViewById(R.id.cancel_button).setOnClickListener(v -> {
+                        discountAmount = 0;
+                        numOfPoints = 0;
                         bottomSheetDialog.dismiss();
                         usePoints.setChecked(false);
                     });
@@ -236,6 +240,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
                     bottomSheetDialog.setCancelable(false);
                     bottomSheetDialog.show();
                 }else {
+                    usePoints.setChecked(false);
                     showMessage("number of points must more than 50 point");
                 }
 

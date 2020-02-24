@@ -160,8 +160,9 @@ public class MainActivity extends AppCompatActivity
         locationsAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, locationsArray);
         locationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(locationsAdapter);
-        locationSpinner.setOnItemSelectedListener(this);
-
+        locationSpinner.setEnabled(false);
+        locationSpinner.setSelection(1);
+        locationString = locationsEnglish.get(0);
         if (!locationString.equals("")) {
 
             int spinnerPosition = locationsEnglish.indexOf(locationString) + 1;
@@ -210,12 +211,10 @@ public class MainActivity extends AppCompatActivity
         setName();
 
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    FINE_LOCATION_REQUEST_CODE);
-            requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION,
-                    COARSE_LOCATION_REQUEST_CODE);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+
+            requestPermission();
+
             return;
         }
 
@@ -245,15 +244,33 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    protected void requestPermission(String permissionType, int requestCode) {
-        int permission = ContextCompat.checkSelfPermission(this,
-                permissionType);
+    protected void requestPermission() {
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{permissionType}, requestCode
-            );
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        FINE_LOCATION_REQUEST_CODE
+                );
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
         }
+
     }
 
     @Override
@@ -660,4 +677,14 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+    public void hideViews() {
+        sliderLayout.setVisibility(View.GONE);
+        locationSpinner.setVisibility(View.GONE);
+    }
+
+
+    public void showViews() {
+        sliderLayout.setVisibility(View.VISIBLE);
+        locationSpinner.setVisibility(View.VISIBLE);
+    }
 }

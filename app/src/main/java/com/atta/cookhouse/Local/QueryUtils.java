@@ -223,7 +223,7 @@ public class QueryUtils {
                         loginView.navigateToMain();
                     } else {
 
-                        loginView.showError("Invalid email or password");
+                        loginView.showMessage("Invalid email or password");
                     }
                 }else if (loginView == null && cartView != null){
 
@@ -246,7 +246,7 @@ public class QueryUtils {
 
                     loginView.dismissProgressDialog();
 
-                    loginView.showError(t.getMessage());
+                    loginView.showMessage(t.getMessage());
                 }else if (loginView == null && cartView != null){
 
                     cartView.dismissProgressDialog();
@@ -270,7 +270,7 @@ public class QueryUtils {
 
             if (!email.matches(emailPattern) || email.isEmpty())
             {
-                loginView.showError("Invalid email address");
+                loginView.showMessage("Invalid email address");
                 loginView.showViewError("email","Invalid email address");
                 valid = false;
 
@@ -280,7 +280,7 @@ public class QueryUtils {
             }
 
             if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-                loginView.showError("password must be between 4 and 10 alphanumeric characters");
+                loginView.showMessage("password must be between 4 and 10 alphanumeric characters");
                 loginView.showViewError("password","password must be between 4 and 10 alphanumeric characters");
                 valid = false;
             } else {

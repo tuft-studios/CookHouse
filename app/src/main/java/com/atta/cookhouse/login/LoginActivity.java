@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void onClick(View view) {
         if (view == login) {
             if (!loginPresenter.validate(emailText.getText().toString().trim(), passwordText.getText().toString())) {
-                showError("Invalid Login details");
+                showMessage("Invalid Login details");
                 return;
             }
 
@@ -106,7 +106,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         } else if (view == sendBtn) {
 
             phone = phoneTextView.getText().toString();
-            loginPresenter.sendSms(phone);
+            if (phone.length() != 12 || phone.charAt(0) != '2') {
+                phoneTextView.setError("Enter a valid Phone number");
+
+                phoneTextView.requestFocus();
+            }else {
+
+                loginPresenter.sendSms(phone);
+            }
         } else if (view == resetBtn) {
             resetPassword();
         }
@@ -154,22 +161,22 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
 
         if (newPassword.isEmpty() || newPassword.length() < 4 || newPassword.length() > 10) {
-            showError("wrong new password, Passwords  must be between 4 and 10 alphanumeric characters");
+            showMessage("wrong new password, Passwords  must be between 4 and 10 alphanumeric characters");
             valid = false;
         } else if (passwordConfirm.isEmpty() || passwordConfirm.length() < 4 || passwordConfirm.length() > 10) {
 
-            showError("wrong confirm password, Passwords  must be between 4 and 10 alphanumeric characters");
+            showMessage("wrong confirm password, Passwords  must be between 4 and 10 alphanumeric characters");
             valid = false;
         } else if (!newPassword.equals(passwordConfirm)) {
 
-            showError("new password and confirm password not Matched");
+            showMessage("new password and confirm password not Matched");
             valid = false;
         }
         return valid;
     }
 
     @Override
-    public void showError(String error) {
+    public void showMessage(String error) {
 
         Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
         login.setEnabled(true);
@@ -246,18 +253,18 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         codeDialog = new Dialog(this);
 
 
-        passwordDialog.setContentView(R.layout.password_code_popup);
+        codeDialog.setContentView(R.layout.password_code_popup);
 
         resetBtn = passwordDialog.findViewById(R.id.btn_reset);
-        code = passwordDialog.findViewById(R.id.old_password);
+        code = passwordDialog.findViewById(R.id.code);
         newPassword = passwordDialog.findViewById(R.id.new_password);
         newPasswordConfirm = passwordDialog.findViewById(R.id.new_password_confirm);
 
         resetBtn.setOnClickListener(this);
 
 
-        passwordDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        passwordDialog.show();
+        codeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        codeDialog.show();
     }
 
     @Override
