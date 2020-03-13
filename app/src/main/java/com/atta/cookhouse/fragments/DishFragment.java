@@ -113,25 +113,6 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         View view = inflater.inflate(R.layout.grid_view,container,false);
         recyclerView = view.findViewById(R.id.recycler_view);
 
-            recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-
-                @Override
-                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    if (dy != 0){
-
-                        ((MainActivity)getActivity()).hideViews();
-                    }else if (dy == 0){
-
-                        ((MainActivity)getActivity()).showViews();
-                    }
-                }
-            });
-
 
         if (getArguments() != null) {
 

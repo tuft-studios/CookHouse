@@ -30,7 +30,7 @@
         android:layout_gravity="top|end"
         app:layout_anchor="@id/toolbar"
         app:layout_anchorGravity="bottom|end"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/white"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/cart" />
 

@@ -271,7 +271,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(count == 6 && (before == 5 || before == 7))     //size as per your requirement
+                if(count == 6 && before == 5)     //size as per your requirement
                 {
                     promoCodeString = s.toString();
                     cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), s.toString());
@@ -519,8 +519,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
             backToMain();
         }else if (view == backToCartBtn){
 
-            findViewById(R.id.sammary_layout).setVisibility(View.GONE);
-            findViewById(R.id.sammary_layout).startAnimation(mSlideToLift);
+            findViewById(R.id.summary_layout).setVisibility(View.GONE);
+            findViewById(R.id.summary_layout).startAnimation(mSlideToLift);
 
             findViewById(R.id.cart_layout).setVisibility(View.VISIBLE);
 
@@ -835,8 +835,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
                     deliveryTimeTxt.setText(orderTime);
                     deliveryAddTxt.setText(address);
 
-                    findViewById(R.id.sammary_layout).startAnimation(mSlideFromBelow);
-                    findViewById(R.id.sammary_layout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.summary_layout).startAnimation(mSlideFromBelow);
+                    findViewById(R.id.summary_layout).setVisibility(View.VISIBLE);
                     findViewById(R.id.cart_layout).setVisibility(View.GONE);
 
                 }else {

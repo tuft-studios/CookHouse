@@ -169,4 +169,14 @@
     <string name="cancel">cancel</string>
     <string name="maps_title">Confirmation</string>
     <string name="maps_message">Are you sure you want to select location from map?</string>
+    <string name="account_info">Account Info</string>
+    <string name="summary">Summary</string>
+    <string name="to_be_delivered_in">To be delivered in</string>
+    <string name="to_address">To Address</string>
+    <string name="mobile_phone">Mobile Phone</string>
+    <string name="items">Items</string>
+    <string name="canceled">Canceled</string>
+    <string name="your_cart">Your Cart</string>
+    <string name="promo">Promo</string>
+    <string name="add_promo_code">Add Promo Code</string>
 </resources>
