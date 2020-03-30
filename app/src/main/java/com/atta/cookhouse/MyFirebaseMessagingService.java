@@ -56,6 +56,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 /*intent.putExtra("distance", distance);
                 intent.putExtra("offeror_id", offerorId);*/
+            }else if(title.equals("Order status changed")){
+                mNotificationManager = new MyNotificationManager(getApplicationContext(), true);
+                //String distance = data.getString("distance");
+                String orderId = data.getString("order_id");
+
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.putExtra("distance", distance);
+                intent.putExtra("order_id", orderId);
+            }else if(title.equals("Order Canceled")){
+                mNotificationManager = new MyNotificationManager(getApplicationContext(), true);
+                //String distance = data.getString("distance");
+                String orderId = data.getString("order_id");
+
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.putExtra("distance", distance);
+                intent.putExtra("order_id", orderId);
             }
 
 

@@ -44,7 +44,7 @@ public class MyNotificationManager {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(new NotificationCompat.BigTextStyle())
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.kersho_bs)
                 .setContentIntent(resultPendingIntent)
                 .setAutoCancel(true);
 
