@@ -56,7 +56,8 @@ public class CartPresenter implements CartContract.Presenter {
     @Override
     public void getCartItems(final boolean view, @Nullable final int userId, @Nullable final String location,
                              final int deliveryAdd, @Nullable final String mobile, @Nullable final String orderTime,
-                             @Nullable final double discountAmount, @Nullable final String promocode, final int numOfPoints) {
+                             @Nullable final double discountAmount, @Nullable final String promocode, final int numOfPoints,
+                             @Nullable final String comment) {
 
 
         class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
@@ -148,7 +149,7 @@ public class CartPresenter implements CartContract.Presenter {
                     Order order = new Order(dishesBuilder.toString(), countBuilder.toString(),
                             optionstBuilder.toString(), sizeBuilder.toString(), sides1Builder.toString(),
                             sides2Builder.toString(), totalPrice, deliveryPrice, total, discountAmount,
-                            userId, location, deliveryAdd, mobile,  orderTime, creationTime, eta, "test", promocode, numOfPoints);
+                            userId, location, deliveryAdd, mobile,  orderTime, creationTime, eta, comment, promocode, numOfPoints);
 
                     addOrder(order);
                 }

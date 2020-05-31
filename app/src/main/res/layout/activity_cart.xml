@@ -133,9 +133,22 @@
             android:visibility="invisible"
             android:cursorVisible="false"
             app:layout_constraintHorizontal_weight="3"
-            app:layout_constraintBottom_toTopOf="@+id/tv_subtotal"
+            app:layout_constraintBottom_toTopOf="@+id/comment_txt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/promo_check" />
+
+
+        <EditText
+            android:id="@+id/comment_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="4dp"
+            android:background="@android:drawable/editbox_background_normal"
+            android:hint="@string/write_a_comment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tv_subtotal" />
 
 
         <TextView

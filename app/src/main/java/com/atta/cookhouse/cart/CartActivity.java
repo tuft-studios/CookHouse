@@ -61,8 +61,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     private RecyclerView recyclerView, summaryRecyclerView;
 
-    TextView subtotalPrice, deliverPrice, totalPrice, subtotalPriceSum, deliverPriceSum, totalPriceSum, mobileNumberTxt, deliveryTimeTxt, deliveryAddTxt
-            , addAddresses, addPhone, discountTv, discountTvSum;
+    TextView subtotalPrice, deliverPrice, totalPrice, subtotalPriceSum, deliverPriceSum, totalPriceSum,
+            mobileNumberTxt, deliveryTimeTxt, deliveryAddTxt, addAddresses, addPhone, discountTv, discountTvSum;
 
     RelativeLayout confirmLayout;
 
@@ -80,7 +80,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     CheckBox usePoints, addPromo;
 
-    EditText email,password, dateText, timeText, tempPhone, promoCodeText;
+    EditText email,password, dateText, timeText, tempPhone, promoCodeText, commentText;
 
     ProgressDialog progressDialog;
 
@@ -109,7 +109,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         cartPresenter = new CartPresenter(CartActivity.this, CartActivity.this, recyclerView, summaryRecyclerView,  progressDialog);
 
-        cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount, null, 0);
+        cartPresenter.getCartItems(true, 0, null, 0, null,
+                null, discountAmount, null, 0, null);
 
 
         cartPresenter.getAddresses(sessionManager.getUserId());
@@ -144,10 +145,11 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         backToCartBtn.setOnClickListener(this);
 
 
-        addPromo = findViewById(R.id.promo_check) ;
-        usePoints = findViewById(R.id.points_check) ;
+        addPromo = findViewById(R.id.promo_check);
+        usePoints = findViewById(R.id.points_check);
 
-        promoCodeText = findViewById(R.id.promoCode) ;
+        promoCodeText = findViewById(R.id.promoCode);
+        commentText = findViewById(R.id.comment_txt);
 
 
         addPromo.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -646,10 +648,12 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         int userId = SessionManager.getInstance(CartActivity.this).getUserId();
         String location = SessionManager.getInstance(CartActivity.this).getOrderLocation();
+        String comment = commentText.getText().toString();
 
         if (addressLocation.equals(location)){
 
-            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , orderTime, discountAmount, promoCodeString, numOfPoints);
+            cartPresenter.getCartItems(false, userId, location, deliveryAdd, mobile , orderTime,
+                    discountAmount, promoCodeString, numOfPoints, comment);
         }else {
             showMessage("select or add address within the area");
         }
@@ -662,8 +666,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         Button confirmButton;
         RadioButton now, later;
         Switch mobileSwitch;
-        CheckBox commentCheckBox;
-        TextView commentTxt;
+        //CheckBox commentCheckBox;
+        //TextView commentTxt;
 
         TextView mobileTxt;
 
@@ -685,6 +689,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         addAddresses.setOnClickListener(this);
         addPhone = myDialog.findViewById(R.id.edit_mobile);
         addPhone.setOnClickListener(this);
+/*
         commentCheckBox = myDialog.findViewById(R.id.comment_check);
         commentTxt = myDialog.findViewById(R.id.comment_txt);
         commentCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -697,7 +702,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
                 }
             }
         });
-
+*/
         dateText = myDialog.findViewById(R.id.day);
         timeText = myDialog.findViewById(R.id.time);
         mobileSwitch = myDialog.findViewById(R.id.temp_mobile_switch);
@@ -767,7 +772,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         confirmButton.setOnClickListener(v -> {
 
 
-            cartPresenter.getCartItems(true, 0, null, 0, null, null, discountAmount, null, 0);
+            cartPresenter.getCartItems(true, 0, null, 0, null,
+                    null, discountAmount, null, 0, null);
 
 
             String languageToLoad = sessionManager.getLanguage();

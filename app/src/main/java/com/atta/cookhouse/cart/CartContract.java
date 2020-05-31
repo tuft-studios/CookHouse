@@ -50,7 +50,7 @@ public interface CartContract {
     interface Presenter{
 
         void getCartItems(boolean view, int userId, String location, int deliveryAdd, String mobile,
-                          String orderTime, double discountAmount, String promocode, int numOfPoints);
+                          String orderTime, double discountAmount, String promocode, int numOfPoints, String comment);
 
         double totalPriceCalculation(List<CartItem> cartItems);
 
