@@ -114,7 +114,7 @@ public class CartPresenter implements CartContract.Presenter {
                     //ArrayList<String> dishes = new ArrayList<>(), count = new ArrayList<>();
 
                     StringBuilder dishesBuilder = new StringBuilder(), countBuilder = new StringBuilder(),
-                            optionstBuilder = new StringBuilder(), sides1Builder = new StringBuilder(),
+                            optionsBuilder = new StringBuilder(), sides1Builder = new StringBuilder(),
                             sides2Builder = new StringBuilder(), sizeBuilder = new StringBuilder();
 
                     int eta = 0;
@@ -122,7 +122,7 @@ public class CartPresenter implements CartContract.Presenter {
                     for (int i = 0; i <  cartItems.size(); i++) {
                         dishesBuilder.append(cartItems.get(i).getDishId());
                         countBuilder.append(cartItems.get(i).getCount());
-                        optionstBuilder.append(cartItems.get(i).getOption());
+                        optionsBuilder.append(cartItems.get(i).getOption());
                         sides1Builder.append(cartItems.get(i).getSide1());
                         sides2Builder.append(cartItems.get(i).getSide2());
                         sizeBuilder.append(cartItems.get(i).getSize());
@@ -130,7 +130,7 @@ public class CartPresenter implements CartContract.Presenter {
                         if (i != (cartItems.size() -1)){
                             dishesBuilder.append(",");
                             countBuilder.append(",");
-                            optionstBuilder.append(",");
+                            optionsBuilder.append(",");
                             sides1Builder.append(",");
                             sides2Builder.append(",");
                             sizeBuilder.append(",");
@@ -147,7 +147,7 @@ public class CartPresenter implements CartContract.Presenter {
                     double total = totalPrice+deliveryPrice-discountAmount;
 
                     Order order = new Order(dishesBuilder.toString(), countBuilder.toString(),
-                            optionstBuilder.toString(), sizeBuilder.toString(), sides1Builder.toString(),
+                            optionsBuilder.toString(), sizeBuilder.toString(), sides1Builder.toString(),
                             sides2Builder.toString(), totalPrice, deliveryPrice, total, discountAmount,
                             userId, location, deliveryAdd, mobile,  orderTime, creationTime, eta, comment, promocode, numOfPoints);
 
@@ -158,6 +158,46 @@ public class CartPresenter implements CartContract.Presenter {
 
         GetTasks gt = new GetTasks();
         gt.execute();
+    }
+
+    @Override
+    public void calculateEta(){
+        final int[] eta = {0};
+
+        class GetTasks extends AsyncTask<Void, Void, List<CartItem>> {
+
+            @Override
+            protected List<CartItem> doInBackground(Void... voids) {
+                List<CartItem> cartItems = DatabaseClient
+                        .getInstance(mContext)
+                        .getAppDatabase()
+                        .itemDao()
+                        .getAll();
+                return cartItems;
+            }
+
+            @Override
+            protected void onPostExecute(List<CartItem> cartItems) {
+                super.onPostExecute(cartItems);
+                for (int i = 0; i < cartItems.size(); i++) {
+
+                    if (cartItems.get(i).getEta() > eta[0]) {
+
+                        eta[0] = cartItems.get(i).getEta();
+                    }
+                }
+
+                eta[0] += 30;
+
+                mView.setEta(eta[0]);
+            }
+
+        }
+
+
+        GetTasks gt = new GetTasks();
+        gt.execute();
+
     }
 
     @Override

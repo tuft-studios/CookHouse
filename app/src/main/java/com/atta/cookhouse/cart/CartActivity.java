@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.atta.cookhouse.R;
@@ -52,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -86,7 +85,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     String orderTime, schedule, dateSelected, timeSelected, mobile, address, addressLocation, promoCodeString, discountString;
 
-    int deliveryAddId, numOfPoints;
+    int deliveryAddId, numOfPoints, eta;
 
     double subTotal, deliveryAmount, totalAmount, discountAmount;
 
@@ -94,7 +93,16 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     Dialog myDialog;
 
-    Snackbar snackbar;
+    Boolean summary = false;
+
+    //String languageToLoad = sessionManager.getLanguage();
+    //Locale locale = new Locale(languageToLoad);
+    //Locale.setDefault(locale);
+
+    final long today = System.currentTimeMillis();
+    final Calendar myCalendar = Calendar.getInstance();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:MM", Locale.US);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -311,68 +319,68 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         orderBtn.setOnClickListener(this);
     }
 
-/*    private void showSnackbar(View buttonView) {
-        // Create the Snackbar
-        snackbar = Snackbar.make(buttonView, "", Snackbar.LENGTH_INDEFINITE);
-        // Get the Snackbar's layout view
-        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
-        // Hide the text
-        TextView textView = layout.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setVisibility(View.INVISIBLE);
+    /*    private void showSnackbar(View buttonView) {
+            // Create the Snackbar
+            snackbar = Snackbar.make(buttonView, "", Snackbar.LENGTH_INDEFINITE);
+            // Get the Snackbar's layout view
+            Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
+            // Hide the text
+            TextView textView = layout.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setVisibility(View.INVISIBLE);
 
 
-        // Inflate our custom view
-        View snackView = getLayoutInflater().inflate(R.layout.my_snackbar, null);
-        // Configure the view
-        EditText editText = snackView.findViewById(R.id.editText);
+            // Inflate our custom view
+            View snackView = getLayoutInflater().inflate(R.layout.my_snackbar, null);
+            // Configure the view
+            EditText editText = snackView.findViewById(R.id.editText);
 
-        //promoCodeText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        editText.setText(promoCodeString);
+            //promoCodeText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            editText.setText(promoCodeString);
 
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(editText.getText().toString().length() == 6)     //size as per your requirement
-                {
-                    promoCodeString = editText.getText().toString();
-                    cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), promoCodeString);
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(editText.getText().toString().length() == 6)     //size as per your requirement
+                    {
+                        promoCodeString = editText.getText().toString();
+                        cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), promoCodeString);
 
-            }
-        });
+                    }
+                }
 
+                @Override
+                public void afterTextChanged(Editable s) {
 
-        Button confirm = snackView.findViewById(R.id.button2);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                promoCodeString = editText.getText().toString();
-                cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), promoCodeString);
-                snackbar.dismiss();
-            }
-        });
+                }
+            });
 
 
-        //If the view is not covering the whole snackbar layout, add this line
-        layout.setPadding(0,0,0,0);
+            Button confirm = snackView.findViewById(R.id.button2);
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    promoCodeString = editText.getText().toString();
+                    cartPresenter.checkPromoCode(SessionManager.getInstance(CartActivity.this).getUserId(), promoCodeString);
+                    snackbar.dismiss();
+                }
+            });
 
-        // Add the view to the Snackbar's layout
-        layout.addView(snackView, 0);
-        // Show the Snackbar
-        snackbar.show();
-    }
 
-*/
+            //If the view is not covering the whole snackbar layout, add this line
+            layout.setPadding(0,0,0,0);
+
+            // Add the view to the Snackbar's layout
+            layout.addView(snackView, 0);
+            // Show the Snackbar
+            snackbar.show();
+        }
+
+    */
     @Override
     public void showAddresses(List<Address> mAddresses) {
 
@@ -549,7 +557,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
             if (SessionManager.getInstance(CartActivity.this).isLoggedIn()){
 
-                showDialog();
+                cartPresenter.calculateEta();
+                //showDialog();
                 //Toast.makeText(CartActivity.this, "Done", Toast.LENGTH_LONG).show();
 
             }else {
@@ -622,9 +631,15 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (summary){
 
-        startActivity(new Intent(CartActivity.this, MainActivity.class));
+            findViewById(R.id.summary_layout).setVisibility(View.GONE);
+            findViewById(R.id.summary_layout).startAnimation(mSlideToLift);
+
+            findViewById(R.id.cart_layout).setVisibility(View.VISIBLE);
+
+            summary = false;
+        }else startActivity(new Intent(CartActivity.this, MainActivity.class));
     }
 
 
@@ -661,14 +676,18 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
     }
 
     @Override
+    public void setEta(int mEta){
+        eta = mEta;
+
+        showDialog();
+    }
+
+    @Override
     public void showDialog() {
 
         Button confirmButton;
         RadioButton now, later;
         Switch mobileSwitch;
-        //CheckBox commentCheckBox;
-        //TextView commentTxt;
-
         TextView mobileTxt;
 
         Spinner addressesSpinner;
@@ -689,20 +708,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         addAddresses.setOnClickListener(this);
         addPhone = myDialog.findViewById(R.id.edit_mobile);
         addPhone.setOnClickListener(this);
-/*
-        commentCheckBox = myDialog.findViewById(R.id.comment_check);
-        commentTxt = myDialog.findViewById(R.id.comment_txt);
-        commentCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    commentTxt.setVisibility(View.VISIBLE);
-                }else {
-                    commentTxt.setVisibility(View.GONE);
-                }
-            }
-        });
-*/
+
         dateText = myDialog.findViewById(R.id.day);
         timeText = myDialog.findViewById(R.id.time);
         mobileSwitch = myDialog.findViewById(R.id.temp_mobile_switch);
@@ -762,15 +768,56 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
             }
         });
 
-
         setDateTime();
 
+        Date currentDate = new Date();   // given date
+        Calendar currentCalendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        currentCalendar.setTime(currentDate);   // assigns calendar to given date
 
+        if (currentCalendar.get(Calendar.HOUR_OF_DAY) >= 22 || currentCalendar.get(Calendar.HOUR_OF_DAY) < 11){
 
+            setLater(View.VISIBLE, "later");
+
+            now.setOnCheckedChangeListener(null);
+
+            now.setClickable(false);
+
+            now.setEnabled(false);
+
+            later.setChecked(true);
+
+        }else {
+
+            now.setClickable(true);
+
+            later.setChecked(false);
+
+            now.setOnCheckedChangeListener((compoundButton, b) -> {
+                if(!b){
+                    setLater(View.VISIBLE, "later");
+                }else {
+                    setLater(View.INVISIBLE, "now");
+                }
+            });
+        }
+
+        later.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                setLater(View.VISIBLE, "later");
+            }else {
+                setLater(View.INVISIBLE, "now");
+            }
+        });
 
         confirmButton = myDialog.findViewById(R.id.confirm2);
         confirmButton.setOnClickListener(v -> {
 
+            if (timeSelected == null || dateSelected == null){
+                showMessage("Delivery time not selected");
+                return;
+            }
+
+            summary = true;
 
             cartPresenter.getCartItems(true, 0, null, 0, null,
                     null, discountAmount, null, 0, null);
@@ -799,43 +846,22 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
                     if (schedule == "now"){
 
-                        if (new Date().getHours() > 20){
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", locale);
 
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", locale);
+                        String currentTime = sdf.format(new Date());
 
-                            String date = sdf.format(addDaysToJavaUtilDate(new Date(), 1));
-
-                            String time = "11:00 AM";
-
-                            orderTime = date + " " + time;
-
-                        }else if (new Date().getHours() < 11){
-
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", locale);
-
-                            String date = sdf.format(new Date());
-
-                            String time= "11:00 AM";
-
-                            orderTime = date + " " + time;
-
-                        }else {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm", locale);
-
-                            String currentTime = sdf.format(new Date());
-
-                            Date date = null;
-                            try {
-                                date = sdf.parse(currentTime);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.setTime(date);
-                            calendar.add(Calendar.MINUTE, 90);
-
-                            orderTime = sdf.format(calendar.getTime());
+                        Date date = null;
+                        try {
+                            date = sdf.parse(currentTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
+                        Calendar orderCalendar = Calendar.getInstance();
+                        orderCalendar.setTime(date);
+                        orderCalendar.add(Calendar.MINUTE, eta);
+
+                        orderTime = sdf.format(orderCalendar.getTime());
+
                     }else orderTime = dateSelected + " " + timeSelected;
 
                     deliveryTimeTxt.setText(orderTime);
@@ -857,154 +883,148 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         });
 
 
-        if (new Date().getHours() > 20 || new Date().getHours() < 11){
-
-            setLater(View.VISIBLE, "later");
-
-            now.setOnCheckedChangeListener(null);
-
-            now.setClickable(false);
-
-            now.setEnabled(false);
-
-            later.setChecked(true);
-
-        }else {
-
-            now.setClickable(true);
-
-            later.setChecked(false);
-
-            now.setOnCheckedChangeListener((compoundButton, b) -> {
-                if(!b){
-                    setLater(View.VISIBLE, "later");
-                }else {
-                    setLater(View.INVISIBLE, "now");
-                }
-            });
-        }
-        later.setOnCheckedChangeListener((compoundButton, b) -> {
-            if(b){
-                setLater(View.VISIBLE, "later");
-            }else {
-                setLater(View.INVISIBLE, "now");
-            }
-        });
-
-
         myDialog.setCancelable(true);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }
 
     public void setDateTime() {
-        String languageToLoad = sessionManager.getLanguage();
 
+        myCalendar.set(Calendar.ZONE_OFFSET, 2);
 
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
+        Date orderDate = new Date();   // current date
+        myCalendar.setTime(orderDate);   // assigns calendar to given date
 
+        if (myCalendar.get(Calendar.HOUR_OF_DAY) >= 22){
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", locale);
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", locale);
+            timeSelected = "12:00 PM";
+            myCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            myCalendar.set(Calendar.HOUR_OF_DAY, 12);
+            myCalendar.set(Calendar.MINUTE, 0);
+            dateSelected = dateFormat.format(myCalendar.getTime());
 
-        if (new Date().getHours() > 20){
-
-
-            dateSelected = dateFormat.format(addDaysToJavaUtilDate(new Date(), 1));
-
-            dateText.setText(dateSelected);
-
-            timeSelected = "11:00 AM";
-
-            timeText.setText(timeSelected);
-
-        }else if (new Date().getHours() < 11){
-
-            dateSelected = dateFormat.format(new Date());
-
-            dateText.setText(dateSelected);
-
-            timeSelected = "11:00 AM";
-
-            timeText.setText(timeSelected);
-
+        }else if (myCalendar.get(Calendar.HOUR_OF_DAY) < 11){
+            timeSelected = "12:00 PM";
+            myCalendar.set(Calendar.HOUR_OF_DAY, 12);
+            myCalendar.set(Calendar.MINUTE, 0);
+            dateSelected = dateFormat.format(orderDate);
         }else {
-
-
-            dateText.setText(dateFormat.format(new Date()));
-
-            timeText.setText(timeFormat.format(addHoursToJavaUtilDate(new Date(), 2)));
+            myCalendar.add(Calendar.MINUTE, eta);
+            dateSelected = dateFormat.format(orderDate);
+            timeSelected = timeFormat.format(myCalendar.getTime());
         }
 
+        dateText.setText(dateSelected);
+        timeText.setText(timeSelected);
 
-        dateText.setOnClickListener(v -> {
+        dateText.setOnClickListener(v -> setDeliveryTime(myCalendar));
+        timeText.setOnClickListener(v -> setDeliveryTime(myCalendar));
+    }
 
-            final Calendar myCalendar = Calendar.getInstance();
+    public void setDeliveryTime(Calendar myCalendar) {
 
-            String myFormat = "dd/MM/yyyy"; //In which you need put here
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
+        int minute = myCalendar.get(Calendar.MINUTE);
 
-            dateText.setText(sdf.format(myCalendar.getTime()));
+        DatePickerDialog date;
+        date = new DatePickerDialog(CartActivity.this, new DatePickerDialog.OnDateSetListener() {
 
-            dateSelected = sdf.format(myCalendar.getTime());
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-            DatePickerDialog date;
-            date = new DatePickerDialog(CartActivity.this, new DatePickerDialog.OnDateSetListener() {
-
-                @Override
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    // TODO Auto-generated method stub
-                    myCalendar.set(Calendar.YEAR, year);
-                    myCalendar.set(Calendar.MONTH, monthOfYear);
-                    myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-
-                    dateText.setText(dateFormat.format(myCalendar.getTime()));
-
+                myCalendar.set(year, monthOfYear, dayOfMonth);
+                //If user tries to select date in past (or today)
+                if (myCalendar.getTimeInMillis() >= today) {
                     dateSelected = dateFormat.format(myCalendar.getTime());
+                    dateText.setText(dateSelected);
+
+
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(CartActivity.this,
+                            AlertDialog.THEME_HOLO_LIGHT, (timePicker, selectedHour, selectedMinute) -> {
+
+                        myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                        myCalendar.set(Calendar.MINUTE, selectedMinute);
+
+                        if (myCalendar.getTimeInMillis() >= today) {
+                            if (selectedHour >= 23) {
+                                showMessage("Max delivery time is 11:00 PM");
+
+                            } else if (selectedHour < 12) {
+                                showMessage("first delivery time is 12:00 PM");
+
+                            } else if (timeDiff(dateSelected, timeSelected) < eta) {
+
+                                showMessage("delivery time less than order cooking time");
+
+                            } else {
+                                timeSelected = updateTime(selectedHour, selectedMinute);
+                                timeText.setText(timeSelected);
+                            }
+                        }else {
+                            showMessage("Cannot select a past date");
+                        }
+                    }, hour, minute, false);//no 12 hour time
+                    mTimePicker.show();
+                }else {
+                    showMessage("Cannot select a past date");
                 }
-            }, myCalendar .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH));
-            date.show();
+            }
+        }, myCalendar .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH));
+        date.show();
+
+    }
+
+    // Used to convert 24hr format to 12hr format with AM/PM values
+    private String updateTime(int hours, int mins) {
+
+        String timeSet = "";
+        if (hours > 12) {
+            hours -= 12;
+            timeSet = "PM";
+        } else if (hours == 0) {
+            hours += 12;
+            timeSet = "AM";
+        } else if (hours == 12)
+            timeSet = "PM";
+        else
+            timeSet = "AM";
 
 
-        });
+        String minutes = "";
+        if (mins < 10)
+            minutes = "0" + mins;
+        else
+            minutes = String.valueOf(mins);
 
-        timeText.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
-            final Calendar mCurrentTime = Calendar.getInstance();
-            int hour = mCurrentTime.get(Calendar.HOUR);
-            int minute = mCurrentTime.get(Calendar.MINUTE);
-            TimePickerDialog mTimePicker;
-            mTimePicker = new TimePickerDialog(CartActivity.this, AlertDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+        // Append in a StringBuilder
+        String aTime = new StringBuilder().append(hours).append(':')
+                .append(minutes).append(" ").append(timeSet).toString();
 
-                    if (selectedHour >= 20){
-                        showMessage("Max delivery time is 7:30 PM");
-                        timeSelected = null;
-                        timeText.setText("");
-                    }else if (selectedHour < 11){
-                        showMessage("first delivery time is 11:00 AM");
-                        timeSelected = null;
-                        timeText.setText("");
-                    }else {
+        return aTime;
+    }
 
-                        mCurrentTime.set(Calendar.HOUR, selectedHour);
-                        mCurrentTime.set(Calendar.MINUTE, selectedMinute);
+    public int timeDiff(String dateSelected, String timeSelected) {
+        int diffMin = 0;
+        try {
+            String format = "dd/MM/yyyy hh:mm a";
 
-                        timeText.setText(timeFormat.format(mCurrentTime.getTime()));
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
 
-                        mCurrentTime.set(Calendar.HOUR, selectedHour -2);
-                        timeSelected = timeFormat.format(mCurrentTime.getTime());
-                    }
-                }
-            }, hour, minute, false);//no 12 hour time
-            mTimePicker.show();
+            Date dateObj1 = sdf.parse(dateSelected + " " + timeSelected);
+            Date dateObj2 = new Date();
 
+            // getTime() returns the number of milliseconds since January 1, 1970, 00:00:00 GMT represented by this Date object
+            long diff = dateObj1.getTime() - dateObj2.getTime();
 
-        });
+            diffMin = (int) (diff / (60 * 1000));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return diffMin;
     }
 
     public void setDateTime2() {
@@ -1032,13 +1052,6 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         return calendar.getTime();
     }
 
-
-    public Date addDaysToJavaUtilDate(Date date, int days) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, days);
-        return calendar.getTime();
-    }
 
     @Override
     public boolean validateOrder(int deliveryAdd, EditText timeText, EditText dateText) {

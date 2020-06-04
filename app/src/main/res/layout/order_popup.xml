@@ -167,6 +167,7 @@
             android:hint="@string/day"
             android:inputType="date"
             android:singleLine="true"
+            android:background="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/switch_group"
             app:layout_constraintTop_toBottomOf="@+id/edit_mobile" />

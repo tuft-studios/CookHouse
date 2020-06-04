@@ -45,12 +45,17 @@ public interface CartContract {
         void setDiscount(int discount);
 
         void wrongPromo();
+
+        void setEta(int eta);
     }
 
     interface Presenter{
 
         void getCartItems(boolean view, int userId, String location, int deliveryAdd, String mobile,
-                          String orderTime, double discountAmount, String promocode, int numOfPoints, String comment);
+                          String orderTime, double discountAmount, String promocode, int numOfPoints,
+                          String comment);
+
+        void calculateEta();
 
         double totalPriceCalculation(List<CartItem> cartItems);
 
