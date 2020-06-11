@@ -6,7 +6,7 @@ android {
         applicationId "com.atta.cookhouse"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 5
+        versionCode 6
         versionName "1.1.2"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

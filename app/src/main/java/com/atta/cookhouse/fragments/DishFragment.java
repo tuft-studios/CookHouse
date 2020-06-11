@@ -104,13 +104,13 @@ public class DishFragment extends Fragment implements FragmentsContract.View {
         //View rootView = inflater.inflate(R.layout.dishes_grid, container, false);
 
 
-        counterFab = (CounterFab) getActivity().findViewById(R.id.fab);
+        counterFab = getActivity().findViewById(R.id.fab);
 
 
 
         fragmentsPresenter = new FragmentsPresenter(this, getContext(), counterFab);
         //return rootView;
-        View view = inflater.inflate(R.layout.grid_view,container,false);
+        View view = inflater.inflate(R.layout.fragment_dishes,container,false);
         recyclerView = view.findViewById(R.id.recycler_view);
 
 

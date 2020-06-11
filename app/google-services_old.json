@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "690778218599",
-    "firebase_url": "https://kershoman-e9d73.firebaseio.com",
-    "project_id": "kershoman-e9d73",
-    "storage_bucket": "kershoman-e9d73.appspot.com"
+    "project_number": "302546490825",
+    "firebase_url": "https://cook-house-1540255032618.firebaseio.com",
+    "project_id": "cook-house-1540255032618",
+    "storage_bucket": "cook-house-1540255032618.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:690778218599:android:ee5ad4df86c9de633af4c2",
+        "mobilesdk_app_id": "1:302546490825:android:5e07f6222b2e68e6",
         "android_client_info": {
           "package_name": "com.atta.cookhouse"
         }
       },
       "oauth_client": [
         {
-          "client_id": "690778218599-gr3u4h8mj4drku1l39r2eoa61oe55gpf.apps.googleusercontent.com",
+          "client_id": "302546490825-0aglqm54jme0cnikmdat65don6vp1mub.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.atta.cookhouse",
@@ -23,20 +23,20 @@
           }
         },
         {
-          "client_id": "690778218599-muaf862kr9iv83ogb9h27kdj72darael.apps.googleusercontent.com",
+          "client_id": "302546490825-m1d7fo9d0a4qut3mchkfuequpva4iauo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCbnKI5lowucI2bYXVfJ3D2yTERgRMhArY"
+          "current_key": "AIzaSyCsLowlTG7vY4tS08Nw0hmecU832bZqxDg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "690778218599-muaf862kr9iv83ogb9h27kdj72darael.apps.googleusercontent.com",
+              "client_id": "302546490825-m1d7fo9d0a4qut3mchkfuequpva4iauo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
